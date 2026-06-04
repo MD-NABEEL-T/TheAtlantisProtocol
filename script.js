@@ -1,418 +1,408 @@
 /**
- * விண்வெளில் ஒரு பயணம் — IARRD Astronomy Workshop
- * script.js — All pages
- *
- * ⚙️  CONFIGURE YOUR GOOGLE APPS SCRIPT URL HERE:
+ * ஆழ்கடலில் ஒரு பயணம் — IARRD Marine Technology Masterclass
+ * script.js — Landing page logic, payment gateways, and data sheets.
  */
+
 const BACKEND_URL = "https://vinvelil-workshop.onrender.com";
-
-// old url :"https://script.google.com/macros/s/AKfycbwwleBrM0mXl6RstdxeUnanh3VGOtrmiG9Szul6dGvN5WJRR0GYRS4IYOsKyNQtq96I/exec"
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXbLR7egPx3VerVUI3kqB50kSl5WZajoz1ThGy1hU2WZNl3CT-pSHvOyx_koXHm8zGDg/exec";
-
 const ADMIN_PASSWORD = "iarrdadmin2026";
 
 /* ═══════════════════════════════════════
-   STARFIELD (all pages)
-═══════════════════════════════════════ */
-(function initStarfield() {
-  const canvas = document.getElementById("starfield");
+   BIOLUMINESCENT CANVAS SYSTEM
+   ═══════════════════════════════════════ */
+(function initMarineCanvas() {
+  const canvas = document.getElementById("marine-canvas") || document.getElementById("starfield");
   if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
-  let stars = [];
-  const STAR_COUNT = 280;
+  let particles = [];
+  let sonarWaves = [];
+  const PARTICLE_COUNT = window.innerWidth < 768 ? 60 : 120;
 
   function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   }
 
-  function createStars() {
-    stars = [];
-    for (let i = 0; i < STAR_COUNT; i++) {
-      const size = Math.random();
-      stars.push({
+  function createParticles() {
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        r: size < .6 ? .5 : size < .85 ? 1 : 1.7,
-        alpha: .25 + Math.random() * .75,
-        speed: .0003 + Math.random() * .0006,
-        offset: Math.random() * Math.PI * 2,
+        r: Math.random() * 2 + 0.5,
+        speedY: -(Math.random() * 0.2 + 0.05), // float upwards
+        speedX: (Math.random() - 0.5) * 0.15,  // slow sway
+        alpha: Math.random() * 0.6 + 0.2,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleOffset: Math.random() * Math.PI * 2,
+        color: Math.random() > 0.4 ? 'rgba(0, 245, 255, ' : 'rgba(139, 92, 246, '
       });
     }
   }
 
+  function emitSonar(x, y) {
+    sonarWaves.push({
+      x: x || Math.random() * canvas.width,
+      y: y || Math.random() * canvas.height,
+      radius: 0,
+      maxRadius: Math.random() * 120 + 80,
+      speed: Math.random() * 0.6 + 0.4,
+      alpha: 0.35
+    });
+  }
+
+  // Periodic sonar emitter (every 5 seconds)
+  setInterval(() => {
+    if (sonarWaves.length < 5) emitSonar();
+  }, 5000);
+
+  // Mouse interactivity for sonar ripples
+  window.addEventListener("click", (e) => {
+    if (e.target.tagName !== "BUTTON" && e.target.tagName !== "A" && e.target.tagName !== "INPUT" && e.target.tagName !== "SELECT") {
+      emitSonar(e.clientX, e.clientY);
+    }
+  });
+
   function draw(t) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const s of stars) {
-      const twinkle = .55 + .45 * Math.sin(t * s.speed * 1000 + s.offset);
+
+    // 1. Draw Sonar Waves
+    for (let i = sonarWaves.length - 1; i >= 0; i--) {
+      const w = sonarWaves[i];
+      w.radius += w.speed;
+      w.alpha = 0.35 * (1 - (w.radius / w.maxRadius));
+
+      if (w.radius >= w.maxRadius) {
+        sonarWaves.splice(i, 1);
+        continue;
+      }
+
       ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(220,232,255,${s.alpha * twinkle})`;
-      ctx.fill();
+      ctx.arc(w.x, w.y, w.radius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(0, 245, 255, ${w.alpha})`;
+      ctx.lineWidth = 1.2;
+      ctx.stroke();
+
+      // Double ring effect
+      if (w.radius > 20) {
+        ctx.beginPath();
+        ctx.arc(w.x, w.y, w.radius - 20, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(139, 92, 246, ${w.alpha * 0.5})`;
+        ctx.stroke();
+      }
     }
+
+    // 2. Draw Bioluminescent Particles (Marine Snow)
+    for (const p of particles) {
+      // Float up
+      p.y += p.speedY;
+      p.x += p.speedX;
+
+      // Wrap boundaries
+      if (p.y < -10) {
+        p.y = canvas.height + 10;
+        p.x = Math.random() * canvas.width;
+      }
+      if (p.x < -10 || p.x > canvas.width + 10) {
+        p.speedX *= -1;
+      }
+
+      // Twinkle calculation
+      const twinkle = 0.5 + 0.5 * Math.sin(t * p.twinkleSpeed + p.twinkleOffset);
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color + (p.alpha * twinkle) + ')';
+      ctx.fill();
+
+      // Glow halo for larger particles
+      if (p.r > 1.8) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + (p.alpha * twinkle * 0.2) + ')';
+        ctx.fill();
+      }
+    }
+
     requestAnimationFrame(draw);
   }
 
   resize();
-  createStars();
-  window.addEventListener("resize", () => { resize(); createStars(); });
+  createParticles();
+  window.addEventListener("resize", () => { resize(); createParticles(); });
   requestAnimationFrame(draw);
 })();
 
 /* ═══════════════════════════════════════
-   CINEMATIC BLACK HOLE (landing page)
-═══════════════════════════════════════ */
-/* ═══════════════════════════════════════
-   CINEMATIC SOLAR SYSTEM (landing page)
-═══════════════════════════════════════ */
-(function initSolarSystem3D() {
-  const container = document.getElementById("solar-system-3d");
-  if (!container || typeof THREE === "undefined") return;
+   SOUND TOGGLE
+   ═══════════════════════════════════════ */
+(function initSound() {
+  const soundBtn = document.getElementById("ambient-sound-toggle");
+  if (!soundBtn) return;
 
-  const W = window.innerWidth;
-  const H = window.innerHeight;
+  const audio = new Audio("audio/vinvelil-audio.mpeg");
+  audio.loop = true;
+  audio.volume = 0.35;
+  let playing = false;
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
-  renderer.setSize(W, H);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.0;
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  container.appendChild(renderer.domElement);
-
-  let composer;
-  const renderScene = typeof THREE.RenderPass !== "undefined" ? new THREE.RenderPass(new THREE.Scene(), new THREE.Camera()) : null;
-
-  window.addEventListener("resize", () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    if(composer) composer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 1000);
-  camera.position.set(0, 5, 25);
-  camera.lookAt(0, 0, 0);
-  
-  if (renderScene) {
-    renderScene.scene = scene;
-    renderScene.camera = camera;
-  }
-
-  // Texture Loader
-  const textureLoader = new THREE.TextureLoader();
-  textureLoader.crossOrigin = "Anonymous";
-  
-  // Create generic noise texture for planets if CDN fails
-  const createNoiseTex = (color1, color2) => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512; canvas.height = 512;
-    const ctx = canvas.getContext('2d');
-    for(let i=0; i<512; i+=4) {
-      for(let j=0; j<512; j+=4) {
-        ctx.fillStyle = Math.random() > 0.5 ? color1 : color2;
-        ctx.fillRect(i, j, 4, 4);
-      }
+  audio.addEventListener("loadedmetadata", () => {
+    if (audio.duration > 60) {
+      audio.currentTime = 60; // start at 1 minute for ambient loop
     }
-    return new THREE.CanvasTexture(canvas);
-  };
-
-  // LIGHTING
-  const ambientLight = new THREE.AmbientLight(0x0a1525, 0.2); // deep space dark blue
-  scene.add(ambientLight);
-
-  const sunLight = new THREE.PointLight(0xffeedd, 3.5, 300);
-  sunLight.position.set(-15, 0, -10); // Sun on the left
-  sunLight.castShadow = true;
-  sunLight.shadow.mapSize.width = 2048;
-  sunLight.shadow.mapSize.height = 2048;
-  sunLight.shadow.bias = -0.001;
-  scene.add(sunLight);
-
-  const systemGroup = new THREE.Group();
-  scene.add(systemGroup);
-
-  // 1. SUN (Left Side)
-  const sunGeo = new THREE.SphereGeometry(8, 64, 64);
-  
-  const sunShaderMat = new THREE.ShaderMaterial({
-    uniforms: { time: { value: 0 } },
-    vertexShader: `
-      varying vec2 vUv;
-      varying vec3 vPos;
-      void main() {
-        vUv = uv; vPos = position;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `,
-    fragmentShader: `
-      uniform float time;
-      varying vec2 vUv;
-      varying vec3 vPos;
-      float hash(vec3 p) { return fract(sin(dot(p, vec3(12.9898, 78.233, 45.164))) * 43758.5453); }
-      float noise(vec3 x) {
-        vec3 p = floor(x); vec3 f = fract(x);
-        f = f*f*(3.0-2.0*f);
-        return mix(mix(mix(hash(p+vec3(0,0,0)), hash(p+vec3(1,0,0)),f.x),
-                       mix(hash(p+vec3(0,1,0)), hash(p+vec3(1,1,0)),f.x),f.y),
-                   mix(mix(hash(p+vec3(0,0,1)), hash(p+vec3(1,0,1)),f.x),
-                       mix(hash(p+vec3(0,1,1)), hash(p+vec3(1,1,1)),f.x),f.y),f.z);
-      }
-      void main() {
-        float n = noise(vPos * 0.8 + time * 0.2);
-        n += 0.5 * noise(vPos * 2.0 - time * 0.5);
-        vec3 color = mix(vec3(0.9, 0.3, 0.0), vec3(1.0, 0.9, 0.6), n);
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `
   });
-  const sun = new THREE.Mesh(sunGeo, sunShaderMat);
-  sun.position.copy(sunLight.position);
-  systemGroup.add(sun);
 
-  const haloGeo = new THREE.SphereGeometry(8.5, 32, 32);
-  const haloMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending, side: THREE.BackSide });
-  const sunHalo = new THREE.Mesh(haloGeo, haloMat);
-  sun.add(sunHalo);
-
-  // 2. EARTH (Center)
-  const earthGeo = new THREE.SphereGeometry(2, 64, 64);
-  const earthMat = new THREE.MeshStandardMaterial({
-    color: 0xffffff,
-    map: textureLoader.load('https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg', undefined, undefined, () => {
-      earthMat.map = createNoiseTex('rgba(10,50,150,1)', 'rgba(20,100,50,1)');
-      earthMat.needsUpdate = true;
-    }),
-    roughness: 0.7,
-    metalness: 0.1
-  });
-  const earth = new THREE.Mesh(earthGeo, earthMat);
-  earth.position.set(4, -1, -2);
-  earth.castShadow = true;
-  earth.receiveShadow = true;
-  systemGroup.add(earth);
-
-  const atmosGeo = new THREE.SphereGeometry(2.05, 32, 32);
-  const atmosMat = new THREE.MeshBasicMaterial({ color: 0x4488ff, transparent: true, opacity: 0.2, blending: THREE.AdditiveBlending, side: THREE.BackSide });
-  const atmosphere = new THREE.Mesh(atmosGeo, atmosMat);
-  earth.add(atmosphere);
-
-  // 3. SATURN (Top Right)
-  const saturnGeo = new THREE.SphereGeometry(3.5, 64, 64);
-  const createSaturnTex = () => {
-    const c = document.createElement('canvas'); c.width = 1; c.height = 128;
-    const ctx = c.getContext('2d');
-    const grad = ctx.createLinearGradient(0,0,0,128);
-    grad.addColorStop(0, '#dcb588'); grad.addColorStop(0.2, '#c4996b'); grad.addColorStop(0.4, '#e3caa0');
-    grad.addColorStop(0.6, '#b78c62'); grad.addColorStop(0.8, '#e3caa0'); grad.addColorStop(1, '#dcb588');
-    ctx.fillStyle = grad; ctx.fillRect(0,0,1,128);
-    return new THREE.CanvasTexture(c);
-  };
-  const saturnMat = new THREE.MeshStandardMaterial({ map: createSaturnTex(), roughness: 0.8 });
-  const saturn = new THREE.Mesh(saturnGeo, saturnMat);
-  saturn.position.set(22, 6, -15);
-  saturn.castShadow = true;
-  saturn.receiveShadow = true;
-  systemGroup.add(saturn);
-
-  // Saturn Rings
-  const ringGeo = new THREE.RingGeometry(4.5, 8.5, 128);
-  const createRingTex = () => {
-    const c = document.createElement('canvas'); c.width = 256; c.height = 1;
-    const ctx = c.getContext('2d');
-    const grad = ctx.createLinearGradient(0,0,256,0);
-    grad.addColorStop(0, 'rgba(200,180,150,0)');
-    grad.addColorStop(0.1, 'rgba(200,180,150,0.8)');
-    grad.addColorStop(0.3, 'rgba(220,200,180,0.9)');
-    grad.addColorStop(0.35, 'rgba(0,0,0,0)'); 
-    grad.addColorStop(0.4, 'rgba(180,160,130,0.7)');
-    grad.addColorStop(0.8, 'rgba(160,140,110,0.5)');
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = grad; ctx.fillRect(0,0,256,1);
-    return new THREE.CanvasTexture(c);
-  };
-  
-  const ringMat = new THREE.MeshStandardMaterial({
-    map: createRingTex(),
-    color: 0xffffff,
-    transparent: true,
-    opacity: 0.9,
-    side: THREE.DoubleSide,
-    roughness: 0.8
-  });
-  
-  const pos = ringGeo.attributes.position;
-  const uvs = ringGeo.attributes.uv;
-  for(let i=0; i<pos.count; i++) {
-    const r = Math.sqrt(pos.x[i]*pos.x[i] + pos.y[i]*pos.y[i]);
-    uvs.setXY(i, (r - 4.5) / (8.5 - 4.5), 0.5);
-  }
-  
-  const rings = new THREE.Mesh(ringGeo, ringMat);
-  rings.rotation.x = Math.PI / 2 + 0.2;
-  rings.rotation.y = 0.1;
-  rings.receiveShadow = true;
-  rings.castShadow = true;
-  saturn.add(rings);
-
-  // 4. MARS
-  const marsGeo = new THREE.SphereGeometry(0.8, 32, 32);
-  const marsMat = new THREE.MeshStandardMaterial({ color: 0x993322, roughness: 0.9 });
-  const mars = new THREE.Mesh(marsGeo, marsMat);
-  mars.position.set(-5, -6, 8);
-  mars.receiveShadow = true;
-  mars.castShadow = true;
-  systemGroup.add(mars);
-
-  // 5. ASTEROID DUST
-  const dustGeo = new THREE.BufferGeometry();
-  const dustCount = 1500;
-  const dustPos = new Float32Array(dustCount * 3);
-  for(let i=0; i<dustCount; i++) {
-    dustPos[i*3] = (Math.random() - 0.5) * 100;
-    dustPos[i*3+1] = (Math.random() - 0.5) * 40;
-    dustPos[i*3+2] = (Math.random() - 0.5) * 80 - 10;
-  }
-  dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
-  const dustMat = new THREE.PointsMaterial({ color: 0xaaaaaa, size: 0.05, transparent: true, opacity: 0.4 });
-  const dust = new THREE.Points(dustGeo, dustMat);
-  scene.add(dust);
-
-  // 6. POST PROCESSING (Subtle Bloom)
-  if (typeof THREE.EffectComposer !== "undefined" && typeof THREE.UnrealBloomPass !== "undefined") {
-    composer = new THREE.EffectComposer(renderer);
-    composer.addPass(renderScene);
-    const bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(W, H), 0.4, 0.5, 0.8);
-    bloomPass.threshold = 0.5; 
-    bloomPass.strength = 0.8;
-    bloomPass.radius = 0.6;
-    composer.addPass(bloomPass);
-  }
-
-  systemGroup.rotation.x = 0.1;
-  systemGroup.rotation.y = 0.05;
-
-  // 7. ANIMATION LOOP
-  let time = 0;
-  const clock = new THREE.Clock();
-
-  function animate() {
-    requestAnimationFrame(animate);
-    const delta = clock.getDelta();
-    time += delta;
-
-    sunShaderMat.uniforms.time.value = time;
-
-    earth.rotation.y += 0.002;
-    saturn.rotation.y += 0.001;
-    mars.rotation.y += 0.003;
-
-    earth.position.x = 4 + Math.sin(time * 0.05) * 0.5;
-    earth.position.z = -2 + Math.cos(time * 0.05) * 0.5;
-    
-    saturn.position.x = 22 + Math.sin(time * 0.02 + 1) * 1.0;
-    saturn.position.z = -15 + Math.cos(time * 0.02 + 1) * 1.0;
-
-    dust.rotation.y = time * 0.005;
-
-    const scrollY = window.scrollY;
-    camera.position.x = Math.sin(time * 0.1) * 0.5;
-    
-    // For mobile (portrait), we might want to push the camera back a bit to see the sun on the left and earth in the center
-    const isMobile = window.innerWidth < 768;
-    const zOffset = isMobile ? 35 : 25;
-    const yOffset = isMobile ? 8 : 5;
-    
-    camera.position.y = yOffset + Math.cos(time * 0.08) * 0.3 - scrollY * 0.005;
-    camera.position.z = zOffset - scrollY * 0.01;
-    
-    // Adjust lookAt slightly based on mobile
-    camera.lookAt(isMobile ? 2 : 0, 0, 0);
-
-    if (composer) {
-      composer.render();
+  soundBtn.addEventListener("click", () => {
+    if (!playing) {
+      audio.play().then(() => {
+        playing = true;
+        soundBtn.innerHTML = "🔊 Sound";
+        soundBtn.classList.add("playing");
+      }).catch(err => {
+        console.warn("Audio blocked by browser policy:", err);
+      });
     } else {
-      renderer.render(scene, camera);
+      audio.pause();
+      playing = false;
+      soundBtn.innerHTML = "🔇 Sound";
+      soundBtn.classList.remove("playing");
     }
-  }
-
-  animate();
+  });
 })();
 
 /* ═══════════════════════════════════════
-   LANDING PAGE
-═══════════════════════════════════════ */
-if (document.querySelector(".page-landing")) {
+   COUNTDOWN TIMER (Index page)
+   ═══════════════════════════════════════ */
+(function initCountdown() {
+  const cdDays = document.getElementById("cd-days");
+  if (!cdDays) return;
 
-  const header = document.querySelector(".site-header");
-  window.addEventListener("scroll", () => {
-    header.classList.toggle("scrolled", window.scrollY > 40);
-  });
+  // Masterclass date: July 4, 2026
+  const targetTime = new Date("2026-07-04T10:00:00+05:30").getTime();
 
-  const TARGET = new Date("2026-05-17T18:00:00");
+  function update() {
+    const now = Date.now();
+    const diff = Math.max(0, targetTime - now);
 
-  function updateCountdown() {
-    const now = new Date();
-    const diff = TARGET - now;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
 
-    if (diff <= 0) {
-      ["days", "hours", "mins", "secs"].forEach(id =>
-        document.querySelector(`#cd-${id} .cd-num`).textContent = "00"
-      );
+    document.getElementById('cd-days').textContent = String(d).padStart(2, '0');
+    document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
+    document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
+  }
+
+  update();
+  setInterval(update, 1000);
+})();
+
+/* ═══════════════════════════════════════
+   EMBEDDED LANDING REGISTRATION FORM HANDLER
+   ═══════════════════════════════════════ */
+(function initEmbeddedForm() {
+  const submitBtn = document.getElementById("submit-reg-btn");
+  if (!submitBtn) return;
+
+  submitBtn.addEventListener("click", async () => {
+    const name = document.getElementById("reg-name").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const phone = document.getElementById("reg-phone").value.trim();
+    const category = document.getElementById("reg-category").value;
+    const org = document.getElementById("reg-org") ? document.getElementById("reg-org").value.trim() : "";
+    const privacyCheck = document.getElementById("reg-privacy-agree");
+
+    // Validations
+    if (!name) { shake("reg-name"); return; }
+    if (!email || !email.includes("@")) { shake("reg-email"); return; }
+    if (!phone) { shake("reg-phone"); return; }
+    if (document.getElementById("reg-org") && document.getElementById("reg-org").style.display !== "none" && !org) {
+      shake("reg-org"); return;
+    }
+
+    if (!privacyCheck || !privacyCheck.checked) {
+      const consentBox = privacyCheck.closest(".privacy-consent");
+      consentBox.style.borderColor = "#ff7f50";
+      consentBox.style.boxShadow = "0 0 10px rgba(255, 127, 80, 0.2)";
+      setTimeout(() => {
+        consentBox.style.borderColor = "";
+        consentBox.style.boxShadow = "";
+      }, 2000);
       return;
     }
 
-    const days = Math.floor(diff / 864e5);
-    const hours = Math.floor((diff % 864e5) / 36e5);
-    const mins = Math.floor((diff % 36e5) / 6e4);
-    const secs = Math.floor((diff % 6e4) / 1e3);
+    // Build the submission payload following Google Sheets Columns
+    const submission = {
+      name: name,
+      email: email,
+      phone: phone,
+      category: category,
+      school: category === "school" ? org : "",
+      standard: "", // blank for single step
+      college: category === "college" ? org : "",
+      dept: "",
+      year: "",
+      company: category === "professional" ? org : "",
+      role: "",
+      description: category === "enthusiast" ? org : "",
+      timestamp: new Date().toISOString()
+    };
 
-    document.querySelector("#cd-days  .cd-num").textContent = String(days).padStart(2, "0");
-    document.querySelector("#cd-hours .cd-num").textContent = String(hours).padStart(2, "0");
-    document.querySelector("#cd-mins  .cd-num").textContent = String(mins).padStart(2, "0");
-    document.querySelector("#cd-secs  .cd-num").textContent = String(secs).padStart(2, "0");
-  }
+    const spinner = document.getElementById("submit-spinner");
+    const errEl = document.getElementById("submit-error");
 
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+    submitBtn.style.display = "none";
+    spinner.style.display = "block";
+    errEl.style.display = "none";
 
-  const revealObserver = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("active");
-        obs.unobserve(entry.target);
+    // Demo Mode check
+    if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_SCRIPT_URL") {
+      await new Promise(res => setTimeout(res, 1200));
+      window.location.href = "success.html";
+      return;
+    }
+
+    try {
+      console.log("📤 Initializing payment system...", submission);
+
+      // STEP 1: CREATE PAYMENT ORDER
+      const orderRes = await fetch(`${BACKEND_URL}/api/payment/create-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" }
+      });
+
+      if (!orderRes.ok) {
+        const errText = await orderRes.text();
+        throw new Error(`Server error ${orderRes.status}: ${errText || "Order creation failed"}`);
       }
-    });
-  }, { root: null, rootMargin: "0px", threshold: 0.12 });
 
-  document.querySelectorAll(".mission-file-card.reveal, .crew-card.reveal, .test-card.reveal, .payment-card.reveal, .contact-card.reveal").forEach((card, i) => {
-    card.style.transitionDelay = `${(i % 5) * 0.08}s`;
-    revealObserver.observe(card);
+      const orderData = await orderRes.json();
+      if (!orderData.success || !orderData.order) {
+        throw new Error(orderData.message || "Failed to create checkout order.");
+      }
+
+      // STEP 2: LAUNCH CHECKOUT WINDOW
+      let checkoutOpened = false;
+
+      const options = {
+        key: orderData.key,
+        amount: orderData.order.amount,
+        currency: orderData.order.currency,
+        name: "IARRD Marine Academy",
+        description: "Masterclass Registration — ஆழ்கடலில் ஒரு பயணம்",
+        order_id: orderData.order.id,
+        theme: { color: "#00f5ff" },
+        prefill: {
+          email: email,
+          contact: phone,
+          name: name
+        },
+
+        // Payment verified callback
+        handler: async function (response) {
+          console.log("✅ Checkout completed successfully.");
+          try {
+            // STEP 3: VERIFY SIGNATURE
+            console.log("🔐 Verifying checkout digital signature...");
+            const verifyRes = await fetch(`${BACKEND_URL}/api/payment/verify-payment`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(response)
+            });
+
+            if (!verifyRes.ok) {
+              const errText = await verifyRes.text();
+              throw new Error(`Signature verification failed: ${errText}`);
+            }
+
+            const verifyData = await verifyRes.json();
+            if (!verifyData.success) {
+              throw new Error(verifyData.message || "Verification response invalid.");
+            }
+
+            // STEP 4: RECORD REGISTRATION TO SPREADSHEET
+            console.log("📊 Archiving registration details...");
+            try {
+              await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                mode: "no-cors",
+                headers: { "Content-Type": "text/plain" },
+                body: JSON.stringify({
+                  ...submission,
+                  paymentStatus: "PAID",
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpayOrderId: response.razorpay_order_id
+                })
+              });
+            } catch (sheetsErr) {
+              console.warn("Sheets response unreadable (cors restriction):", sheetsErr.message);
+            }
+
+            await new Promise(res => setTimeout(res, 1200));
+            window.location.href = "success.html";
+
+          } catch (err) {
+            console.error("❌ Checkout response processing failure:", err);
+            spinner.style.display = "none";
+            submitBtn.style.display = "block";
+            errEl.style.display = "block";
+            errEl.textContent = `❌ Error: ${err.message}`;
+          }
+        },
+
+        modal: {
+          ondismiss: function () {
+            console.log("⚠️ Checkout interface dismissed by user.");
+            if (spinner.style.display === "block") {
+              spinner.style.display = "none";
+              submitBtn.style.display = "block";
+              errEl.style.display = "block";
+              errEl.textContent = "Checkout cancelled. Please retry.";
+            }
+          }
+        }
+      };
+
+      if (!checkoutOpened) {
+        checkoutOpened = true;
+        const rpay = new Razorpay(options);
+        rpay.open();
+      }
+
+    } catch (e) {
+      console.error("❌ Submission process failure:", e);
+      spinner.style.display = "none";
+      submitBtn.style.display = "block";
+      errEl.style.display = "block";
+      errEl.textContent = `❌ Error: ${e.message}`;
+    }
   });
-}
+
+  function shake(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.borderColor = "#ff7f50";
+    el.animate([
+      { transform: "translateX(0)" },
+      { transform: "translateX(-5px)" },
+      { transform: "translateX(5px)" },
+      { transform: "translateX(0)" }
+    ], { duration: 250, easing: "ease" });
+    el.focus();
+    setTimeout(() => { el.style.borderColor = ""; }, 1500);
+  }
+})();
 
 /* ═══════════════════════════════════════
-   REGISTRATION FORM - PAYMENT HANDLER (FIXED)
-═══════════════════════════════════════ */
+   LEGACY MULTI-STEP REGISTRATION FORM (form.html compatibility)
+   ═══════════════════════════════════════ */
 if (document.querySelector(".page-form")) {
-
   const formData = {
-    category: "",
-    name: "",
-    email: "",
-    phone: "",
-    schoolName: "",
-    standard: "",
-    collegeName: "",
-    department: "",
-    year: "",
-    company: "",
-    role: "",
-    describe: "",
-    timestamp: "",
+    category: "", name: "", email: "", phone: "",
+    schoolName: "", standard: "", collegeName: "", department: "",
+    year: "", company: "", role: "", describe: "", timestamp: "",
   };
 
   let currentStep = 1;
@@ -433,7 +423,7 @@ if (document.querySelector(".page-form")) {
     });
 
     const pct = ((n - 1) / (TOTAL - 1)) * 100;
-    progressFill.style.width = pct + "%";
+    if (progressFill) progressFill.style.width = pct + "%";
     currentStep = n;
   }
 
@@ -447,67 +437,78 @@ if (document.querySelector(".page-form")) {
       catCards.forEach(c => c.classList.remove("selected"));
       card.classList.add("selected");
       formData.category = card.dataset.cat;
-      next1.disabled = false;
+      if (next1) next1.disabled = false;
     });
   });
 
-  next1.addEventListener("click", () => showStep(2));
+  if (next1) next1.addEventListener("click", () => showStep(2));
 
-  document.getElementById("next-2").addEventListener("click", () => {
-    const name = val("name");
-    const email = val("email");
-    const phone = val("phone");
+  const next2 = document.getElementById("next-2");
+  if (next2) {
+    next2.addEventListener("click", () => {
+      const name = val("name");
+      const email = val("email");
+      const phone = val("phone");
 
-    if (!name) { shake("name"); return; }
-    if (!email || !email.includes("@")) { shake("email"); return; }
-    if (!phone) { shake("phone"); return; }
+      if (!name) { shakeField("name"); return; }
+      if (!email || !email.includes("@")) { shakeField("email"); return; }
+      if (!phone) { shakeField("phone"); return; }
 
-    formData.name = name;
-    formData.email = email;
-    formData.phone = phone;
+      formData.name = name;
+      formData.email = email;
+      formData.phone = phone;
 
-    document.querySelectorAll(".dynamic-fields").forEach(f => f.classList.remove("active"));
-    document.getElementById(`fields-${formData.category}`)?.classList.add("active");
+      document.querySelectorAll(".dynamic-fields").forEach(f => f.classList.remove("active"));
+      document.getElementById(`fields-${formData.category}`)?.classList.add("active");
 
-    const titles = {
-      school: "Your School Details",
-      college: "Your College Details",
-      professional: "Your Professional Details",
-      enthusiast: "About You",
-    };
-    document.getElementById("step3-title").textContent = titles[formData.category] || "Additional Info";
+      const titles = {
+        school: "Your School Details",
+        college: "Your College Details",
+        professional: "Your Professional Details",
+        enthusiast: "About You",
+      };
+      const titleEl = document.getElementById("step3-title");
+      if (titleEl) titleEl.textContent = titles[formData.category] || "Additional Info";
 
-    showStep(3);
-  });
+      showStep(3);
+    });
+  }
 
-  document.getElementById("back-2").addEventListener("click", () => showStep(1));
+  const back2 = document.getElementById("back-2");
+  if (back2) back2.addEventListener("click", () => showStep(1));
 
-  document.getElementById("next-3").addEventListener("click", () => {
-    const cat = formData.category;
+  const next3 = document.getElementById("next-3");
+  if (next3) {
+    next3.addEventListener("click", () => {
+      const cat = formData.category;
 
-    if (cat === "school") {
-      formData.schoolName = val("school-name");
-      formData.standard = val("standard");
-      if (!formData.schoolName) { shake("school-name"); return; }
-    } else if (cat === "college") {
-      formData.collegeName = val("college-name");
-      formData.department = val("department");
-      formData.year = val("year");
-      if (!formData.collegeName) { shake("college-name"); return; }
-    } else if (cat === "professional") {
-      formData.company = val("company");
-      formData.role = val("role");
-      if (!formData.company) { shake("company"); return; }
-    } else if (cat === "enthusiast") {
-      formData.describe = val("describe");
-    }
+      if (cat === "school") {
+        formData.schoolName = val("school-name");
+        formData.standard = val("standard");
+        if (!formData.schoolName) { shakeField("school-name"); return; }
+      } else if (cat === "college") {
+        formData.collegeName = val("college-name");
+        formData.department = val("department");
+        formData.year = val("year");
+        if (!formData.collegeName) { shakeField("college-name"); return; }
+      } else if (cat === "professional") {
+        formData.company = val("company");
+        formData.role = val("role");
+        if (!formData.company) { shakeField("company"); return; }
+      } else if (cat === "enthusiast") {
+        formData.describe = val("describe");
+      }
 
-    buildReview();
-    showStep(4);
-  });
+      buildReview();
+      showStep(4);
+    });
+  }
 
-  document.getElementById("back-3").addEventListener("click", () => showStep(2));
-  document.getElementById("back-4").addEventListener("click", () => showStep(3));
+  const back3 = document.getElementById("back-3");
+  if (back3) back3.addEventListener("click", () => showStep(2));
+  
+  const back4 = document.getElementById("back-4");
+  if (back4) back4.addEventListener("click", () => showStep(3));
 
   function buildReview() {
     const cat = formData.category;
@@ -537,272 +538,160 @@ if (document.querySelector(".page-form")) {
       if (formData.describe) rows.push({ k: "Description", v: formData.describe });
     }
 
-    document.getElementById("review-card").innerHTML = rows
-      .map(r => `<div class="review-row">
-        <span class="review-key">${r.k}</span>
-        <span class="review-val">${r.v || "—"}</span>
-      </div>`).join("");
+    const reviewEl = document.getElementById("review-card");
+    if (reviewEl) {
+      reviewEl.innerHTML = rows
+        .map(r => `<div class="review-row">
+          <span class="review-key">${r.k}</span>
+          <span class="review-val">${r.v || "—"}</span>
+        </div>`).join("");
+    }
   }
 
-  // ── Submit Button Handler ──
-  document.getElementById("submit-btn").addEventListener("click", async () => {
-
-    // Privacy checkbox validation
-    const privacyCheck = document.getElementById("privacy-agree");
-    if (!privacyCheck || !privacyCheck.checked) {
-      const consentBox = privacyCheck?.closest(".privacy-consent");
-      if (consentBox) {
-        consentBox.style.outline = "1px solid #e87878";
-        consentBox.style.borderColor = "#e87878";
-        consentBox.scrollIntoView({ behavior: "smooth", block: "center" });
-        setTimeout(() => {
-          consentBox.style.outline = "";
-          consentBox.style.borderColor = "";
-        }, 2000);
-      }
-      return;
-    }
-
-    formData.timestamp = new Date().toISOString();
-
-    const spinner = document.getElementById("submit-spinner");
-    const errEl = document.getElementById("submit-error");
-    const submitBtn = document.getElementById("submit-btn");
-
-    submitBtn.style.display = "none";
-    spinner.style.display = "block";
-    errEl.style.display = "none";
-
-    // Demo mode
-    if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_SCRIPT_URL") {
-      await fakeDelay(1200);
-      window.location.href = "success.html";
-      return;
-    }
-
-    try {
-      const allowedCategories = ["school", "college", "professional", "enthusiast"];
-      if (!allowedCategories.includes(formData.category)) {
-        throw new Error("Invalid category: " + formData.category);
+  const submitBtnLegacy = document.getElementById("submit-btn");
+  if (submitBtnLegacy) {
+    submitBtnLegacy.addEventListener("click", async () => {
+      const privacyCheck = document.getElementById("privacy-agree");
+      if (!privacyCheck || !privacyCheck.checked) {
+        const consentBox = privacyCheck?.closest(".privacy-consent");
+        if (consentBox) {
+          consentBox.style.borderColor = "#ff7f50";
+          setTimeout(() => { consentBox.style.borderColor = ""; }, 2000);
+        }
+        return;
       }
 
-      const submission = {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        category: formData.category,
-        school: formData.category === "school" ? formData.schoolName : "",
-        standard: formData.category === "school" ? formData.standard : "",
-        college: formData.category === "college" ? formData.collegeName : "",
-        dept: formData.category === "college" ? formData.department : "",
-        year: formData.category === "college" ? formData.year : "",
-        company: formData.category === "professional" ? formData.company : "",
-        role: formData.category === "professional" ? formData.role : "",
-        description: formData.category === "enthusiast" ? formData.describe : "",
-        timestamp: formData.timestamp,
-      };
+      formData.timestamp = new Date().toISOString();
 
-      console.log("📤 Starting payment process...", submission);
+      const spinner = document.getElementById("submit-spinner");
+      const errEl = document.getElementById("submit-error");
 
-      // ═════════════════════════════════════════
-      // STEP 1: CREATE RAZORPAY ORDER
-      // ═════════════════════════════════════════
-      console.log("📦 Creating Razorpay order...");
-      
-      let orderRes;
+      submitBtnLegacy.style.display = "none";
+      if (spinner) spinner.style.display = "block";
+      if (errEl) errEl.style.display = "none";
+
+      if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_SCRIPT_URL") {
+        await new Promise(res => setTimeout(res, 1200));
+        window.location.href = "success.html";
+        return;
+      }
+
       try {
-        orderRes = await fetch(`${BACKEND_URL}/api/payment/create-order`, {
+        const submission = {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          category: formData.category,
+          school: formData.category === "school" ? formData.schoolName : "",
+          standard: formData.category === "school" ? formData.standard : "",
+          college: formData.category === "college" ? formData.collegeName : "",
+          dept: formData.category === "college" ? formData.department : "",
+          year: formData.category === "college" ? formData.year : "",
+          company: formData.category === "professional" ? formData.company : "",
+          role: formData.category === "professional" ? formData.role : "",
+          description: formData.category === "enthusiast" ? formData.describe : "",
+          timestamp: formData.timestamp,
+        };
+
+        const orderRes = await fetch(`${BACKEND_URL}/api/payment/create-order`, {
           method: "POST",
           headers: { "Content-Type": "application/json" }
         });
-      } catch (fetchErr) {
-        // ✅ FIX: Network error handling
-        throw new Error(`Network error: ${fetchErr.message}. Check your internet connection.`);
-      }
 
-      // ✅ FIX: Check HTTP status BEFORE parsing JSON
-      if (!orderRes.ok) {
-        const errText = await orderRes.text();
-        throw new Error(`Server error ${orderRes.status}: ${errText || "Order creation failed"}`);
-      }
+        if (!orderRes.ok) throw new Error(`Order API status ${orderRes.status}`);
+        const orderData = await orderRes.json();
+        if (!orderData.success) throw new Error(orderData.message);
 
-      const orderData = await orderRes.json();
-
-      if (!orderData.success || !orderData.order) {
-        throw new Error(`Order failed: ${orderData.message || "Unknown error"}`);
-      }
-
-      console.log(`✅ Order created: ${orderData.order.id}, Amount: ₹${orderData.order.amount / 100}`);
-
-      // ═════════════════════════════════════════
-      // STEP 2: OPEN RAZORPAY POPUP
-      // ═════════════════════════════════════════
-      console.log("💳 Opening Razorpay checkout...");
-
-      // ✅ FIX: Prevent duplicate Razorpay instances
-      let razorpayOpened = false;
-
-      const options = {
-        key: orderData.key,
-        amount: orderData.order.amount,
-        currency: orderData.order.currency,
-        name: "IARRD Astronomy Workshop",
-        description: "Workshop Registration — விண்வெளில் ஒரு பயணம் 2.0",
-        order_id: orderData.order.id,
-        theme: { color: "#d4a853" },
-        prefill: {
-          email: formData.email,
-          contact: formData.phone,
-          name: formData.name
-        },
-
-        // ═════════════════════════════════════════
-        // PAYMENT SUCCESS HANDLER
-        // ═════════════════════════════════════════
-        handler: async function (response) {
-          console.log("✅ Payment completed by Razorpay");
-          console.log(`   Payment ID: ${response.razorpay_payment_id}`);
-          console.log(`   Order ID: ${response.razorpay_order_id}`);
-          
-          try {
-            // ─────────────────────────────────────
-            // STEP 3: VERIFY PAYMENT SIGNATURE
-            // ─────────────────────────────────────
-            console.log("🔐 Verifying payment signature...");
-            
-            let verifyRes;
+        let opened = false;
+        const options = {
+          key: orderData.key,
+          amount: orderData.order.amount,
+          currency: orderData.order.currency,
+          name: "IARRD Marine Academy",
+          description: "Masterclass Registration — ஆழ்கடலில் ஒரு பயணம்",
+          order_id: orderData.order.id,
+          theme: { color: "#00f5ff" },
+          prefill: { email: formData.email, contact: formData.phone, name: formData.name },
+          handler: async function (response) {
             try {
-              verifyRes = await fetch(`${BACKEND_URL}/api/payment/verify-payment`, {
+              const verifyRes = await fetch(`${BACKEND_URL}/api/payment/verify-payment`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(response)
               });
-            } catch (fetchErr) {
-              // ✅ FIX: Network error in verification
-              throw new Error(`Verification network error: ${fetchErr.message}`);
+
+              if (!verifyRes.ok) throw new Error("Verification network error");
+              const verifyData = await verifyRes.json();
+              if (!verifyData.success) throw new Error(verifyData.message);
+
+              try {
+                await fetch(GOOGLE_SCRIPT_URL, {
+                  method: "POST",
+                  mode: "no-cors",
+                  headers: { "Content-Type": "text/plain" },
+                  body: JSON.stringify({
+                    ...submission,
+                    paymentStatus: "PAID",
+                    razorpayPaymentId: response.razorpay_payment_id,
+                    razorpayOrderId: response.razorpay_order_id
+                  })
+                });
+              } catch (e) {}
+
+              await new Promise(r => setTimeout(r, 1200));
+              window.location.href = "success.html";
+            } catch (err) {
+              if (spinner) spinner.style.display = "none";
+              submitBtnLegacy.style.display = "block";
+              if (errEl) {
+                errEl.style.display = "block";
+                errEl.textContent = `Error: ${err.message}`;
+              }
             }
-
-            // ✅ FIX: Check HTTP status before parsing
-            if (!verifyRes.ok) {
-              const errText = await verifyRes.text();
-              throw new Error(`Verification server error ${verifyRes.status}: ${errText}`);
-            }
-
-            const verifyData = await verifyRes.json();
-
-            if (!verifyData.success) {
-              throw new Error(`Signature verification failed: ${verifyData.message}`);
-            }
-
-            console.log("✅ Payment signature verified!");
-
-            // ─────────────────────────────────────
-            // STEP 4: SAVE TO GOOGLE SHEETS
-            // ─────────────────────────────────────
-            console.log("📊 Saving to Google Sheets...");
-            
-            try {
-              await fetch(GOOGLE_SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors",  // ← Required for Google Apps Script
-                headers: { "Content-Type": "text/plain" },  // ← Must be text/plain with no-cors
-                body: JSON.stringify({
-                  ...submission,
-                  paymentStatus: "PAID",
-                  razorpayPaymentId: response.razorpay_payment_id,
-                  razorpayOrderId: response.razorpay_order_id
-                })
-              });
-              console.log("✅ Google Sheets request sent (no-cors mode)");
-            } catch (sheetsErr) {
-              // ✅ FIX: no-cors always "fails" at client - that's OK
-              console.warn("⚠️  Google Sheets response unreadable (expected with no-cors):", sheetsErr.message);
-            }
-
-            // ─────────────────────────────────────
-            // STEP 5: REDIRECT TO SUCCESS
-            // ─────────────────────────────────────
-            console.log("⏳ Waiting for Google Sheets to process...");
-            await new Promise(res => setTimeout(res, 1500));
-
-            console.log("🚀 Redirecting to success page...");
-            window.location.href = "success.html";
-
-          } catch (err) {
-            // ✅ FIX: Show error to user
-            console.error("❌ Payment handler error:", err);
-            spinner.style.display = "none";
-            submitBtn.style.display = "inline-flex";
-            errEl.style.display = "block";
-            errEl.textContent = `❌ Error: ${err.message}`;
-            errEl.style.color = "#e87878";
-          }
-        },
-
-        // ═════════════════════════════════════════
-        // PAYMENT FAILURE/DISMISS HANDLER
-        // ═════════════════════════════════════════
-        modal: {
-          ondismiss: function () {
-            console.log("⚠️  User dismissed payment popup");
-            
-            // ✅ FIX: Only reset if payment didn't complete
-            if (spinner.style.display === "block") {
-              spinner.style.display = "none";
-              submitBtn.style.display = "inline-flex";
-              errEl.style.display = "block";
-              errEl.textContent = "Payment cancelled. Please try again.";
+          },
+          modal: {
+            ondismiss: function () {
+              if (spinner) spinner.style.display = "none";
+              submitBtnLegacy.style.display = "block";
             }
           }
+        };
+
+        if (!opened) {
+          opened = true;
+          const rpay = new Razorpay(options);
+          rpay.open();
         }
-      };
-
-      // ✅ FIX: Single Razorpay instance (prevent duplicates)
-      if (!razorpayOpened) {
-        razorpayOpened = true;
-        console.log("🎯 Creating Razorpay instance...");
-        const razorpay = new Razorpay(options);
-        razorpay.open();
+      } catch (err) {
+        if (spinner) spinner.style.display = "none";
+        submitBtnLegacy.style.display = "block";
+        if (errEl) {
+          errEl.style.display = "block";
+          errEl.textContent = `Error: ${err.message}`;
+        }
       }
-
-    } catch (e) {
-      // ✅ FIX: Outer try-catch for all errors
-      console.error("❌ Payment submission error:", e);
-      spinner.style.display = "none";
-      submitBtn.style.display = "inline-flex";
-      errEl.style.display = "block";
-      errEl.textContent = `❌ Error: ${e.message}`;
-      errEl.style.color = "#e87878";
-    }
-  });
-
-  // Helper functions (unchanged)
-  function shake(id) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    el.style.borderColor = "#e87878";
-    el.animate([
-      { transform: "translateX(0)" },
-      { transform: "translateX(-5px)" },
-      { transform: "translateX(5px)" },
-      { transform: "translateX(-4px)" },
-      { transform: "translateX(4px)" },
-      { transform: "translateX(0)" },
-    ], { duration: 320, easing: "ease" });
-    el.focus();
-    setTimeout(() => { el.style.borderColor = ""; }, 1500);
+    });
   }
 
-  function fakeDelay(ms) {
-    return new Promise(res => setTimeout(res, ms));
+  function shakeField(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.borderColor = "#ff7f50";
+    el.animate([
+      { transform: "translateX(0)" },
+      { transform: "translateX(-4px)" },
+      { transform: "translateX(4px)" },
+      { transform: "translateX(0)" }
+    ], { duration: 250 });
+    el.focus();
+    setTimeout(() => { el.style.borderColor = ""; }, 1500);
   }
 }
 
 /* ═══════════════════════════════════════
-   ADMIN PANEL
-═══════════════════════════════════════ */
+   ADMIN SCRIPT DASHBOARD
+   ═══════════════════════════════════════ */
 if (document.querySelector(".page-admin")) {
-
   const loginEl = document.getElementById("admin-login");
   const dashEl = document.getElementById("admin-dashboard");
   const loginBtn = document.getElementById("admin-login-btn");
@@ -825,33 +714,18 @@ if (document.querySelector(".page-admin")) {
       passInput.focus();
     }
   }
-  loginBtn.addEventListener("click", attemptLogin);
-  passInput.addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
-  logoutBtn.addEventListener("click", () => {
-    loginEl.style.display = "flex";
-    dashEl.style.display = "none";
-    passInput.value = "";
-  });
 
-  function getField(r, ...keys) {
-    const lowerMap = {};
-    for (const k of Object.keys(r)) {
-      lowerMap[k.toLowerCase().trim()] = r[k];
-    }
-    for (const key of keys) {
-      const v = lowerMap[key.toLowerCase().trim()];
-      if (v !== undefined && v !== null && String(v).trim() !== "") return String(v).trim();
-    }
-    return "";
+  if (loginBtn) loginBtn.addEventListener("click", attemptLogin);
+  if (passInput) passInput.addEventListener("keydown", e => { if (e.key === "Enter") attemptLogin(); });
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      loginEl.style.display = "flex";
+      dashEl.style.display = "none";
+      passInput.value = "";
+    });
   }
 
   function normalizeRow(r) {
-    if (!normalizeRow._logged) {
-      console.log("📋 Raw keys:", Object.keys(r));
-      console.log("📋 First row:", r);
-      normalizeRow._logged = true;
-    }
-
     const m = {};
     for (const k of Object.keys(r)) {
       m[k.toLowerCase().trim()] = String(r[k] || "").trim();
@@ -860,7 +734,6 @@ if (document.querySelector(".page-admin")) {
     const name = m["name"] || "";
     const email = m["email"] || "";
     const phone = m["phone"] || "";
-
     let rawCat = (m["category"] || "").toLowerCase();
     let cat = "";
     if (rawCat === "school") cat = "school";
@@ -892,13 +765,11 @@ if (document.querySelector(".page-admin")) {
     const fetchErr = document.getElementById("admin-fetch-error");
     const debugBox = document.getElementById("admin-debug");
 
-    loading.style.display = "block";
-    table.style.display = "none";
-    emptyEl.style.display = "none";
-    fetchErr.style.display = "none";
+    if (loading) loading.style.display = "block";
+    if (table) table.style.display = "none";
+    if (emptyEl) emptyEl.style.display = "none";
+    if (fetchErr) fetchErr.style.display = "none";
     if (debugBox) debugBox.style.display = "none";
-
-    normalizeRow._logged = false;
 
     try {
       const res = await fetch(`${GOOGLE_SCRIPT_URL}?token=admin123`);
@@ -908,19 +779,15 @@ if (document.querySelector(".page-admin")) {
       if (raw.length > 0 && debugBox) {
         const keys = Object.keys(raw[0]);
         debugBox.style.display = "block";
-        debugBox.innerHTML = `<strong>📋 Sheet column names detected:</strong> <code>${keys.join(", ")}</code><br>
-          <small>If category shows "—", one of these must be your category column. <a href="#" id="hide-debug" style="color:var(--accent)">Hide</a></small>`;
-        document.getElementById("hide-debug")?.addEventListener("click", e => {
-          e.preventDefault(); debugBox.style.display = "none";
-        });
+        debugBox.innerHTML = `<strong>📋 Sheet Columns:</strong> <code>${keys.join(", ")}</code>`;
       }
 
       allData = raw.map(normalizeRow);
       renderTable(allData);
     } catch (e) {
-      loading.style.display = "none";
-      fetchErr.style.display = "block";
-      console.error("Admin fetch error:", e);
+      if (loading) loading.style.display = "none";
+      if (fetchErr) fetchErr.style.display = "block";
+      console.error("Dashboard Sync Error:", e);
     }
   }
 
@@ -930,55 +797,51 @@ if (document.querySelector(".page-admin")) {
     const emptyEl = document.getElementById("admin-empty");
     const tbody = document.getElementById("admin-tbody");
 
-    loading.style.display = "none";
+    if (loading) loading.style.display = "none";
 
     if (!data.length) {
-      emptyEl.style.display = "block";
-      table.style.display = "none";
+      if (emptyEl) emptyEl.style.display = "block";
+      if (table) table.style.display = "none";
       updateStats([]);
       return;
     }
 
-    table.style.display = "table";
-    emptyEl.style.display = "none";
+    if (table) table.style.display = "table";
+    if (emptyEl) emptyEl.style.display = "none";
 
     const catLabels = {
-      school: "School Student",
-      college: "College Student",
-      professional: "Working Professional",
-      enthusiast: "Enthusiast",
+      school: "School Student", college: "College Student",
+      professional: "Working Professional", enthusiast: "Enthusiast",
     };
     const badgeClass = {
-      school: "badge-school",
-      college: "badge-college",
-      professional: "badge-professional",
-      enthusiast: "badge-enthusiast",
+      school: "badge-school", college: "badge-college",
+      professional: "badge-professional", enthusiast: "badge-enthusiast",
     };
 
-    tbody.innerHTML = data.map((row, i) => {
-      const cat = row.category;
-      const det = buildDetailStr(row);
-      const time = row.timestamp
-        ? new Date(row.timestamp).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })
-        : "—";
+    if (tbody) {
+      tbody.innerHTML = data.map((row, i) => {
+        const cat = row.category;
+        const det = buildDetailStr(row);
+        const time = row.timestamp
+          ? new Date(row.timestamp).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })
+          : "—";
 
-      const knownCats = ["school", "college", "professional", "enthusiast"];
-      const catDisplay = knownCats.includes(cat)
-        ? `<span class="cat-badge ${badgeClass[cat]}">${catLabels[cat]}</span>`
-        : `<span class="cat-badge" style="border-color:rgba(255,120,60,.4);color:#ff8844;background:rgba(255,120,60,.08)">
-            ⚠ ${esc(cat || Object.keys(row._raw || {}).join(", ").slice(0, 30))}
-           </span>`;
+        const knownCats = ["school", "college", "professional", "enthusiast"];
+        const catDisplay = knownCats.includes(cat)
+          ? `<span class="cat-badge ${badgeClass[cat]}">${catLabels[cat]}</span>`
+          : `<span class="cat-badge" style="border-color:rgba(255,120,60,.4);color:#ff8844;background:rgba(255,120,60,.08)">⚠ ${esc(cat || "Other")}</span>`;
 
-      return `<tr>
-        <td style="color:var(--text-dim)">${i + 1}</td>
-        <td><strong>${esc(row.name || "—")}</strong></td>
-        <td style="color:var(--text-muted)">${esc(row.email || "—")}</td>
-        <td style="color:var(--text-muted)">${esc(row.phone || "—")}</td>
-        <td>${catDisplay}</td>
-        <td style="color:var(--text-muted);font-size:.8rem">${det}</td>
-        <td style="color:var(--text-dim);font-size:.78rem;white-space:nowrap">${time}</td>
-      </tr>`;
-    }).join("");
+        return `<tr>
+          <td style="color:var(--text-dim)">${i + 1}</td>
+          <td><strong>${esc(row.name || "—")}</strong></td>
+          <td style="color:var(--text-muted)">${esc(row.email || "—")}</td>
+          <td style="color:var(--text-muted)">${esc(row.phone || "—")}</td>
+          <td>${catDisplay}</td>
+          <td style="color:var(--text-muted);font-size:.8rem">${det}</td>
+          <td style="color:var(--text-dim);font-size:.78rem;white-space:nowrap">${time}</td>
+        </tr>`;
+      }).join("");
+    }
 
     updateStats(data);
   }
@@ -986,48 +849,50 @@ if (document.querySelector(".page-admin")) {
   function buildDetailStr(row) {
     const cat = row.category;
     if (cat === "school") {
-      const parts = [row.schoolName, row.standard].filter(Boolean);
-      return parts.length ? parts.map(esc).join(" · ") : "—";
+      return [row.schoolName, row.standard].filter(Boolean).map(esc).join(" · ") || "—";
     }
     if (cat === "college") {
-      const parts = [row.collegeName, row.department, row.year].filter(Boolean);
-      return parts.length ? parts.map(esc).join(" · ") : "—";
+      return [row.collegeName, row.department, row.year].filter(Boolean).map(esc).join(" · ") || "—";
     }
     if (cat === "professional") {
-      const parts = [row.company, row.role].filter(Boolean);
-      return parts.length ? parts.map(esc).join(" · ") : "—";
+      return [row.company, row.role].filter(Boolean).map(esc).join(" · ") || "—";
     }
     if (cat === "enthusiast") {
-      const d = row.describe || "";
-      return d ? esc(d.slice(0, 80) + (d.length > 80 ? "…" : "")) : "—";
+      return esc(row.describe ? row.describe.slice(0, 80) + "..." : "—");
     }
     return "—";
   }
 
   function updateStats(data) {
-    document.getElementById("stat-total").textContent = data.length;
-    document.getElementById("stat-school").textContent = data.filter(r => r.category === "school").length;
-    document.getElementById("stat-college").textContent = data.filter(r => r.category === "college").length;
-    document.getElementById("stat-pro").textContent = data.filter(r => r.category === "professional").length;
-    document.getElementById("stat-enth").textContent = data.filter(r => r.category === "enthusiast").length;
+    const setStat = (id, val) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    };
+    setStat("stat-total", data.length);
+    setStat("stat-school", data.filter(r => r.category === "school").length);
+    setStat("stat-college", data.filter(r => r.category === "college").length);
+    setStat("stat-pro", data.filter(r => r.category === "professional").length);
+    setStat("stat-enth", data.filter(r => r.category === "enthusiast").length);
   }
 
   function esc(str) {
     return String(str || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  catFilter.addEventListener("change", () => {
-    const f = catFilter.value;
-    const filtered = f === "all" ? allData : allData.filter(r => r.category === f);
-    renderTable(filtered);
-  });
+  if (catFilter) {
+    catFilter.addEventListener("change", () => {
+      const f = catFilter.value;
+      const filtered = f === "all" ? allData : allData.filter(r => r.category === f);
+      renderTable(filtered);
+    });
+  }
 
-  refreshBtn.addEventListener("click", () => {
-    catFilter.value = "all";
-    loadData();
-  });
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      if (catFilter) catFilter.value = "all";
+      loadData();
+    });
+  }
 }

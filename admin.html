@@ -4,13 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — விண்வெளில் ஒரு பயணம்</title>
+  <title>Admin Dashboard — ஆழ்கடலில் ஒரு பயணம்</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Rajdhani:wght@400;500;600;700&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 
 <body class="page-admin">
@@ -21,7 +19,7 @@
   <div class="admin-login" id="admin-login">
     <div class="admin-card">
       <p class="form-event-label">IARRD · ADMIN PANEL</p>
-      <h2 class="form-title-tamil" style="font-size:1.4rem;margin-bottom:1.5rem;">Registrations Dashboard</h2>
+      <h2 class="form-title-tamil" style="font-size: 1.4rem; margin-bottom: 1.5rem;">Registrations Dashboard</h2>
       <div class="field-group">
         <label for="admin-pass">Admin Password</label>
         <input type="password" id="admin-pass" placeholder="Enter password" />
@@ -38,10 +36,10 @@
 
     <div class="admin-topbar">
       <a href="index.html" class="logo-area" style="padding:0">
-        <img src="logo/logo.jpeg" alt="IARRD Logo" class="logo-img" />
+        <img src="logo/logo3.png" alt="IARRD Logo" class="logo-img" />
       </a>
-      <div style="display:flex;gap:1rem;align-items:center">
-        <span class="event-label" style="font-size:.7rem">விண்வெளில் ஒரு பயணம்</span>
+      <div style="display:flex;gap:1.5rem;align-items:center">
+        <span class="event-label" style="font-size:.7rem; margin-bottom: 0;">ஆழ்கடலில் ஒரு பயணம்</span>
         <button class="btn-back" id="admin-logout">Logout</button>
       </div>
     </div>
@@ -49,16 +47,11 @@
     <div class="admin-content">
       <div class="admin-toolbar">
         <div class="admin-stats" id="admin-stats">
-          <div class="stat-box"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span>
-          </div>
-          <div class="stat-box"><span class="stat-num" id="stat-school">—</span><span class="stat-label">School</span>
-          </div>
-          <div class="stat-box"><span class="stat-num" id="stat-college">—</span><span class="stat-label">College</span>
-          </div>
-          <div class="stat-box"><span class="stat-num" id="stat-pro">—</span><span
-              class="stat-label">Professional</span></div>
-          <div class="stat-box"><span class="stat-num" id="stat-enth">—</span><span class="stat-label">Enthusiast</span>
-          </div>
+          <div class="stat-box"><span class="stat-num" id="stat-total">—</span><span class="stat-label">Total</span></div>
+          <div class="stat-box"><span class="stat-num" id="stat-school">—</span><span class="stat-label">School</span></div>
+          <div class="stat-box"><span class="stat-num" id="stat-college">—</span><span class="stat-label">College</span></div>
+          <div class="stat-box"><span class="stat-num" id="stat-pro">—</span><span class="stat-label">Professional</span></div>
+          <div class="stat-box"><span class="stat-num" id="stat-enth">—</span><span class="stat-label">Enthusiast</span></div>
         </div>
         <div class="admin-filter-wrap">
           <label for="cat-filter">Filter by:</label>
@@ -69,13 +62,13 @@
             <option value="professional">Working Professional</option>
             <option value="enthusiast">Enthusiast</option>
           </select>
-          <button class="btn-next" id="refresh-btn" style="padding:.5rem 1.2rem">↻ Refresh</button>
+          <button class="btn-next" id="refresh-btn" style="padding:.5rem 1.2rem; margin-left: 0.5rem;">↻ Refresh</button>
         </div>
       </div>
 
       <!-- Debug box: shows raw column names from Sheet when data loads -->
       <div id="admin-debug" style="display:none; margin-bottom:1rem; padding:.9rem 1.2rem;
-        background:rgba(212,168,83,.08); border:1px solid rgba(212,168,83,.25);
+        background:rgba(0,245,255,.05); border:1px solid rgba(0,245,255,.15);
         border-radius:10px; font-size:.78rem; color:var(--text-muted); line-height:1.8;">
       </div>
 
@@ -103,7 +96,7 @@
         </div>
         <div id="admin-fetch-error" class="submit-error"
           style="display:none;margin:2rem auto;max-width:400px;text-align:center">
-          ⚠️ Failed to fetch data. Check your Google Script URL in script.js.
+          ⚠️ Failed to sync registrations. Verify backend script configurations.
         </div>
       </div>
     </div>
