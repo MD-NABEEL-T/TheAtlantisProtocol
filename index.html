@@ -127,7 +127,12 @@ body {
   z-index: 2;
   pointer-events: none;
 }
-
+#vehicle-canvas {
+  position: absolute;
+  inset: 0; width: 100%; height: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
 /* ── Atmospheric overlays ── */
 .hero-vignette {
   position: absolute;
@@ -785,6 +790,8 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
   <canvas id="ocean-bg-canvas"></canvas>
   <canvas id="godrays-canvas"></canvas>
   <canvas id="marine-canvas"></canvas>
+
+  <canvas id="vehicle-canvas"></canvas>
 
   <div class="hero-vignette"></div>
   <div class="hero-bottom-fade"></div>
@@ -1662,6 +1669,419 @@ document.getElementById('submit-reg-btn').addEventListener('click', function() {
   });
   rzp.open();
 });
+
+
+
+/* ════════════════════════════════════════════════════
+   AUV / SUBMARINE VEHICLE — passes through hero L→R
+   Bioluminescent deep-sea autonomous underwater vehicle
+════════════════════════════════════════════════════ */
+(function initVehicleCanvas() {
+  var c = document.getElementById('vehicle-canvas');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+
+  function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  /* ── Vehicle state ── */
+  var vehicles = [];
+
+  function spawnVehicle() {
+    var type = Math.random() > 0.45 ? 'auv' : 'sub';
+    var scale = type === 'sub' ? (0.55 + Math.random() * 0.35) : (0.4 + Math.random() * 0.3);
+    var speed = (0.0004 + Math.random() * 0.0003) * (Math.random() > 0.5 ? 1 : -1);
+    var startX = speed > 0 ? -0.15 : 1.15;
+    vehicles.push({
+      x: startX,
+      y: 0.18 + Math.random() * 0.52,
+      scale: scale,
+      speed: speed,
+      alpha: 0,
+      fadeIn: true,
+      type: type,
+      wobble: Math.random() * Math.PI * 2,
+      wobbleAmp: 0.003 + Math.random() * 0.005,
+      wobbleSpeed: 0.008 + Math.random() * 0.012,
+      thrusterPhase: Math.random() * Math.PI * 2,
+      lights: [
+        { ox: 0.38, oy: -0.08, hue: 175, phase: Math.random() * Math.PI * 2 },
+        { ox: -0.32, oy: 0.04, hue: 260, phase: Math.random() * Math.PI * 2 },
+        { ox: 0.1, oy: 0.12, hue: 175, phase: Math.random() * Math.PI * 2 }
+      ]
+    });
+  }
+
+  /* Spawn first vehicle after 3 seconds, then every 22–38 seconds */
+  setTimeout(spawnVehicle, 3000);
+  function scheduleNext() {
+    var delay = 22000 + Math.random() * 16000;
+    setTimeout(function() { spawnVehicle(); scheduleNext(); }, delay);
+  }
+  scheduleNext();
+
+  /* ── Draw AUV (torpedo-style with sensor array) ── */
+  function drawAUV(ctx, x, y, sc, dir, alpha, t, wobblePhase, thrPhase) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(x, y);
+    ctx.scale(dir, 1); /* flip for direction */
+
+    var L = 110 * sc; /* body length */
+    var R = 14 * sc;  /* body radius */
+
+    /* ── Propeller wash (rear glow trail) ── */
+    var trailGrad = ctx.createLinearGradient(-L * 0.5 - 60 * sc, 0, -L * 0.5, 0);
+    trailGrad.addColorStop(0, 'rgba(0,232,255,0)');
+    trailGrad.addColorStop(0.4, 'rgba(0,232,255,0.06)');
+    trailGrad.addColorStop(1, 'rgba(0,255,204,0.12)');
+    ctx.fillStyle = trailGrad;
+    ctx.beginPath();
+    ctx.ellipse(-L * 0.5 - 30 * sc, 0, 60 * sc, R * 1.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* ── Main body hull ── */
+    var hullGrad = ctx.createLinearGradient(0, -R, 0, R);
+    hullGrad.addColorStop(0, 'rgba(12,45,72,0.92)');
+    hullGrad.addColorStop(0.35, 'rgba(8,30,55,0.96)');
+    hullGrad.addColorStop(0.7, 'rgba(4,18,36,0.98)');
+    hullGrad.addColorStop(1, 'rgba(2,10,22,0.95)');
+
+    ctx.beginPath();
+    /* Nose cone */
+    ctx.moveTo(L * 0.5, 0);
+    ctx.bezierCurveTo(L * 0.5, -R * 0.3, L * 0.35, -R, 0, -R);
+    ctx.lineTo(-L * 0.42, -R);
+    /* Tail taper */
+    ctx.bezierCurveTo(-L * 0.48, -R, -L * 0.5, -R * 0.35, -L * 0.5, 0);
+    ctx.bezierCurveTo(-L * 0.5, R * 0.35, -L * 0.48, R, -L * 0.42, R);
+    ctx.lineTo(0, R);
+    ctx.bezierCurveTo(L * 0.35, R, L * 0.5, R * 0.3, L * 0.5, 0);
+    ctx.closePath();
+    ctx.fillStyle = hullGrad;
+    ctx.fill();
+
+    /* Hull edge glow */
+    ctx.strokeStyle = 'rgba(0,180,220,0.35)';
+    ctx.lineWidth = 1 * sc;
+    ctx.stroke();
+
+    /* ── Hull highlight (specular) ── */
+    var specGrad = ctx.createLinearGradient(0, -R, 0, -R * 0.2);
+    specGrad.addColorStop(0, 'rgba(100,200,240,0.18)');
+    specGrad.addColorStop(1, 'rgba(100,200,240,0)');
+    ctx.beginPath();
+    ctx.ellipse(0, -R * 0.62, L * 0.35, R * 0.28, 0, 0, Math.PI * 2);
+    ctx.fillStyle = specGrad;
+    ctx.fill();
+
+    /* ── Dorsal fin ── */
+    ctx.beginPath();
+    ctx.moveTo(L * 0.05, -R);
+    ctx.lineTo(L * 0.1, -R * 2.2);
+    ctx.lineTo(-L * 0.15, -R * 2.0);
+    ctx.lineTo(-L * 0.2, -R);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(8,30,55,0.95)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,180,220,0.25)';
+    ctx.lineWidth = 0.5 * sc;
+    ctx.stroke();
+
+    /* ── Pectoral fins (horizontal) ── */
+    ctx.beginPath();
+    ctx.moveTo(L * 0.02, R * 0.6);
+    ctx.lineTo(L * 0.06, R * 2.0);
+    ctx.lineTo(-L * 0.12, R * 1.85);
+    ctx.lineTo(-L * 0.15, R * 0.6);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(6,24,45,0.9)';
+    ctx.fill();
+    ctx.stroke();
+
+    /* ── Sensor dome (nose) ── */
+    var domeGrad = ctx.createRadialGradient(L * 0.44, -R * 0.1, 0, L * 0.44, 0, R * 0.8);
+    domeGrad.addColorStop(0, 'rgba(0,232,255,0.25)');
+    domeGrad.addColorStop(0.5, 'rgba(0,180,220,0.12)');
+    domeGrad.addColorStop(1, 'rgba(0,100,160,0.05)');
+    ctx.beginPath();
+    ctx.arc(L * 0.44, 0, R * 0.75, 0, Math.PI * 2);
+    ctx.fillStyle = domeGrad;
+    ctx.fill();
+
+    /* ── SONAR emitter ring (nose) ── */
+    ctx.beginPath();
+    ctx.arc(L * 0.44, 0, R * 0.75, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,232,255,0.5)';
+    ctx.lineWidth = 1 * sc;
+    ctx.stroke();
+
+    /* ── Panel lines (hull detail) ── */
+    ctx.strokeStyle = 'rgba(0,140,180,0.2)';
+    ctx.lineWidth = 0.7 * sc;
+    for (var pi = 0; pi < 4; pi++) {
+      var px = -L * 0.1 + (pi - 1.5) * L * 0.1;
+      ctx.beginPath();
+      ctx.moveTo(px, -R * 0.85);
+      ctx.lineTo(px, R * 0.85);
+      ctx.stroke();
+    }
+
+    /* ── Thruster ring (rear) ── */
+    var thrPulse = 0.7 + 0.3 * Math.sin(t * 0.08 + thrPhase);
+    ctx.beginPath();
+    ctx.arc(-L * 0.46, 0, R * 0.55, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(0,232,255,' + (0.4 * thrPulse) + ')';
+    ctx.lineWidth = 2 * sc;
+    ctx.stroke();
+    /* Thruster inner glow */
+    var thrGrad = ctx.createRadialGradient(-L * 0.46, 0, 0, -L * 0.46, 0, R * 0.55);
+    thrGrad.addColorStop(0, 'rgba(0,255,200,' + (0.3 * thrPulse) + ')');
+    thrGrad.addColorStop(1, 'rgba(0,180,255,0)');
+    ctx.fillStyle = thrGrad;
+    ctx.beginPath();
+    ctx.arc(-L * 0.46, 0, R * 0.55, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* ── Bioluminescent navigation lights ── */
+    var lightPositions = [
+      { ox: L * 0.38, oy: -R * 0.5, hue: 175, r: 3 * sc },
+      { ox: L * 0.38, oy: R * 0.5, hue: 160, r: 3 * sc },
+      { ox: -L * 0.3, oy: -R * 0.4, hue: 260, r: 2.5 * sc },
+      { ox: 0, oy: R * 0.9, hue: 175, r: 2 * sc }
+    ];
+    lightPositions.forEach(function(lp, li) {
+      var lpulse = 0.5 + 0.5 * Math.sin(t * 0.04 + li * 1.2 + thrPhase);
+      /* Glow halo */
+      var lgGrad = ctx.createRadialGradient(lp.ox, lp.oy, 0, lp.ox, lp.oy, lp.r * 4);
+      lgGrad.addColorStop(0, 'hsla(' + lp.hue + ',100%,65%,' + (0.5 * lpulse) + ')');
+      lgGrad.addColorStop(1, 'hsla(' + lp.hue + ',80%,55%,0)');
+      ctx.fillStyle = lgGrad;
+      ctx.beginPath();
+      ctx.arc(lp.ox, lp.oy, lp.r * 4, 0, Math.PI * 2);
+      ctx.fill();
+      /* Core dot */
+      ctx.fillStyle = 'hsla(' + lp.hue + ',100%,80%,' + (0.8 + 0.2 * lpulse) + ')';
+      ctx.beginPath();
+      ctx.arc(lp.ox, lp.oy, lp.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    /* ── SONAR ping (nose) ── */
+    var sonarPhase = (t * 0.012 + thrPhase) % (Math.PI * 2);
+    if (sonarPhase < Math.PI) {
+      var sonarR = sonarPhase / Math.PI;
+      ctx.beginPath();
+      ctx.arc(L * 0.44, 0, R * 0.75 + sonarR * R * 3, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(0,232,255,' + ((1 - sonarR) * 0.25) + ')';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  /* ── Draw Submarine (classic cigar shape with conning tower) ── */
+  function drawSub(ctx, x, y, sc, dir, alpha, t, thrPhase) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.translate(x, y);
+    ctx.scale(dir, 1);
+
+    var L = 160 * sc;
+    var R = 18 * sc;
+
+    /* Wake trail */
+    var wakeGrad = ctx.createLinearGradient(-L * 0.6 - 70 * sc, 0, -L * 0.5, 0);
+    wakeGrad.addColorStop(0, 'rgba(0,200,255,0)');
+    wakeGrad.addColorStop(1, 'rgba(0,200,255,0.07)');
+    ctx.fillStyle = wakeGrad;
+    ctx.beginPath();
+    ctx.ellipse(-L * 0.5 - 35 * sc, 0, 70 * sc, R * 1.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* Main hull */
+    var hullGrad = ctx.createLinearGradient(0, -R, 0, R);
+    hullGrad.addColorStop(0, 'rgba(10,35,60,0.94)');
+    hullGrad.addColorStop(0.5, 'rgba(5,20,40,0.97)');
+    hullGrad.addColorStop(1, 'rgba(2,10,22,0.96)');
+    ctx.beginPath();
+    ctx.ellipse(0, 0, L * 0.5, R, 0, 0, Math.PI * 2);
+    ctx.fillStyle = hullGrad;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,160,210,0.3)';
+    ctx.lineWidth = 1.2 * sc;
+    ctx.stroke();
+
+    /* Hull specular */
+    var specGrad = ctx.createLinearGradient(0, -R, 0, -R * 0.3);
+    specGrad.addColorStop(0, 'rgba(80,180,230,0.14)');
+    specGrad.addColorStop(1, 'rgba(80,180,230,0)');
+    ctx.fillStyle = specGrad;
+    ctx.beginPath();
+    ctx.ellipse(L * 0.05, -R * 0.55, L * 0.38, R * 0.32, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* Conning tower (sail) */
+    ctx.beginPath();
+    ctx.moveTo(-L * 0.05, -R);
+    ctx.lineTo(-L * 0.04, -R * 2.6);
+    ctx.quadraticCurveTo(L * 0.01, -R * 3.0, L * 0.06, -R * 2.6);
+    ctx.lineTo(L * 0.08, -R);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(6,22,42,0.95)';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0,160,210,0.25)';
+    ctx.lineWidth = 0.7 * sc;
+    ctx.stroke();
+
+    /* Periscope */
+    ctx.beginPath();
+    ctx.moveTo(L * 0.02, -R * 3.0);
+    ctx.lineTo(L * 0.02, -R * 4.0);
+    ctx.strokeStyle = 'rgba(0,200,230,0.5)';
+    ctx.lineWidth = 1.5 * sc;
+    ctx.stroke();
+    /* Periscope tip glow */
+    var pGrad = ctx.createRadialGradient(L * 0.02, -R * 4.0, 0, L * 0.02, -R * 4.0, 5 * sc);
+    pGrad.addColorStop(0, 'rgba(0,255,220,0.7)');
+    pGrad.addColorStop(1, 'rgba(0,200,255,0)');
+    ctx.fillStyle = pGrad;
+    ctx.beginPath();
+    ctx.arc(L * 0.02, -R * 4.0, 5 * sc, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* Stern planes */
+    [R * 0.7, -R * 0.7].forEach(function(oy) {
+      ctx.beginPath();
+      ctx.moveTo(-L * 0.38, oy * 0.5);
+      ctx.lineTo(-L * 0.42, oy * 2.2);
+      ctx.lineTo(-L * 0.48, oy * 2.0);
+      ctx.lineTo(-L * 0.44, oy * 0.5);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(5,18,38,0.9)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(0,140,190,0.2)';
+      ctx.lineWidth = 0.5 * sc;
+      ctx.stroke();
+    });
+
+    /* Bow planes */
+    [R * 0.6, -R * 0.6].forEach(function(oy) {
+      ctx.beginPath();
+      ctx.moveTo(L * 0.22, oy * 0.4);
+      ctx.lineTo(L * 0.26, oy * 1.9);
+      ctx.lineTo(L * 0.30, oy * 1.7);
+      ctx.lineTo(L * 0.27, oy * 0.4);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(5,18,38,0.9)';
+      ctx.fill();
+    });
+
+    /* Propeller (rear) */
+    var propPhase = t * 0.12;
+    for (var pb = 0; pb < 5; pb++) {
+      var pa = propPhase + (pb / 5) * Math.PI * 2;
+      ctx.save();
+      ctx.translate(-L * 0.5, 0);
+      ctx.rotate(pa);
+      ctx.beginPath();
+      ctx.ellipse(0, R * 0.5, 3 * sc, R * 0.8, pa * 0.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0,180,220,0.35)';
+      ctx.fill();
+      ctx.restore();
+    }
+    /* Prop hub */
+    ctx.fillStyle = 'rgba(0,200,230,0.5)';
+    ctx.beginPath();
+    ctx.arc(-L * 0.5, 0, 4 * sc, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* Thruster glow */
+    var tPulse = 0.6 + 0.4 * Math.sin(t * 0.06 + thrPhase);
+    var thrGrad = ctx.createRadialGradient(-L * 0.5, 0, 0, -L * 0.5, 0, R);
+    thrGrad.addColorStop(0, 'rgba(0,255,200,' + (0.25 * tPulse) + ')');
+    thrGrad.addColorStop(1, 'rgba(0,180,255,0)');
+    ctx.fillStyle = thrGrad;
+    ctx.beginPath();
+    ctx.arc(-L * 0.5, 0, R, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* Running lights */
+    var rLights = [
+      { ox: L * 0.45, oy: 0, hue: 175, r: 3.5 * sc },
+      { ox: -L * 0.3, oy: -R * 0.5, hue: 260, r: 2.5 * sc },
+      { ox: L * 0.15, oy: R * 0.8, hue: 175, r: 2 * sc }
+    ];
+    rLights.forEach(function(lp, li) {
+      var lpulse = 0.5 + 0.5 * Math.sin(t * 0.035 + li * 1.5 + thrPhase);
+      var lgGrad = ctx.createRadialGradient(lp.ox, lp.oy, 0, lp.ox, lp.oy, lp.r * 5);
+      lgGrad.addColorStop(0, 'hsla(' + lp.hue + ',100%,65%,' + (0.45 * lpulse) + ')');
+      lgGrad.addColorStop(1, 'hsla(' + lp.hue + ',80%,55%,0)');
+      ctx.fillStyle = lgGrad;
+      ctx.beginPath();
+      ctx.arc(lp.ox, lp.oy, lp.r * 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'hsla(' + lp.hue + ',100%,82%,' + (0.85 + 0.15 * lpulse) + ')';
+      ctx.beginPath();
+      ctx.arc(lp.ox, lp.oy, lp.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.restore();
+  }
+
+  var t = 0;
+
+  function draw() {
+    t++;
+    var W = c.width, H = c.height;
+    ctx.clearRect(0, 0, W, H);
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+
+    for (var i = vehicles.length - 1; i >= 0; i--) {
+      var v = vehicles[i];
+
+      /* Wobble path */
+      v.wobble += v.wobbleSpeed;
+      var wobbleY = Math.sin(v.wobble) * v.wobbleAmp * H;
+
+      /* Move */
+      v.x += v.speed;
+
+      /* Fade in/out */
+      if (v.fadeIn) {
+        v.alpha = Math.min(1, v.alpha + 0.008);
+        if (v.alpha >= 1) v.fadeIn = false;
+      }
+
+      /* Off-screen removal with fade */
+      var offScreen = (v.speed > 0 && v.x > 1.15) || (v.speed < 0 && v.x < -0.15);
+      if (offScreen) { vehicles.splice(i, 1); continue; }
+
+      /* Fade out near edges */
+      var edgeDist = Math.min(Math.abs(v.x), Math.abs(1 - v.x));
+      if (edgeDist < 0.1) v.alpha = Math.min(v.alpha, edgeDist * 10);
+
+      var screenX = v.x * W;
+      var screenY = v.y * H + wobbleY;
+      var dir = v.speed > 0 ? 1 : -1;
+
+      if (v.type === 'auv') {
+        drawAUV(ctx, screenX, screenY, v.scale, dir, v.alpha * 0.85, t, v.wobble, v.thrusterPhase);
+      } else {
+        drawSub(ctx, screenX, screenY, v.scale, dir, v.alpha * 0.75, t, v.thrusterPhase);
+      }
+    }
+
+    ctx.restore();
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
 </script>
 </body>
 </html>

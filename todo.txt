@@ -1,5 +1,8 @@
 css modification of all pages (after 11 pm)
-to change mail theme ,and content in google appscript.
+to change hero page lil bit 
+to change mail theme - awesome but need to getit from claude nabeel.iarrd gmail
+at (10:30 pm),and 
+content in google appscript.
 
 deploy
 https://the-atlantis-protocol.vercel.app/
