@@ -1,7 +1,7 @@
-css modification of all page (after 3.30)
+css modification of all pages (after 11 pm)
 to change mail theme ,and content in google appscript.
 
-frontend ,backend deploy
+deploy
 https://the-atlantis-protocol.vercel.app/
 https://theatlantisprotocol.onrender.com/
 backend use 1 rupee for your account and success page check 
