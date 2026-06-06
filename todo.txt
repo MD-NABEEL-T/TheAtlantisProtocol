@@ -1,0 +1,13 @@
+css modification of all page (after 3.30)
+to change mail theme ,and content in google appscript.
+
+frontend ,backend deploy
+backend use 1 rupee for your account and success page check 
+
+razorpay keys using new website link from harish and .env to change 
+whatsapp not possible 
+more cart logic for fucking gautham 
+something that's all 
+
+
+web app url=https://script.google.com/macros/s/AKfycbxujEPR387qZMVDqTh7KaNVLKBnH7-YJOp6yXduT1Nx9WarFX092LfbrcmADFaEXKcL/exec

@@ -18,7 +18,7 @@ app.use("/api/payment", paymentRoutes);
 app.get("/", (req, res) => {
   res.json({
     status: "running",
-    service: "Vinvelil Razorpay Backend",
+    service: "Atlantis Protocol Razorpay Backend",
     version: "1.0.0",
     timestamp: new Date().toISOString()
   });

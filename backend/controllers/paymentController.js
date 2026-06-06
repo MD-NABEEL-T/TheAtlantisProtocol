@@ -22,13 +22,14 @@ export const createOrder = async (req, res) => {
     const options = {
       amount: 99 * 100,  // ₹99.00 = 9900 paise
       currency: "INR",
-      receipt: `receipt_${Date.now()}`
+      receipt: `atlantis_${Date.now()}`
     };
 
-    console.log("📦 Creating Razorpay order for ₹99...");
+    console.log("📦 Creating Razorpay order for ₹99 — Atlantis Protocol...");
     const order = await razorpay.orders.create(options);
     console.log(`✅ Order created: ${order.id}`);
 
+    
     res.status(200).json({
       success: true,
       order,
