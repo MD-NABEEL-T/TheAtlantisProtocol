@@ -1,0 +1,2169 @@
+/* ═══════════════════════════════════════════════════════════════════
+   THE ATLANTIS PROTOCOL — Cinematic CSS Upgrade
+   IARRD Marine Technology Masterclass 2026
+   Aesthetic: Aquaman × Avatar — Bioluminescent Abyss
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Reset & Typography ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Aquaman Deep Ocean Palette */
+  --abyss:          #010812;
+  --abyss-mid:      #020d1f;
+  --deep-blue:      #041428;
+  --trench:         #051a32;
+  --ocean-mid:      #072040;
+
+  /* Bioluminescent Neon Accents */
+  --biolum:         #00e8ff;      /* pure cyan glow */
+  --biolum-bright:  #4df5ff;
+  --biolum-dim:     rgba(0, 232, 255, 0.15);
+  --biolum-glow:    rgba(0, 232, 255, 0.35);
+  --biolum-pulse:   rgba(0, 232, 255, 0.6);
+
+  --atlantis-teal:  #00c9a7;      /* Atlantean metallic teal */
+  --atlantis-glow:  rgba(0, 201, 167, 0.25);
+
+  --energy-cyan:    #00f5ff;      /* Arthur's trident energy */
+  --energy-purple:  #7b2fff;      /* deep current purple */
+  --energy-violet:  rgba(123, 47, 255, 0.3);
+
+  --coral-fire:     #ff6b35;      /* warm accent — anemone light */
+  --coral-glow:     rgba(255, 107, 53, 0.3);
+
+  --gold-trident:   #d4a843;      /* Atlantean gold trim */
+  --gold-glow:      rgba(212, 168, 67, 0.25);
+
+  /* Text */
+  --text-bright:    #e8f8ff;
+  --text-mid:       rgba(200, 235, 245, 0.75);
+  --text-dim:       rgba(150, 200, 225, 0.45);
+
+  /* Fonts */
+  --font-display:   'Cinzel', serif;
+  --font-body:      'Rajdhani', sans-serif;
+  --font-mono:      'Space Mono', monospace;
+  --font-tamil:     'Noto Sans Tamil', sans-serif;
+
+  /* Transitions */
+  --ease-fluid:     cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-snap:      cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html { scroll-behavior: smooth; overflow-x: hidden; }
+
+body {
+  background: var(--abyss);
+  color: var(--text-bright);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ════════════════════════════════════════════════════════
+   GLOBAL WATER TEXTURE — subtle animated grain over ALL sections
+   ════════════════════════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(ellipse 120% 60% at 50% 0%, rgba(0, 100, 160, 0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 80% 40% at 80% 100%, rgba(0, 50, 120, 0.12) 0%, transparent 60%);
+  animation: body-current 18s ease-in-out infinite alternate;
+}
+@keyframes body-current {
+  0%   { background-position: 0% 0%, 100% 100%; }
+  100% { background-position: 20% 30%, 80% 70%; }
+}
+
+
+/* ════════════════════════════════════════════════════════
+   HEADER — Atlantean Command Bridge
+   ════════════════════════════════════════════════════════ */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 52px;
+  background: linear-gradient(
+    to bottom,
+    rgba(1, 8, 18, 0.96) 0%,
+    rgba(1, 8, 18, 0.4) 70%,
+    transparent 100%
+  );
+  backdrop-filter: blur(0px);
+  transition: all 0.5s var(--ease-fluid);
+}
+
+.site-header.scrolled {
+  padding: 14px 52px;
+  background: rgba(1, 8, 18, 0.97);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(0, 232, 255, 0.1);
+  box-shadow:
+    0 4px 32px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(0, 232, 255, 0.08),
+    inset 0 -1px 0 rgba(0, 232, 255, 0.04);
+}
+
+/* Atlantean scan line on header bottom */
+.site-header.scrolled::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--biolum) 20%,
+    var(--biolum-bright) 50%,
+    var(--biolum) 80%,
+    transparent 100%
+  );
+  opacity: 0.5;
+  animation: scan-line 4s ease-in-out infinite;
+}
+@keyframes scan-line {
+  0%,100% { opacity: 0.3; transform: scaleX(0.8); }
+  50%      { opacity: 0.7; transform: scaleX(1); }
+}
+
+.logo-area img {
+  height: 38px;
+  filter: brightness(1.4) drop-shadow(0 0 12px rgba(0, 232, 255, 0.5));
+  transition: filter 0.3s ease, transform 0.3s ease;
+}
+.logo-area img:hover {
+  filter: brightness(1.8) drop-shadow(0 0 20px rgba(0, 232, 255, 0.8));
+  transform: scale(1.05);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+
+.site-nav a {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  text-decoration: none;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.site-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px; left: 0; right: 0;
+  height: 1px;
+  background: var(--biolum);
+  transform: scaleX(0);
+  transition: transform 0.3s var(--ease-fluid);
+  box-shadow: 0 0 8px var(--biolum);
+}
+
+.site-nav a:hover { color: var(--biolum); }
+.site-nav a:hover::after { transform: scaleX(1); }
+
+.sound-toggle {
+  background: rgba(0, 232, 255, 0.05);
+  border: 1px solid rgba(0, 232, 255, 0.28);
+  color: var(--biolum);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  padding: 8px 18px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 232, 255, 0.08);
+}
+.sound-toggle:hover {
+  background: rgba(0, 232, 255, 0.12);
+  border-color: var(--biolum);
+  box-shadow: 0 0 24px rgba(0, 232, 255, 0.25);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   HERO — The Abyss Descent (Full Cinematic Treatment)
+   ════════════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 720px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--abyss);
+}
+
+/* Canvas layers */
+#caustic-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+#three-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Volumetric light shafts — the Aquaman signature look */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    conic-gradient(from 270deg at 30% -10%,
+      transparent 0deg,
+      rgba(0, 180, 220, 0.06) 8deg,
+      transparent 16deg,
+      transparent 22deg,
+      rgba(0, 160, 200, 0.04) 28deg,
+      transparent 35deg
+    ),
+    conic-gradient(from 260deg at 70% -5%,
+      transparent 0deg,
+      rgba(0, 200, 240, 0.05) 10deg,
+      transparent 20deg,
+      transparent 28deg,
+      rgba(0, 140, 180, 0.03) 35deg,
+      transparent 42deg
+    );
+  animation: light-shafts 12s ease-in-out infinite alternate;
+}
+@keyframes light-shafts {
+  0%   { opacity: 0.6; transform: skewX(-2deg); }
+  50%  { opacity: 1;   transform: skewX(0deg); }
+  100% { opacity: 0.7; transform: skewX(1deg); }
+}
+
+/* Deep radial vignette */
+.hero-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 70% at 50% 40%, transparent 20%, rgba(1,8,18,0.55) 70%, rgba(1,8,18,0.9) 100%),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(0, 20, 50, 0.8) 0%, transparent 70%);
+}
+
+.hero-bottom-fade {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 260px;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(1,8,18,0.4) 40%,
+    rgba(1,8,18,0.85) 75%,
+    var(--abyss) 100%
+  );
+}
+
+/* Hero Content */
+.hero-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  max-width: 880px;
+  padding: 0 36px;
+}
+
+/* Event Badge — Atlantean HUD chip */
+.event-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--biolum);
+  background: rgba(0, 232, 255, 0.05);
+  border: 1px solid rgba(0, 232, 255, 0.3);
+  padding: 8px 22px;
+  border-radius: 40px;
+  margin-bottom: 36px;
+  opacity: 0;
+  transform: translateY(20px);
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 20px rgba(0, 232, 255, 0.08),
+    inset 0 1px 0 rgba(0, 232, 255, 0.15);
+}
+
+/* Shimmer sweep on badge */
+.event-badge::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; bottom: 0;
+  width: 50%;
+  background: linear-gradient(90deg, transparent, rgba(0, 232, 255, 0.1), transparent);
+  animation: badge-shimmer 4s ease-in-out infinite 2s;
+}
+@keyframes badge-shimmer {
+  0%   { left: -100%; }
+  50%  { left: 200%; }
+  100% { left: 200%; }
+}
+
+.badge-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--biolum);
+  box-shadow: 0 0 8px var(--biolum), 0 0 16px rgba(0,232,255,0.5);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px var(--biolum); }
+  50%      { opacity: 0.5; transform: scale(0.7); box-shadow: 0 0 4px var(--biolum); }
+}
+
+/* Main Tamil Title */
+.hero-tamil {
+  font-family: var(--font-tamil);
+  font-size: clamp(44px, 7.5vw, 96px);
+  font-weight: 700;
+  line-height: 1.05;
+  color: var(--text-bright);
+  opacity: 0;
+  transform: translateY(30px);
+  margin-bottom: 12px;
+  text-shadow:
+    0 0 60px rgba(0, 232, 255, 0.35),
+    0 0 120px rgba(0, 160, 210, 0.2),
+    0 4px 40px rgba(0, 0, 0, 0.9);
+  letter-spacing: -0.01em;
+}
+
+/* English Subtitle — Atlantean rune style */
+.hero-en {
+  font-family: var(--font-display);
+  font-size: clamp(13px, 1.8vw, 17px);
+  font-weight: 400;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--gold-trident);
+  opacity: 0;
+  transform: translateY(20px);
+  margin-bottom: 30px;
+  text-shadow:
+    0 0 20px rgba(212, 168, 67, 0.5),
+    0 0 40px rgba(212, 168, 67, 0.2);
+}
+
+/* Atlantean divider — trident spark */
+.hero-divider {
+  width: 100px;
+  height: 1px;
+  margin: 0 auto 30px;
+  opacity: 0;
+  position: relative;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--atlantis-teal) 30%,
+    var(--biolum-bright) 50%,
+    var(--atlantis-teal) 70%,
+    transparent
+  );
+  box-shadow: 0 0 12px var(--biolum), 0 0 30px rgba(0,232,255,0.3);
+}
+.hero-divider::before,
+.hero-divider::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--biolum-bright);
+  box-shadow: 0 0 10px var(--biolum), 0 0 20px rgba(0,232,255,0.6);
+}
+.hero-divider::before { left: calc(50% - 48px); }
+.hero-divider::after  { right: calc(50% - 48px); }
+
+/* Hero Tagline */
+.hero-tagline {
+  font-family: var(--font-body);
+  font-size: clamp(14px, 1.7vw, 17px);
+  font-weight: 400;
+  color: var(--text-mid);
+  max-width: 620px;
+  margin: 0 auto 44px;
+  line-height: 1.75;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* ── AQUAMAN CTA BUTTON — Trident Energy Core ── */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  background: transparent;
+  border: 1px solid var(--biolum);
+  color: var(--biolum);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 18px 44px;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s var(--ease-fluid);
+  box-shadow:
+    0 0 20px rgba(0,232,255,0.12),
+    inset 0 0 20px rgba(0,232,255,0.04);
+}
+
+/* Energy fill on hover */
+.cta-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(0, 232, 255, 0.25) 0%,
+    rgba(0, 201, 167, 0.15) 50%,
+    rgba(0, 180, 240, 0.2) 100%
+  );
+  transform: translateX(-101%);
+  transition: transform 0.4s var(--ease-fluid);
+}
+
+/* Electric top edge */
+.cta-btn::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, var(--biolum-bright), transparent
+  );
+  opacity: 0.6;
+  box-shadow: 0 0 8px var(--biolum);
+}
+
+.cta-btn:hover {
+  color: #fff;
+  border-color: var(--biolum-bright);
+  box-shadow:
+    0 0 40px rgba(0, 232, 255, 0.3),
+    0 0 80px rgba(0, 232, 255, 0.12),
+    inset 0 0 30px rgba(0, 232, 255, 0.06);
+  transform: translateY(-2px);
+}
+.cta-btn:hover::before { transform: translateX(0); }
+
+.cta-btn span, .cta-arrow { position: relative; z-index: 1; }
+.cta-arrow {
+  font-size: 20px;
+  transition: transform 0.25s ease;
+  text-shadow: 0 0 12px var(--biolum);
+}
+.cta-btn:hover .cta-arrow { transform: translateX(6px); }
+
+/* ── Countdown — Atlantean HUD Displays ── */
+.countdown-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 52px;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.countdown-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 18, 40, 0.7);
+  border: 1px solid rgba(0, 232, 255, 0.2);
+  border-radius: 4px;
+  padding: 16px 22px;
+  min-width: 76px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(0, 232, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 232, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+/* Scan line sweep inside countdown boxes */
+.countdown-box::before {
+  content: '';
+  position: absolute;
+  top: -100%; left: 0; right: 0;
+  height: 50%;
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(0, 232, 255, 0.04),
+    transparent
+  );
+  animation: hud-scan 3s linear infinite;
+}
+@keyframes hud-scan {
+  0%   { top: -100%; }
+  100% { top: 200%; }
+}
+
+.cd-num {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--biolum);
+  line-height: 1;
+  text-shadow:
+    0 0 20px rgba(0, 232, 255, 0.7),
+    0 0 40px rgba(0, 232, 255, 0.3);
+}
+.cd-label {
+  font-family: var(--font-body);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.cd-sep {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  color: rgba(0, 232, 255, 0.3);
+  margin-bottom: 24px;
+  text-shadow: 0 0 8px rgba(0, 232, 255, 0.4);
+}
+
+/* Depth meter */
+.depth-meter {
+  position: absolute;
+  right: 52px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.depth-track {
+  width: 2px; height: 220px;
+  background: rgba(0, 232, 255, 0.08);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 232, 255, 0.1);
+}
+.depth-fill {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top,
+    var(--biolum),
+    var(--atlantis-teal) 50%,
+    rgba(0, 232, 255, 0.15)
+  );
+  box-shadow: 0 0 10px var(--biolum);
+  animation: depth-rise 7s ease-in-out infinite alternate;
+}
+@keyframes depth-rise { 0%{height:15%} 100%{height:95%} }
+.depth-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--biolum);
+  letter-spacing: 0.12em;
+  writing-mode: vertical-rl;
+  opacity: 0.55;
+  text-shadow: 0 0 8px rgba(0, 232, 255, 0.5);
+}
+
+/* Pressure gauge */
+.pressure-gauge {
+  position: absolute;
+  left: 52px; top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--biolum);
+  opacity: 0.5;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gauge-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gauge-bar {
+  width: 42px; height: 2px;
+  background: rgba(0,232,255,0.1);
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.gauge-bar::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  background: linear-gradient(90deg, var(--atlantis-teal), var(--biolum));
+  box-shadow: 0 0 6px var(--biolum);
+  animation: gauge-flicker 3.5s ease-in-out infinite;
+}
+.gauge-bar:nth-child(2)::after { width: 65%; animation-delay: 0s; }
+.gauge-bar:nth-child(3)::after { width: 40%; animation-delay: 0.7s; }
+.gauge-bar:nth-child(4)::after { width: 82%; animation-delay: 1.4s; }
+@keyframes gauge-flicker { 0%,100%{opacity:1} 50%{opacity:0.45} }
+
+/* Scroll hint */
+.scroll-hint {
+  position: absolute;
+  bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: rgba(0, 232, 255, 0.4);
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fade-in-up 1s 3s forwards;
+}
+.scroll-line {
+  width: 1px; height: 52px;
+  background: linear-gradient(to bottom, rgba(0,232,255,0.5), transparent);
+  box-shadow: 0 0 6px rgba(0,232,255,0.3);
+  animation: scroll-pulse 2.2s ease-in-out infinite;
+}
+@keyframes scroll-pulse {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 1; }
+  50%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+@keyframes fade-in-up { to { opacity: 1; } }
+
+/* Seaweed kelp layer */
+.seaweed-layer {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 240px;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+.seaweed-layer::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to top, var(--abyss), transparent);
+}
+.sw {
+  position: absolute;
+  bottom: 0;
+  border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
+  transform-origin: bottom center;
+  filter: blur(0.5px);
+}
+.sw1  { left:2%;   height:165px; width:13px; background:linear-gradient(to top,#001a10,#003d22,#005533); opacity:.55; animation:sway1 4.2s ease-in-out infinite; }
+.sw2  { left:5%;   height:205px; width:19px; background:linear-gradient(to top,#001810,#003328,#005040); opacity:.42; animation:sway2 5.2s ease-in-out infinite; animation-delay:-1.2s; }
+.sw3  { left:8%;   height:145px; width:11px; background:linear-gradient(to top,#001e14,#004030,#006045); opacity:.50; animation:sway1 3.8s ease-in-out infinite; animation-delay:-0.7s; }
+.sw4  { left:12%;  height:185px; width:15px; background:linear-gradient(to top,#002010,#003a22,#005535); opacity:.40; animation:sway3 6.1s ease-in-out infinite; animation-delay:-2.0s; }
+.sw5  { left:0.5%; height:125px; width:9px;  background:linear-gradient(to top,#001408,#002e1e,#004530); opacity:.32; animation:sway2 4.6s ease-in-out infinite; animation-delay:-0.4s; }
+.sw6  { right:2%;  height:178px; width:14px; background:linear-gradient(to top,#001a10,#003d22,#005533); opacity:.55; animation:sway2 4.8s ease-in-out infinite; animation-delay:-1.5s; }
+.sw7  { right:5%;  height:215px; width:21px; background:linear-gradient(to top,#001810,#003328,#005040); opacity:.42; animation:sway1 5.5s ease-in-out infinite; animation-delay:-0.9s; }
+.sw8  { right:9%;  height:150px; width:12px; background:linear-gradient(to top,#001e14,#004030,#006045); opacity:.50; animation:sway3 3.9s ease-in-out infinite; animation-delay:-2.3s; }
+.sw9  { right:13%; height:192px; width:16px; background:linear-gradient(to top,#002010,#003a22,#005535); opacity:.38; animation:sway1 5.2s ease-in-out infinite; animation-delay:-0.6s; }
+.sw10 { right:0.5%;height:128px; width:10px; background:linear-gradient(to top,#001408,#002e1e,#004530); opacity:.30; animation:sway2 4.3s ease-in-out infinite; animation-delay:-1.8s; }
+
+@keyframes sway1 {
+  0%,100% { transform: rotate(-9deg) skewX(2deg); }
+  25%      { transform: rotate(7deg) skewX(-1deg); }
+  50%      { transform: rotate(-5deg) skewX(3deg); }
+  75%      { transform: rotate(10deg) skewX(-2deg); }
+}
+@keyframes sway2 {
+  0%,100% { transform: rotate(8deg) skewX(-2deg); }
+  30%      { transform: rotate(-11deg) skewX(3deg); }
+  60%      { transform: rotate(6deg) skewX(-1deg); }
+}
+@keyframes sway3 {
+  0%,100% { transform: rotate(-6deg) skewX(1deg); }
+  40%      { transform: rotate(12deg) skewX(-3deg); }
+  70%      { transform: rotate(-4deg) skewX(2deg); }
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SOCIAL PROOF STRIP — Atlantean Insignia Bar
+   ════════════════════════════════════════════════════════ */
+.social-proof-strip {
+  position: relative;
+  z-index: 10;
+  background: rgba(2, 10, 22, 0.95);
+  border-top: 1px solid rgba(0, 232, 255, 0.12);
+  border-bottom: 1px solid rgba(0, 232, 255, 0.12);
+  padding: 22px 0;
+  overflow: hidden;
+}
+
+/* Animated water current across strip */
+.social-proof-strip::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0, 232, 255, 0.03) 30%,
+    rgba(0, 201, 167, 0.04) 50%,
+    rgba(0, 232, 255, 0.03) 70%,
+    transparent 100%
+  );
+  animation: current-sweep 8s linear infinite;
+}
+@keyframes current-sweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.sp-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 72px;
+  padding: 0 52px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.sp-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.sp-num {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--biolum);
+  text-shadow: 0 0 20px rgba(0,232,255,0.5);
+}
+.sp-label {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.sp-powered {
+  flex-direction: row;
+  gap: 14px;
+  align-items: center;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SHARED SECTION SETTINGS
+   ════════════════════════════════════════════════════════ */
+.section-wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 52px;
+  position: relative;
+  z-index: 10;
+}
+
+section {
+  padding: 110px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle underwater ambience behind each section */
+section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+  color: var(--biolum);
+  margin-bottom: 14px;
+  text-shadow: 0 0 12px rgba(0,232,255,0.4);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 50px);
+  font-weight: 600;
+  color: var(--text-bright);
+  line-height: 1.12;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+}
+
+.section-sub {
+  font-size: 16px;
+  color: var(--text-mid);
+  max-width: 520px;
+  margin-bottom: 60px;
+  line-height: 1.75;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SECTION 2 — DISRUPTION / MISSION BRIEFING
+   Aquaman-style split glass panel
+   ════════════════════════════════════════════════════════ */
+.disruption-section {
+  background:
+    linear-gradient(180deg, var(--abyss) 0%, var(--abyss-mid) 100%);
+}
+
+/* Deep ocean ambient glow */
+.disruption-section::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 60%, rgba(0, 180, 200, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 40%, rgba(0, 100, 160, 0.05) 0%, transparent 60%);
+}
+
+.split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 88px;
+  align-items: center;
+}
+
+/* Atlantean inscription style quote */
+.hook-text {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.4vw, 28px);
+  font-weight: 400;
+  line-height: 1.48;
+  color: var(--text-bright);
+  padding-left: 30px;
+  position: relative;
+}
+
+/* Glowing side bar — energy beam */
+.hook-text::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom,
+    transparent,
+    var(--atlantis-teal) 20%,
+    var(--biolum) 50%,
+    var(--atlantis-teal) 80%,
+    transparent
+  );
+  box-shadow: 0 0 12px var(--biolum), 0 0 24px rgba(0,232,255,0.2);
+  animation: beam-pulse 3s ease-in-out infinite;
+}
+@keyframes beam-pulse {
+  0%,100% { opacity: 0.7; box-shadow: 0 0 8px var(--biolum); }
+  50%      { opacity: 1;   box-shadow: 0 0 20px var(--biolum), 0 0 40px rgba(0,232,255,0.3); }
+}
+
+/* Crystalline glass tab panel */
+.tabs-container {
+  background: rgba(0, 20, 48, 0.6);
+  border: 1px solid rgba(0, 232, 255, 0.14);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(0, 232, 255, 0.12),
+    inset 0 0 40px rgba(0, 20, 60, 0.3);
+  backdrop-filter: blur(12px);
+  position: relative;
+}
+
+/* Crystal sheen effect */
+.tabs-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%; right: 100%;
+  bottom: 0;
+  background: linear-gradient(105deg,
+    transparent 40%,
+    rgba(0, 232, 255, 0.04) 50%,
+    transparent 60%
+  );
+  animation: crystal-sheen 8s ease-in-out infinite 1s;
+}
+@keyframes crystal-sheen {
+  0%   { left: -100%; right: 100%; }
+  40%  { left: 100%;  right: -100%; }
+  100% { left: 100%;  right: -100%; }
+}
+
+.tabs-headers {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 232, 255, 0.1);
+  background: rgba(0, 12, 28, 0.5);
+}
+
+.tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 18px 22px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  position: relative;
+}
+.tab-btn.active {
+  color: var(--biolum);
+  border-bottom-color: var(--biolum);
+  background: rgba(0, 232, 255, 0.05);
+  text-shadow: 0 0 12px rgba(0, 232, 255, 0.5);
+}
+.tab-btn:not(.active):hover { color: var(--text-mid); }
+
+.tab-pane {
+  display: none;
+  padding: 32px;
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.78;
+}
+.tab-pane.active { display: block; animation: pane-fade 0.4s ease; }
+@keyframes pane-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+
+/* ════════════════════════════════════════════════════════
+   SECTION 3 — SYLLABUS / SUBMARINE DESCENT TIMELINE
+   Deep trench vertical pipeline with glow nodes
+   ════════════════════════════════════════════════════════ */
+.syllabus-section {
+  background:
+    linear-gradient(180deg, var(--abyss-mid) 0%, var(--deep-blue) 100%);
+}
+
+.syllabus-section::before {
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 50%, rgba(0, 50, 100, 0.15) 0%, transparent 70%);
+}
+
+.descent-timeline {
+  position: relative;
+}
+
+/* The depth pipe — glowing ocean trench */
+.descent-timeline::before {
+  display: none; /* replaced by section-level left border */
+}
+
+/* Vertical energy conduit */
+.section-wrap::after {
+  content: none;
+}
+
+/* Override the left border approach with a pseudo on the timeline */
+.descent-timeline {
+  padding-left: 0;
+}
+
+/* New glowing pipeline track */
+.timeline-pipe {
+  position: absolute;
+  left: calc(48px + 20px);
+  top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom,
+    rgba(0, 232, 255, 0.8) 0%,
+    rgba(0, 201, 167, 0.6) 35%,
+    rgba(123, 47, 255, 0.5) 70%,
+    rgba(1, 8, 18, 0.1) 100%
+  );
+  box-shadow:
+    0 0 10px rgba(0, 232, 255, 0.3),
+    0 0 25px rgba(0, 232, 255, 0.12);
+}
+
+/* Traveling descent indicator dot */
+.sub-tracker {
+  position: absolute;
+  left: calc(48px + 10px);
+  top: 0;
+  z-index: 10;
+  font-size: 22px;
+  filter: drop-shadow(0 0 14px rgba(0, 232, 255, 1)) drop-shadow(0 0 28px rgba(0,232,255,0.5));
+  transition: top 0.15s ease-out;
+}
+
+.timeline-step {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 44px;
+  align-items: flex-start;
+  padding: 44px 0;
+  border-bottom: 1px solid rgba(0, 232, 255, 0.06);
+  opacity: 0.35;
+  transition: opacity 0.5s ease;
+}
+.timeline-step:last-child { border-bottom: none; }
+.timeline-step.active { opacity: 1; }
+
+/* Step nodes — Atlantean depth beacons */
+.step-node {
+  width: 48px; height: 48px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-dim);
+  border: 1px solid rgba(0, 232, 255, 0.2);
+  border-radius: 50%;
+  background: rgba(1, 8, 18, 0.8);
+  position: relative;
+  z-index: 2;
+  margin-left: 38px;
+  flex-shrink: 0;
+  transition: all 0.4s var(--ease-fluid);
+}
+
+.timeline-step.active .step-node {
+  color: var(--biolum);
+  border-color: var(--biolum);
+  background: rgba(0, 232, 255, 0.08);
+  box-shadow:
+    0 0 20px rgba(0, 232, 255, 0.35),
+    0 0 40px rgba(0, 232, 255, 0.12),
+    inset 0 0 12px rgba(0, 232, 255, 0.08);
+}
+
+/* Depth reading label */
+.step-depth {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold-trident);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-shadow: 0 0 10px rgba(212,168,67,0.4);
+}
+.timeline-step.active .step-depth { color: var(--biolum); text-shadow: 0 0 12px rgba(0,232,255,0.5); }
+
+/* Step card — crystalline panel */
+.step-content {
+  background: rgba(0, 14, 32, 0.5);
+  border: 1px solid rgba(0, 232, 255, 0.07);
+  border-radius: 5px;
+  padding: 28px 32px;
+  backdrop-filter: blur(8px);
+  transition: all 0.4s var(--ease-fluid);
+}
+.timeline-step.active .step-content {
+  border-color: rgba(0, 232, 255, 0.18);
+  background: rgba(0, 22, 50, 0.6);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(0, 232, 255, 0.04),
+    inset 0 1px 0 rgba(0, 232, 255, 0.1);
+}
+
+.step-title {
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.step-desc {
+  font-size: 15px;
+  color: var(--text-mid);
+  line-height: 1.75;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SECTION 4 — VALUE STACK
+   Atlantean treasure vault cards
+   ════════════════════════════════════════════════════════ */
+.value-section {
+  background: linear-gradient(180deg, var(--deep-blue) 0%, var(--abyss) 100%);
+}
+
+.value-section::before {
+  background:
+    radial-gradient(ellipse 40% 60% at 0% 50%, rgba(0, 201, 167, 0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 60% at 100% 50%, rgba(0, 100, 180, 0.05) 0%, transparent 60%);
+}
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.value-card {
+  background: rgba(0, 16, 36, 0.7);
+  border: 1px solid rgba(0, 232, 255, 0.09);
+  padding: 44px 36px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s var(--ease-fluid);
+  backdrop-filter: blur(8px);
+}
+
+/* Atlantean crystal top edge on hover */
+.value-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent,
+    var(--biolum) 30%,
+    var(--atlantis-teal) 50%,
+    var(--biolum) 70%,
+    transparent
+  );
+  box-shadow: 0 0 10px var(--biolum);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s var(--ease-fluid);
+}
+
+/* Corner accent — Atlantean rune corner */
+.value-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 40px; height: 40px;
+  border-bottom: 1px solid rgba(0, 232, 255, 0.12);
+  border-right: 1px solid rgba(0, 232, 255, 0.12);
+  transition: all 0.4s ease;
+}
+
+.value-card:hover {
+  background: rgba(0, 25, 55, 0.8);
+  border-color: rgba(0, 232, 255, 0.18);
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(0, 232, 255, 0.05);
+}
+.value-card:hover::before { transform: scaleX(1); }
+.value-card:hover::after {
+  width: 60px; height: 60px;
+  border-color: rgba(0, 232, 255, 0.25);
+}
+
+.value-icon {
+  font-size: 34px;
+  margin-bottom: 22px;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(0, 232, 255, 0.4));
+}
+.value-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 14px;
+}
+.value-desc {
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.75;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SECTION 5 — TESTIMONIALS CAROUSEL
+   Atlantean field report terminal
+   ════════════════════════════════════════════════════════ */
+.testimonials-section {
+  background: var(--abyss);
+}
+
+.testimonials-section::before {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(0, 50, 100, 0.12) 0%, transparent 60%);
+}
+
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+}
+.carousel-track {
+  display: flex;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.carousel-slide { flex: 0 0 100%; }
+
+.test-card {
+  background: rgba(0, 16, 36, 0.7);
+  border: 1px solid rgba(0, 232, 255, 0.13);
+  border-radius: 5px;
+  padding: 52px;
+  max-width: 740px;
+  margin: 0 auto;
+  text-align: center;
+  backdrop-filter: blur(12px);
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(0, 232, 255, 0.1);
+}
+
+/* Ocean reflection overlay */
+.test-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(0, 232, 255, 0.03) 0%,
+    transparent 40%,
+    rgba(0, 100, 160, 0.03) 100%
+  );
+  pointer-events: none;
+}
+
+.test-stars {
+  font-size: 18px;
+  letter-spacing: 6px;
+  color: var(--gold-trident);
+  margin-bottom: 28px;
+  text-shadow: 0 0 12px rgba(212, 168, 67, 0.6);
+}
+.test-quote {
+  font-family: var(--font-display);
+  font-size: clamp(16px, 2vw, 22px);
+  font-weight: 400;
+  color: var(--text-bright);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+.test-author {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--biolum);
+  letter-spacing: 0.18em;
+  text-shadow: 0 0 10px rgba(0, 232, 255, 0.4);
+}
+
+.carousel-navs {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 36px;
+}
+.carousel-arrow {
+  background: rgba(0, 16, 36, 0.7);
+  border: 1px solid rgba(0, 232, 255, 0.28);
+  color: var(--biolum);
+  font-size: 20px;
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 232, 255, 0.08);
+}
+.carousel-arrow:hover {
+  background: rgba(0, 232, 255, 0.12);
+  border-color: var(--biolum);
+  box-shadow: 0 0 25px rgba(0, 232, 255, 0.3);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SECTION 6 — REGISTER / PAYMENT
+   Atlantean payment terminal + pricing
+   ════════════════════════════════════════════════════════ */
+.payment-section {
+  background:
+    linear-gradient(135deg, var(--abyss-mid) 0%, var(--deep-blue) 50%, var(--abyss) 100%);
+}
+
+.payment-section::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0, 100, 160, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(0, 30, 80, 0.15) 0%, transparent 60%);
+}
+
+.payment-inner {
+  display: grid;
+  grid-template-columns: 1fr 500px;
+  gap: 88px;
+  align-items: start;
+}
+
+.payment-meta-list {
+  list-style: none;
+  margin-top: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.payment-meta-list li {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  color: var(--text-mid);
+}
+.meta-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--biolum);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px var(--biolum);
+}
+
+/* Payment card — Atlantean crystal terminal */
+.payment-card {
+  background: rgba(0, 16, 38, 0.85);
+  border: 1px solid rgba(0, 232, 255, 0.18);
+  border-radius: 6px;
+  padding: 44px;
+  position: sticky;
+  top: 108px;
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 40px 80px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(0, 232, 255, 0.04),
+    inset 0 1px 0 rgba(0, 232, 255, 0.15),
+    inset 0 0 60px rgba(0, 10, 30, 0.3);
+  overflow: hidden;
+}
+
+/* Top energy bar on payment card */
+.payment-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 10%; right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, var(--atlantis-teal) 30%, var(--biolum) 50%, var(--atlantis-teal) 70%, transparent
+  );
+  box-shadow: 0 0 10px var(--biolum);
+}
+
+.price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 8px;
+}
+.price-strike {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  color: var(--text-dim);
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+.price-main {
+  font-family: var(--font-display);
+  font-size: 58px;
+  font-weight: 700;
+  color: var(--biolum);
+  line-height: 1;
+  text-shadow:
+    0 0 30px rgba(0, 232, 255, 0.6),
+    0 0 60px rgba(0, 232, 255, 0.25);
+}
+.price-note {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+
+/* Early bird banner */
+.early-bird {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold-trident);
+  background: rgba(212, 168, 67, 0.07);
+  border: 1px solid rgba(212, 168, 67, 0.22);
+  border-radius: 24px;
+  padding: 10px 18px;
+  margin-bottom: 32px;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 10px rgba(212, 168, 67, 0.4);
+}
+.early-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--coral-fire);
+  box-shadow: 0 0 8px var(--coral-fire);
+  animation: pulse-dot 1.4s infinite;
+}
+
+/* Form fields — Atlantean input panels */
+.field-group { margin-bottom: 18px; }
+.field-group label {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 7px;
+}
+.field-group input,
+.field-group select {
+  width: 100%;
+  background: rgba(0, 8, 20, 0.7);
+  border: 1px solid rgba(0, 232, 255, 0.18);
+  border-radius: 4px;
+  color: var(--text-bright);
+  font-family: var(--font-body);
+  font-size: 15px;
+  padding: 13px 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+.field-group input:focus,
+.field-group select:focus {
+  border-color: var(--biolum);
+  background: rgba(0, 20, 45, 0.8);
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(0, 232, 255, 0.2),
+    0 0 20px rgba(0, 232, 255, 0.08);
+}
+.field-group input::placeholder { color: rgba(150, 200, 225, 0.25); }
+.field-group select option { background: var(--deep-blue); }
+
+.privacy-consent {
+  margin-bottom: 22px;
+  font-size: 13px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.55;
+}
+.privacy-consent input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: var(--biolum);
+}
+
+/* Submit — Trident Energy Launch */
+.btn-submit {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--biolum);
+  color: var(--biolum);
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s var(--ease-fluid);
+  box-shadow:
+    0 0 20px rgba(0, 232, 255, 0.1),
+    inset 0 0 20px rgba(0, 232, 255, 0.03);
+}
+.btn-submit::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(0, 232, 255, 0.2),
+    rgba(0, 201, 167, 0.15)
+  );
+  transform: translateX(-101%);
+  transition: transform 0.4s var(--ease-fluid);
+}
+.btn-submit:hover {
+  color: #fff;
+  border-color: var(--biolum-bright);
+  box-shadow:
+    0 0 40px rgba(0, 232, 255, 0.3),
+    0 8px 30px rgba(0, 0, 0, 0.4);
+  transform: translateY(-2px);
+}
+.btn-submit:hover::before { transform: translateX(0); }
+.btn-submit span { position: relative; z-index: 1; }
+
+.trust-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
+}
+.trust-badges span {
+  font-size: 11px;
+  color: var(--text-dim);
+  background: rgba(0, 232, 255, 0.04);
+  border: 1px solid rgba(0, 232, 255, 0.1);
+  border-radius: 20px;
+  padding: 5px 14px;
+  letter-spacing: 0.06em;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   MISSION CONTROL — TEAM CREW
+   Atlantean officer gallery
+   ════════════════════════════════════════════════════════ */
+.mission-section {
+  background: linear-gradient(180deg, var(--abyss) 0%, var(--abyss-mid) 100%);
+}
+
+.team-category {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-trident);
+  margin-bottom: 32px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(212, 168, 67, 0.18);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-shadow: 0 0 12px rgba(212, 168, 67, 0.4);
+}
+.team-category::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(212, 168, 67, 0.15), transparent);
+}
+
+.crew-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-bottom: 64px;
+}
+.crew-grid.three-col { grid-template-columns: repeat(3, 1fr); }
+
+.crew-card {
+  background: rgba(0, 14, 32, 0.65);
+  border: 1px solid rgba(0, 232, 255, 0.08);
+  padding: 30px 26px;
+  border-radius: 5px;
+  transition: all 0.4s var(--ease-fluid);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+
+/* Atlantean circuit lines in corner */
+.crew-card::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 50px; height: 50px;
+  border-top: 1px solid rgba(0, 232, 255, 0.12);
+  border-right: 1px solid rgba(0, 232, 255, 0.12);
+  transition: all 0.4s ease;
+}
+
+.crew-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--biolum), var(--atlantis-teal));
+  box-shadow: 0 0 8px var(--biolum);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s var(--ease-fluid);
+}
+
+.crew-card:hover {
+  background: rgba(0, 22, 48, 0.8);
+  border-color: rgba(0, 232, 255, 0.18);
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(0, 232, 255, 0.04);
+}
+.crew-card:hover::before {
+  width: 70px; height: 70px;
+  border-color: rgba(0, 232, 255, 0.25);
+}
+.crew-card:hover::after { transform: scaleX(1); }
+
+.crew-avatar-wrap {
+  position: relative;
+  width: 68px; height: 68px;
+  margin-bottom: 18px;
+}
+.crew-avatar-wrap img {
+  width: 68px; height: 68px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 232, 255, 0.25);
+  display: block;
+  transition: border-color 0.3s ease;
+}
+.crew-card:hover .crew-avatar-wrap img {
+  border-color: var(--biolum);
+  box-shadow: 0 0 16px rgba(0, 232, 255, 0.35);
+}
+
+.crew-linkedin {
+  position: absolute;
+  bottom: -2px; right: -2px;
+  background: var(--biolum);
+  border-radius: 50%;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0 10px rgba(0, 232, 255, 0.4);
+}
+.crew-linkedin:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 18px rgba(0, 232, 255, 0.6);
+}
+.crew-linkedin svg { width: 12px; height: 12px; fill: var(--abyss); }
+
+.crew-name {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+.crew-role {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--biolum);
+  letter-spacing: 0.09em;
+  margin-bottom: 12px;
+  line-height: 1.45;
+  text-shadow: 0 0 8px rgba(0, 232, 255, 0.35);
+}
+.crew-spec { font-size: 13px; color: var(--text-dim); line-height: 1.62; }
+
+
+/* ════════════════════════════════════════════════════════
+   CONTACT SECTION
+   Deep sea communication hub
+   ════════════════════════════════════════════════════════ */
+.contact-section {
+  background: var(--abyss);
+}
+
+.contact-section::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(0, 30, 70, 0.15) 0%, transparent 60%);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.contact-card {
+  background: rgba(0, 14, 32, 0.65);
+  border: 1px solid rgba(0, 232, 255, 0.1);
+  border-radius: 5px;
+  padding: 44px 34px;
+  text-align: center;
+  transition: all 0.4s var(--ease-fluid);
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent, rgba(0, 232, 255, 0.3), transparent
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.contact-card:hover {
+  background: rgba(0, 22, 48, 0.8);
+  border-color: rgba(0, 232, 255, 0.2);
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(0, 232, 255, 0.04);
+}
+.contact-card:hover::before { opacity: 1; }
+
+.contact-icon {
+  font-size: 34px;
+  margin-bottom: 18px;
+  display: block;
+  filter: drop-shadow(0 0 10px rgba(0, 232, 255, 0.3));
+}
+.contact-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 6px;
+}
+.contact-sub {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 22px;
+}
+.contact-link {
+  color: var(--biolum);
+  text-decoration: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  transition: opacity 0.2s;
+  text-shadow: 0 0 8px rgba(0, 232, 255, 0.3);
+}
+.contact-link:hover { opacity: 0.75; }
+
+.contact-btn {
+  display: inline-block;
+  background: transparent;
+  border: 1px solid rgba(0, 232, 255, 0.3);
+  color: var(--biolum);
+  padding: 11px 26px;
+  border-radius: 4px;
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+.contact-btn:hover {
+  background: rgba(0, 232, 255, 0.1);
+  border-color: var(--biolum);
+  box-shadow: 0 0 20px rgba(0, 232, 255, 0.2);
+}
+
+.social-links { display: flex; gap: 12px; justify-content: center; }
+.social-link {
+  color: var(--biolum);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid rgba(0, 232, 255, 0.25);
+  padding: 9px 18px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+.social-link:hover {
+  background: rgba(0, 232, 255, 0.1);
+  border-color: var(--biolum);
+  box-shadow: 0 0 15px rgba(0, 232, 255, 0.2);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   MOBILE STICKY CTA — Bioluminescent Glow Bar
+   ════════════════════════════════════════════════════════ */
+.mobile-sticky-cta {
+  display: none;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 199;
+  padding: 14px 18px;
+  background: rgba(1, 8, 20, 0.97);
+  border-top: 1px solid rgba(0, 232, 255, 0.2);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.8);
+}
+.mobile-sticky-btn {
+  display: block;
+  text-align: center;
+  background: linear-gradient(135deg,
+    rgba(0, 232, 255, 0.15) 0%,
+    rgba(0, 201, 167, 0.1) 100%
+  );
+  border: 1px solid var(--biolum);
+  color: var(--biolum);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow:
+    0 0 20px rgba(0, 232, 255, 0.2),
+    inset 0 0 15px rgba(0, 232, 255, 0.05);
+  animation: sticky-pulse 2.5s ease-in-out infinite;
+}
+@keyframes sticky-pulse {
+  0%,100% { box-shadow: 0 0 20px rgba(0,232,255,0.2); }
+  50%      { box-shadow: 0 0 35px rgba(0,232,255,0.4); }
+}
+
+
+/* ════════════════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════════════════ */
+.site-footer {
+  background: #010508;
+  border-top: 1px solid rgba(0, 232, 255, 0.08);
+  padding: 34px 52px;
+  position: relative;
+  z-index: 10;
+}
+.footer-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.footer-copy {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: rgba(150, 200, 225, 0.3);
+  letter-spacing: 0.06em;
+}
+.footer-links { display: flex; gap: 28px; }
+.footer-links a {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  transition: color 0.2s;
+}
+.footer-links a:hover {
+  color: var(--biolum);
+  text-shadow: 0 0 8px rgba(0, 232, 255, 0.4);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   REVEAL ANIMATIONS
+   ════════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s var(--ease-fluid), transform 0.8s var(--ease-fluid);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ════════════════════════════════════════════════════════
+   SUBMIT STATES
+   ════════════════════════════════════════════════════════ */
+.submit-spinner {
+  text-align: center;
+  padding: 18px;
+  font-size: 13px;
+  color: var(--biolum);
+  font-family: var(--font-mono);
+  letter-spacing: 0.1em;
+}
+.spinner {
+  width: 34px; height: 34px;
+  border: 2px solid rgba(0, 232, 255, 0.15);
+  border-top-color: var(--biolum);
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  animation: spin 0.8s linear infinite;
+  box-shadow: 0 0 10px rgba(0, 232, 255, 0.3);
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.submit-error {
+  color: #ff6b6b;
+  font-size: 13px;
+  padding: 14px;
+  text-align: center;
+  background: rgba(255, 74, 74, 0.06);
+  border: 1px solid rgba(255, 74, 74, 0.2);
+  border-radius: 4px;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .site-header { padding: 16px 24px; }
+  .site-header.scrolled { padding: 12px 24px; }
+  .section-wrap { padding: 0 24px; }
+  .split-grid { grid-template-columns: 1fr; gap: 52px; }
+  .value-grid { grid-template-columns: 1fr; }
+  .crew-grid { grid-template-columns: repeat(2, 1fr); }
+  .crew-grid.three-col { grid-template-columns: repeat(2, 1fr); }
+  .contact-grid { grid-template-columns: 1fr; }
+  .payment-inner { grid-template-columns: 1fr; }
+  .payment-card { position: static; }
+  .depth-meter, .pressure-gauge { display: none; }
+  .mobile-sticky-cta { display: block; }
+  section { padding: 72px 0; }
+  .sp-inner { gap: 36px; }
+}
+
+@media (max-width: 600px) {
+  .crew-grid, .crew-grid.three-col { grid-template-columns: 1fr; }
+  .hero-tamil { font-size: 36px; }
+  .countdown-wrap { gap: 5px; }
+  .countdown-box { padding: 12px 14px; min-width: 60px; }
+  .cd-num { font-size: 26px; }
+  .footer-inner { flex-direction: column; align-items: center; }
+  .cta-btn { padding: 15px 28px; font-size: 12px; }
+  .site-nav a { display: none; }
+  .payment-card { padding: 28px 20px; }
+}
+
+
+.hero{
+    position:relative;
+    min-height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+
+    background:
+    radial-gradient(circle at top,
+    #0b3b6e 0%,
+    #062340 35%,
+    #02111f 70%,
+    #010812 100%);
+}
+.light-rays{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+
+    background:
+    linear-gradient(
+        110deg,
+        transparent 0%,
+        rgba(255,255,255,.08) 45%,
+        transparent 60%
+    );
+
+    animation:rays 12s ease-in-out infinite alternate;
+}
+
+@keyframes rays{
+    from{
+        transform:translateX(-120px);
+    }
+    to{
+        transform:translateX(120px);
+    }
+}
+.atlantis-gate{
+    position:absolute;
+
+    width:600px;
+    height:600px;
+
+    border:2px solid rgba(0,229,255,.25);
+
+    left:50%;
+    top:48%;
+
+    transform:translate(-50%,-50%);
+
+    border-radius:50%;
+
+    box-shadow:
+    0 0 30px rgba(0,229,255,.3),
+    0 0 80px rgba(0,229,255,.15);
+
+    opacity:.35;
+}
+
+.sonar-ring{
+    position:absolute;
+
+    width:300px;
+    height:300px;
+
+    border-radius:50%;
+    border:1px solid rgba(0,229,255,.25);
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+}
+
+.sonar1{
+    animation:sonar 5s linear infinite;
+}
+
+.sonar2{
+    animation:sonar 5s linear infinite 2.5s;
+}
+
+@keyframes sonar{
+    from{
+        transform:translate(-50%,-50%) scale(.5);
+        opacity:1;
+    }
+
+    to{
+        transform:translate(-50%,-50%) scale(3);
+        opacity:0;
+    }
+}
+.hero-title{
+    font-size:clamp(3rem,8vw,6rem);
+    color:white;
+    font-weight:700;
+
+    text-shadow:
+    0 0 30px rgba(0,229,255,.5),
+    0 0 80px rgba(0,229,255,.2);
+
+    margin-bottom:20px;
+}
+.hero-subtitle{
+    color:#b9dff0;
+    font-size:1.2rem;
+    letter-spacing:2px;
+    margin-bottom:40px;
+}
+.hud-left,
+.hud-right{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+}
+
+.hud-left{
+    left:60px;
+}
+
+.hud-right{
+    right:60px;
+}
+
+.hud-item{
+    margin-bottom:30px;
+}
+
+.hud-label{
+    display:block;
+    color:#7abed8;
+    font-size:.75rem;
+    letter-spacing:2px;
+}
+
+.hud-value{
+    display:block;
+    color:#00e5ff;
+    font-size:1.2rem;
+    font-weight:700;
+}
+.hero-btn{
+    display:inline-block;
+
+    padding:18px 42px;
+
+    border:1px solid #00e5ff;
+
+    color:#00e5ff;
+
+    text-decoration:none;
+
+    letter-spacing:3px;
+
+    transition:.4s;
+}
+
+.hero-btn:hover{
+    background:#00e5ff;
+    color:#02111f;
+
+    box-shadow:
+    0 0 25px #00e5ff,
+    0 0 70px rgba(0,229,255,.5);
+
+    transform:translateY(-3px);
+}

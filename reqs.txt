@@ -1,0 +1,99 @@
+We are gearing up for our upcoming 2-Part Online Paid Marine Technology Masterclass, "ஆழ்கடலில் ஒரு பயணம்" (The Atlantis Protocol). To hit our goal of 100+ registrations, we need to upgrade our landing page strategy from the previous Vinveliyil Oru Payanam template.
+
+The new website needs to feel like a cinematic movie experience (AquaMan meets Avatar aesthetic) while being highly optimized for fast loading and instant mobile conversions.
+
+Below are the explicit requirements, section-by-section layout, and backend logic required for the development:
+
+1. Theme & UI/UX Guidelines
+Color Palette: Deep oceanic dark backgrounds (Deep Navy Blue/Black) contrasted with high-vibrancy Bioluminescent Neon Cyan, Electric Purple, and Coral Orange accents.
+
+Typography: Bold, clean Tamil typography for main headers alongside sleek, modern English technical fonts.
+
+Immersive Elements: Use smooth scroll animations (GSAP) or subtle fluid/sonar waves wave graphics in the background. Keep it lightweight so it loads instantly on mobile networks.
+
+Sticky Call-to-Action (CTA): A glowing, floating "Secure Your Sub Entry Pass" or "Register Now" button must remain visible at the bottom of the screen at all times on mobile devices.
+
+2. Step-by-Step Landing Page Layout
+Section 1: The Hero Fold (The Cinematic Hook)
+Visual: A powerful background visual of an autonomous underwater vehicle descending into a dark, bioluminescent marine trench.
+
+Main Header (Tamil): ஆழ்கடலில் ஒரு பயணம்
+
+Sub-header: Exploring the Blue Frontier: A 2-Day Masterclass on Marine Robotics, Underwater Acoustics & Naval AI.
+
+Core Details Badge:  July 4 & 5, 2026 |  Fully Online (Live) |  Language: Tamil
+
+Primary CTA Button: A glowing button that reads: [Enter the Deep Space — Register Now] (Smooth scrolls directly to the payment/form section).
+
+Section 2: The Core Disruption (Why Marine Tech?)
+Text/Visual Layout: A high-impact split text block.
+
+The Hook: "70% of our planet is an alien world. We have mapped the surface of the Moon and Mars, but the deep abyss is still waiting for its engineers."
+
+
+Target Breakdown Tabs:
+
+School Students: Uncover deep-sea monsters, pressure paradoxes, and the mysteries of the abyss.
+
+College Students & Professionals: Master AUV/ROV vehicle architectures, SONAR acoustics, and modern Naval Defense AI to upgrade your engineering portfolio.
+
+Section 3: The 7-Step Journey Flow (Syllabus)
+Instead of plain text, lay this out as an interactive vertical timeline/pipeline representing a deep submarine descent:
+
+Step 1: Understanding the Ocean (Entering the Alien World)
+
+Step 2: Underwater Vehicles (Engineering the Leviathans)
+
+Step 3: Power & Control Systems (Surviving Pressure Hulls)
+
+Step 4: Navigation Systems (Blind in the Dark)
+
+Step 5: Communication Systems (The Power of Acoustics)
+
+Step 6: Sensor Systems (The Digital Eyes of Atlantis)
+
+Step 7: Mariana Trench Case Study (The Ultimate Descent Climax)
+
+Section 4: What You Take Back (The Value Stack)
+Display these clearly using bold icons:
+
+Official IARRD Marine Academy Credentials (Boosts student CVs).
+
+2 Days of Live Experiential Training (With Santhosh’s 3D web presentations and simulations).
+
+Exclusive Access to the IARRD Marine Tech Network (Private community link).
+
+Section 5: Social Proof & Validation
+A clean carousel displaying feedback screenshots and text testimonials from our past Vinveliyil Oru Payanam space workshop attendees.
+
+Heading: "What our global explorer community says about IARRD Masterclasses."
+
+Section 6: Dynamic Pricing & Registration Form
+Part 1 Pricing Pass Card: Clear tier display (e.g., Early Bird price vs Standard price). Include a dynamic text line: "Early Bird pricing closes automatically in 48 hours!"
+
+The Conversion Form Fields (Keep it minimal to reduce friction):
+
+Full Name (For Certificate generation)
+
+Email Address
+
+WhatsApp Number
+
+Category (School Student / College Student / Professional / Tech Enthusiast)
+
+Institution/Organization Name
+
+3. Backend, Forms & Automation Requirements
+To ensure a flawless user journey, please implement the following structural logic:
+
+Part 2 Upsell Architecture: Design the database/form routing so that once Part 1 concludes, we can easily deploy a locked, hidden Part 2 Registration Form accessible exclusively to Part 1 verified emails/numbers.
+
+Instant Post-Payment Webhooks: Hook the checkout system up to an automated pipeline (via API/Zapier). The moment a payment is successful, it must trigger:
+
+An instant confirmation email with their digital entry pass.
+
+An automated WhatsApp notification containing the direct, private onboarding link to join our inner community group managed by Shravanthi.
+
+Abandoned Cart Tracking: If a user fills out their name and WhatsApp number but exits before completing the payment gateway transaction, log that data so Goutham can run recovery follow-ups.
+
+Please check this architecture out, map the database constraints, and let us know your estimated timeline for the staging link rollout. Let's make this portal look incredibly premium!
