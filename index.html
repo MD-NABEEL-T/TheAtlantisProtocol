@@ -1691,8 +1691,7 @@ document.getElementById('submit-reg-btn').addEventListener('click', function() {
     var type = Math.random() > 0.45 ? 'auv' : 'sub';
     /* ↑ BIGGER: scale range bumped from 0.4–0.9 → 1.1–1.6 */
     var scale = type === 'sub' ? (1.1 + Math.random() * 0.5) : (1.0 + Math.random() * 0.45);
-    var speed = (0.0003 + Math.random() * 0.00025) * (Math.random() > 0.5 ? 1 : -1);
-    var startX = speed > 0 ? -0.18 : 1.18;
+    var speed = (0.0018 + Math.random() * 0.001) * (Math.random() > 0.5 ? 1 : -1);    var startX = speed > 0 ? -0.18 : 1.18;
     vehicles.push({
       x: startX,
       y: 0.28 + Math.random() * 0.38, /* more centred vertically so hero text area is visible */
