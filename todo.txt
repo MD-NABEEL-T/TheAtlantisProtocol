@@ -2,6 +2,8 @@ css modification of all page (after 3.30)
 to change mail theme ,and content in google appscript.
 
 frontend ,backend deploy
+https://the-atlantis-protocol.vercel.app/
+https://theatlantisprotocol.onrender.com/
 backend use 1 rupee for your account and success page check 
 
 razorpay keys using new website link from harish and .env to change 

@@ -3,8 +3,8 @@
  * script.js — Landing page logic, payment gateways, and data sheets.
  */
 
-const BACKEND_URL = "https://vinvelil-workshop.onrender.com";
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXbLR7egPx3VerVUI3kqB50kSl5WZajoz1ThGy1hU2WZNl3CT-pSHvOyx_koXHm8zGDg/exec";
+const BACKEND_URL = "https://theatlantisprotocol.onrender.com/";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxujEPR387qZMVDqTh7KaNVLKBnH7-YJOp6yXduT1Nx9WarFX092LfbrcmADFaEXKcL/exec";
 const ADMIN_PASSWORD = "iarrdadmin2026";
 
 /* ═══════════════════════════════════════
