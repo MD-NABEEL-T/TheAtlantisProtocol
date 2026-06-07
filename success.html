@@ -1,44 +1,459 @@
 <!DOCTYPE html>
 <html lang="ta">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Registration Successful — ஆழ்கடலில் ஒரு பயணம்</title>
-
-  <link rel="stylesheet" href="style.css" />
+  <meta name="description" content="You're registered for the IARRD Marine Technology Masterclass." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;600;700&family=Orbitron:wght@400;500;700;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@300;400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ══ ROOT ══ */
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    body {
+      /* ── KEY FIX: flex centering ── */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem 100px; /* bottom padding keeps card above seaweed */
+
+      background:
+        radial-gradient(ellipse 100% 60% at 50% 0%,  rgba(0,80,140,0.35)  0%, transparent 60%),
+        radial-gradient(ellipse 80%  50% at 20% 100%, rgba(0,50,100,0.2)   0%, transparent 55%),
+        radial-gradient(ellipse 60%  40% at 80% 80%,  rgba(0,100,160,0.15) 0%, transparent 50%),
+        #010812;
+
+      font-family: 'Rajdhani', sans-serif;
+      color: #dff4f8;
+      overflow-x: hidden;
+    }
+
+    /* ══ ATMOSPHERIC LAYERS (fixed, behind everything) ══ */
+    .light-shafts {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 55%;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        conic-gradient(from 268deg at 25% -8%,
+          transparent 0deg, rgba(0,200,255,0.055) 7deg,
+          transparent 14deg, transparent 20deg,
+          rgba(0,180,220,0.04) 26deg, transparent 33deg),
+        conic-gradient(from 272deg at 75% -5%,
+          transparent 0deg, rgba(0,220,240,0.05) 9deg,
+          transparent 18deg, transparent 25deg,
+          rgba(0,160,200,0.03) 32deg, transparent 40deg);
+      animation: shafts-sway 14s ease-in-out infinite alternate;
+    }
+    @keyframes shafts-sway {
+      0%   { opacity: 0.6; transform: skewX(-3deg); }
+      50%  { opacity: 1;   transform: skewX(0deg);  }
+      100% { opacity: 0.7; transform: skewX(2deg);  }
+    }
+
+    .caustic-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse 30% 15% at 30% 20%, rgba(0,232,255,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 20% 10% at 70% 35%, rgba(0,201,167,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse 25% 12% at 55% 60%, rgba(0,180,255,0.04) 0%, transparent 60%);
+      animation: caustic-shift 10s ease-in-out infinite alternate;
+    }
+    @keyframes caustic-shift {
+      0%   { opacity: 0.5; transform: scale(1)    rotate(0deg);  }
+      50%  { opacity: 1;   transform: scale(1.08) rotate(1deg);  }
+      100% { opacity: 0.6; transform: scale(0.96) rotate(-1deg); }
+    }
+
+    /* ══ BUBBLE FIELD ══ */
+    .bubble-field {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bubble {
+      position: absolute;
+      bottom: -60px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%,
+        rgba(255,255,255,0.22),
+        rgba(0,232,255,0.06) 50%,
+        transparent 70%);
+      border: 1px solid rgba(0,232,255,0.18);
+      backdrop-filter: blur(1px);
+      animation: bubble-rise linear infinite;
+    }
+    .bubble::after {
+      content: '';
+      position: absolute;
+      top: 22%; left: 22%;
+      width: 28%; height: 18%;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transform: rotate(-30deg);
+    }
+    @keyframes bubble-rise {
+      0%   { transform: translateY(0)     translateX(0)   scale(1);    opacity: 0;   }
+      8%   { opacity: 1; }
+      50%  { transform: translateY(-45vh) translateX(12px) scale(1.04); }
+      92%  { opacity: 0.6; }
+      100% { transform: translateY(-105vh) translateX(-8px) scale(0.92); opacity: 0; }
+    }
+
+    /* ══ SEAWEED ══ */
+    .seaweed-layer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      z-index: 3;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .sw {
+      position: absolute;
+      bottom: 0;
+      border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
+      transform-origin: bottom center;
+    }
+    .sw1  { left:1%;   height:155px; width:13px; background:linear-gradient(to top,#001a10,#003d22,#005533); opacity:.55; animation:sway1 4.2s ease-in-out infinite; }
+    .sw2  { left:4%;   height:195px; width:19px; background:linear-gradient(to top,#001810,#003328,#005040); opacity:.42; animation:sway2 5.2s ease-in-out infinite; animation-delay:-1.2s; }
+    .sw3  { left:7%;   height:138px; width:11px; background:linear-gradient(to top,#001e14,#004030,#006045); opacity:.50; animation:sway1 3.8s ease-in-out infinite; animation-delay:-0.7s; }
+    .sw4  { left:11%;  height:175px; width:15px; background:linear-gradient(to top,#002010,#003a22,#005535); opacity:.40; animation:sway3 6.1s ease-in-out infinite; animation-delay:-2.0s; }
+    .sw5  { left:0.5%; height:118px; width:9px;  background:linear-gradient(to top,#001408,#002e1e,#004530); opacity:.32; animation:sway2 4.6s ease-in-out infinite; animation-delay:-0.4s; }
+    .sw6  { right:1%;  height:170px; width:14px; background:linear-gradient(to top,#001a10,#003d22,#005533); opacity:.55; animation:sway2 4.8s ease-in-out infinite; animation-delay:-1.5s; }
+    .sw7  { right:4%;  height:205px; width:21px; background:linear-gradient(to top,#001810,#003328,#005040); opacity:.42; animation:sway1 5.5s ease-in-out infinite; animation-delay:-0.9s; }
+    .sw8  { right:8%;  height:142px; width:12px; background:linear-gradient(to top,#001e14,#004030,#006045); opacity:.50; animation:sway3 3.9s ease-in-out infinite; animation-delay:-2.3s; }
+    .sw9  { right:12%; height:182px; width:16px; background:linear-gradient(to top,#002010,#003a22,#005535); opacity:.38; animation:sway1 5.2s ease-in-out infinite; animation-delay:-0.6s; }
+    .sw10 { right:0.5%;height:120px; width:10px; background:linear-gradient(to top,#001408,#002e1e,#004530); opacity:.30; animation:sway2 4.3s ease-in-out infinite; animation-delay:-1.8s; }
+    @keyframes sway1 {
+      0%,100% { transform: rotate(-9deg) skewX(2deg);  }
+      25%     { transform: rotate(7deg)  skewX(-1deg); }
+      50%     { transform: rotate(-5deg) skewX(3deg);  }
+      75%     { transform: rotate(10deg) skewX(-2deg); }
+    }
+    @keyframes sway2 {
+      0%,100% { transform: rotate(8deg)   skewX(-2deg); }
+      30%     { transform: rotate(-11deg) skewX(3deg);  }
+      60%     { transform: rotate(6deg)   skewX(-1deg); }
+    }
+    @keyframes sway3 {
+      0%,100% { transform: rotate(-6deg) skewX(1deg);  }
+      40%     { transform: rotate(12deg) skewX(-3deg); }
+      70%     { transform: rotate(-4deg) skewX(2deg);  }
+    }
+
+    /* ══ CARD — sits on top of all fixed layers ══ */
+    .success-container {
+      position: relative;
+      z-index: 10;                  /* above all fixed layers */
+      max-width: 540px;
+      width: 100%;
+      text-align: center;
+      background: rgba(0, 14, 32, 0.82);
+      border: 1px solid rgba(0, 232, 255, 0.2);
+      border-radius: 10px;
+      padding: 3.5rem 2.8rem 3rem;
+      backdrop-filter: blur(22px);
+      box-shadow:
+        0 40px 80px rgba(0,0,0,0.7),
+        0 0 0 1px rgba(0,232,255,0.06),
+        inset 0 1px 0 rgba(0,232,255,0.18),
+        0 0 80px rgba(0,100,160,0.12);
+      /* entrance animation */
+      animation: card-rise 0.85s cubic-bezier(0.23,1,0.32,1) both;
+    }
+    @keyframes card-rise {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* Top energy bar */
+    .success-container::before {
+      content: '';
+      position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+      background: linear-gradient(90deg,
+        transparent, rgba(0,201,167,0.6) 25%,
+        rgba(0,232,255,0.9) 50%,
+        rgba(0,201,167,0.6) 75%, transparent);
+      box-shadow: 0 0 14px rgba(0,232,255,0.5);
+    }
+
+    /* ── Depth badge ── */
+    .depth-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Space Mono', monospace; font-size: 9px;
+      letter-spacing: 0.32em; text-transform: uppercase;
+      color: rgba(0,232,255,0.65);
+      background: rgba(0,232,255,0.04);
+      border: 1px solid rgba(0,232,255,0.15);
+      padding: 6px 16px; border-radius: 40px; margin-bottom: 28px;
+    }
+    .depth-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #00e8ff; box-shadow: 0 0 6px #00e8ff;
+      animation: depth-blink 1.8s ease-in-out infinite;
+    }
+    @keyframes depth-blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+    /* ── Orbit icon ── */
+    .success-icon-wrap {
+      position: relative; width: 96px; height: 96px;
+      margin: 0 auto 2rem;
+    }
+    .trident-icon {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.6rem;
+      filter: drop-shadow(0 0 16px rgba(0,232,255,0.8)) drop-shadow(0 0 32px rgba(0,201,167,0.4));
+      animation: trident-pulse 3s ease-in-out infinite;
+    }
+    @keyframes trident-pulse {
+      0%,100% { transform: scale(1)    translateY(0);    filter: drop-shadow(0 0 16px rgba(0,232,255,0.8)); }
+      50%     { transform: scale(1.08) translateY(-3px); filter: drop-shadow(0 0 28px rgba(0,232,255,1)) drop-shadow(0 0 50px rgba(0,201,167,0.6)); }
+    }
+    .orbit-ring {
+      position: absolute; inset: 0;
+      border: 1px solid rgba(0,232,255,0.22);
+      border-radius: 50%;
+      animation: orbit-spin 8s linear infinite;
+    }
+    .orbit-planet {
+      position: absolute; top: -4px; left: 50%;
+      transform: translateX(-50%);
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #00c9a7; box-shadow: 0 0 10px #00c9a7;
+    }
+    .orbit-ring-2 {
+      position: absolute; inset: 10px;
+      border: 1px dashed rgba(0,232,255,0.1);
+      border-radius: 50%;
+      animation: orbit-spin 14s linear infinite reverse;
+    }
+    @keyframes orbit-spin { to { transform: rotate(360deg); } }
+
+    /* ── Titles ── */
+    .success-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.4rem, 4vw, 1.9rem);
+      font-weight: 600; color: #e8f8ff; margin-bottom: 0.4rem;
+      text-shadow: 0 0 30px rgba(0,232,255,0.2);
+    }
+    .success-title-tamil {
+      font-family: 'Noto Sans Tamil', sans-serif;
+      font-size: 1.2rem; font-weight: 600;
+      color: rgba(0,232,255,0.85); margin-bottom: 0.9rem;
+      text-shadow: 0 0 18px rgba(0,232,255,0.3);
+    }
+    .success-sub {
+      font-size: 0.97rem; color: rgba(150,200,225,0.65);
+      margin-bottom: 2rem; line-height: 1.65;
+    }
+
+    /* ── Event box ── */
+    .success-event-box {
+      background: rgba(0,6,18,0.6);
+      border: 1px solid rgba(0,232,255,0.12);
+      border-radius: 7px; padding: 1.4rem 1.6rem;
+      margin-bottom: 1.8rem; text-align: left;
+      position: relative; overflow: hidden;
+    }
+    .success-event-box::before {
+      content: '';
+      position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, transparent, #00e8ff 30%, #00c9a7 70%, transparent);
+      box-shadow: 0 0 10px #00e8ff;
+    }
+    .seb-label {
+      font-family: 'Space Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(0,232,255,0.5); margin-bottom: 0.45rem; display: block;
+    }
+    .seb-title-tamil {
+      font-family: 'Noto Sans Tamil', sans-serif; font-size: 1.45rem;
+      font-weight: 700; color: #fff; margin-bottom: 0.3rem;
+    }
+    .seb-en {
+      font-family: 'Cinzel', serif; font-size: 0.8rem;
+      letter-spacing: 0.12em; color: rgba(200,235,245,0.5);
+      margin-bottom: 0.8rem; text-transform: uppercase; display: block;
+    }
+    .seb-details { display: flex; flex-direction: column; gap: 5px; }
+    .seb-detail-row {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Space Mono', monospace; font-size: 0.75rem;
+      color: rgba(0,232,255,0.7);
+    }
+    .seb-detail-row span:first-child { opacity: 0.5; }
+
+    /* ── Fee pill ── */
+    .fee-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(0,201,167,0.08); border: 1px solid rgba(0,201,167,0.25);
+      border-radius: 20px; padding: 5px 14px; margin-bottom: 1.8rem;
+      font-family: 'Space Mono', monospace; font-size: 0.75rem;
+      color: #00c9a7; letter-spacing: 0.1em;
+    }
+
+    /* ── Checklist ── */
+    .next-steps { text-align: left; margin-bottom: 1.8rem; }
+    .next-steps-title {
+      font-family: 'Space Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: rgba(0,232,255,0.4); margin-bottom: 0.8rem;
+    }
+    .step-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 8px 0; border-bottom: 1px solid rgba(0,232,255,0.06);
+      font-size: 0.92rem; color: rgba(200,235,245,0.7); line-height: 1.5;
+    }
+    .step-item:last-child { border-bottom: none; }
+    .step-check {
+      color: #00c9a7; font-size: 0.8rem; margin-top: 2px; flex-shrink: 0;
+      text-shadow: 0 0 8px #00c9a7;
+    }
+
+    /* ── CTA button ── */
+    .home-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: transparent; border: 1px solid rgba(0,232,255,0.4);
+      color: #00e8ff; padding: 14px 36px; border-radius: 4px;
+      font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none;
+      position: relative; overflow: hidden;
+      transition: all 0.35s ease;
+      box-shadow: 0 0 20px rgba(0,232,255,0.08);
+    }
+    .home-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,232,255,0.18), rgba(0,201,167,0.12));
+      transform: translateX(-101%); transition: transform 0.35s ease;
+    }
+    .home-btn:hover {
+      color: #fff; border-color: #4df5ff;
+      box-shadow: 0 0 35px rgba(0,232,255,0.28);
+      transform: translateY(-2px);
+    }
+    .home-btn:hover::before { transform: translateX(0); }
+    .home-btn span { position: relative; z-index: 1; }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 1rem 90px; }
+      .success-container { padding: 2.5rem 1.5rem 2rem; }
+      .success-title { font-size: 1.3rem; }
+    }
+  </style>
 </head>
 
-<body class="page-success">
+<body>
 
-  <canvas id="starfield"></canvas>
-
-  <div class="success-container">
-    <div class="success-icon-wrap">
-      <div class="success-orbit">
-        <div class="success-planet"></div>
-      </div>
-      <div class="success-check">✓</div>
-    </div>
-
-    <h2 class="success-title">Registration Successful</h2>
-    <p class="success-sub">Digital entry pass confirmation has been sent to your email</p>
-
-    <div class="success-event-box">
-      <p class="seb-label">Your Submersible Entry is Confirmed</p>
-      <p class="seb-title-tamil">ஆழ்கடலில் ஒரு பயணம்</p>
-      <p class="seb-details">July 4 &amp; 5, 2026 · 10:00 AM (IST)</p>
-    </div>
-
-    <a href="index.html" class="cta-btn" style="margin-top: 1rem;">
-      <span>← Back to Home</span>
-    </a>
+  <!-- Fixed atmospheric layers -->
+  <div class="light-shafts"></div>
+  <div class="caustic-layer"></div>
+  <div class="bubble-field" id="bubbleField"></div>
+  <div class="seaweed-layer">
+    <div class="sw sw1"></div><div class="sw sw2"></div><div class="sw sw3"></div>
+    <div class="sw sw4"></div><div class="sw sw5"></div><div class="sw sw6"></div>
+    <div class="sw sw7"></div><div class="sw sw8"></div><div class="sw sw9"></div>
+    <div class="sw sw10"></div>
   </div>
 
-  <script src="script.js"></script>
-</body>
+  <!-- Centered card -->
+  <div class="success-container">
 
+    <div class="depth-badge">
+      <span class="depth-dot"></span>
+      IARRD · MARINE MASTERCLASS 2026
+    </div>
+
+    <div class="success-icon-wrap">
+      <div class="orbit-ring"><div class="orbit-planet"></div></div>
+      <div class="orbit-ring-2"></div>
+      <div class="trident-icon">🔱</div>
+    </div>
+
+    <h1 class="success-title">Descent Confirmed</h1>
+    <p class="success-title-tamil">நீங்கள் பதிவு செய்யப்பட்டுள்ளீர்கள்!</p>
+    <p class="success-sub">
+      Your submersible berth has been reserved. A confirmation with your entry pass and pre-dive materials has been sent to your email.
+    </p>
+
+    <div class="success-event-box">
+      <span class="seb-label">Your Event</span>
+      <p class="seb-title-tamil">ஆழ்கடலில் ஒரு பயணம்</p>
+      <span class="seb-en">Āzhkadalil Oru Payanam</span>
+      <div class="seb-details">
+        <div class="seb-detail-row"><span>📅</span><span>July 4 &amp; 5, 2026</span></div>
+        <div class="seb-detail-row"><span>⏱</span><span>06:00 PM IST · Online Live</span></div>
+        <div class="seb-detail-row"><span>🌊</span><span>IARRD Marine Technology Masterclass</span></div>
+      </div>
+    </div>
+
+    <div class="fee-pill">✓ &nbsp;₹99 Payment Received</div>
+
+    <div class="next-steps">
+      <p class="next-steps-title">What happens next</p>
+      <div class="step-item">
+        <span class="step-check">◈</span>
+        <span>Check your email for the confirmation &amp; session link</span>
+      </div>
+      <div class="step-item">
+        <span class="step-check">◈</span>
+        <span>Pre-dive study materials will be sent 48 hrs before the event</span>
+      </div>
+      <div class="step-item">
+        <span class="step-check">◈</span>
+        <span>Join our WhatsApp community for real-time updates and Q&amp;A</span>
+      </div>
+      <div class="step-item">
+        <span class="step-check">◈</span>
+        <span>Your MSME certificate will be issued upon completing both days</span>
+      </div>
+    </div>
+
+    <a href="index.html" class="home-btn">
+      <span>← Back to Surface</span>
+    </a>
+
+  </div>
+
+  <script>
+    // Spawn CSS-animated bubbles
+    const field = document.getElementById('bubbleField');
+    [
+      { left:8,  size:18, dur:9,  delay:0   },
+      { left:17, size:11, dur:12, delay:2.5 },
+      { left:28, size:24, dur:8,  delay:1   },
+      { left:38, size:9,  dur:14, delay:4   },
+      { left:50, size:16, dur:10, delay:0.5 },
+      { left:61, size:28, dur:7,  delay:3   },
+      { left:72, size:12, dur:11, delay:1.8 },
+      { left:82, size:20, dur:9,  delay:5   },
+      { left:90, size:8,  dur:13, delay:2   },
+      { left:45, size:14, dur:15, delay:6   },
+      { left:33, size:22, dur:8,  delay:7   },
+      { left:65, size:10, dur:16, delay:3.5 },
+    ].forEach(b => {
+      const el = document.createElement('div');
+      el.className = 'bubble';
+      el.style.cssText = `left:${b.left}%;width:${b.size}px;height:${b.size}px;animation-duration:${b.dur}s;animation-delay:${b.delay}s;`;
+      field.appendChild(el);
+    });
+  </script>
+</body>
 </html>

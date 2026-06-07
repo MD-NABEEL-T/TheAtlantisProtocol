@@ -844,7 +844,7 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
   <div class="sp-inner">
     <div class="sp-item"><span class="sp-num">100+</span><span class="sp-label">Explorer Passes</span></div>
     <div class="sp-item"><span class="sp-num">4.8/5</span><span class="sp-label">Session Rating</span></div>
-    <div class="sp-item"><span class="sp-num">MSME / ISO</span><span class="sp-label">Certified Academy</span></div>
+    <div class="sp-item"><span class="sp-num">MSME</span><span class="sp-label">Certified Academy</span></div>
     <div class="sp-item sp-powered">
       <span class="sp-label">Powered by</span>
       <img src="logo/logo4-removebg-preview.png" alt="IARRD" style="height:22px;filter:brightness(1.4)" onerror="this.style.display='none'" />
@@ -1633,44 +1633,6 @@ window.addEventListener('scroll', function() {
 })();
 
 /* ════ RAZORPAY ════ */
-document.getElementById('submit-reg-btn').addEventListener('click', function() {
-  var name = document.getElementById('reg-name').value.trim();
-  var email = document.getElementById('reg-email').value.trim();
-  var phone = document.getElementById('reg-phone').value.trim();
-  var agreed = document.getElementById('reg-privacy-agree').checked;
-  var err = document.getElementById('submit-error');
-  err.style.display = 'none';
-  if (!name || !email || !phone) { err.textContent = '⚠️ Please fill in all required fields.'; err.style.display = 'block'; return; }
-  if (!agreed) { err.textContent = '⚠️ Please agree to the consent before proceeding.'; err.style.display = 'block'; return; }
-  document.getElementById('submit-spinner').style.display = 'block';
-  document.getElementById('submit-reg-btn').style.display = 'none';
-  if (typeof Razorpay === 'undefined') {
-    document.getElementById('submit-spinner').style.display = 'none';
-    document.getElementById('submit-reg-btn').style.display = 'block';
-    err.textContent = '⚠️ Payment gateway unavailable. Try refreshing.';
-    err.style.display = 'block'; return;
-  }
-  var options = {
-    key: 'rzp_test_So49A6jq4H7b1n', amount: 9900, currency: 'INR',
-    name: 'IARRD — The Atlantis Protocol',
-    description: 'Marine Technology Masterclass · July 4-5, 2026',
-    handler: function(response) {
-      document.getElementById('submit-spinner').style.display = 'none';
-      alert('Registration Successful! 🌊 Check your email for onboarding details.');
-    },
-    prefill: { name: name, email: email, contact: phone },
-    theme: { color: '#00e8ff' }
-  };
-  var rzp = new Razorpay(options);
-  rzp.on('payment.failed', function() {
-    document.getElementById('submit-spinner').style.display = 'none';
-    document.getElementById('submit-reg-btn').style.display = 'block';
-    err.textContent = '⚠️ Payment failed. Please retry.'; err.style.display = 'block';
-  });
-  rzp.open();
-});
-
-
 
 /* ════════════════════════════════════════════════════
    AUV / SUBMARINE VEHICLE — passes through hero L→R

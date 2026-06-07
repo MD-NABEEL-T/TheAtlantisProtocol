@@ -1,19 +1,21 @@
-css modification of all pages (after 11 pm)
-to change hero page lil bit 
-to change mail theme - awesome but need to getit from claude nabeel.iarrd gmail
-at (10:30 pm),and 
-change content in google appscript.
+to change mail theme - 1pm tmd.
+more entire working + cart logic for gautham 
+LET ME FIX THIS ENTIRE LOGIC FIRST 
+BECAUSE LATER WE CAN DO THE REQ2 ALRIGHT
 
-use test keys to check if it works 
+like once user fills and submit the data to google sheets and then mail the participant and then the data displayed in success page wiht pending in payment once the user pays it is updated to paid.
+
+Harish has to give razorpay keys , audio ,etc.
+
 deploy
 https://the-atlantis-protocol.vercel.app/
 https://theatlantisprotocol.onrender.com/
-backend use 1 rupee for your account and success page check 
-
-razorpay keys using new website link from harish and .env to change 
-whatsapp not possible 
-more cart logic for fucking gautham 
-something that's all 
-
 
 web app url=https://script.google.com/macros/s/AKfycbxujEPR387qZMVDqTh7KaNVLKBnH7-YJOp6yXduT1Nx9WarFX092LfbrcmADFaEXKcL/exec
+
+
+razorpay keys using new website link from harish and .env to change 
+
+use test keys to check if it works
+
+backend use 1 rupee for your account and success page check 

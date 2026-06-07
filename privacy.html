@@ -1,28 +1,372 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Privacy Policy — IARRD Astronomy Workshop</title>
-  <meta name="description" content="Privacy Policy for the IARRD Astronomy Workshop — Vinvelil Oru Payanam." />
-  <link rel="stylesheet" href="style.css" />
+  <title>Privacy Policy — IARRD · ஆழ்கடலில் ஒரு பயணம்</title>
+  <meta name="description" content="Privacy Policy for the IARRD Marine Technology Masterclass — The Atlantis Protocol." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@300;400;600&display=swap"
-    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@300;400;600&family=Cinzel:wght@400;600;700&family=Rajdhani:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --abyss: #010a12;
+      --glow: #00e8ff;
+      --glow2: #00ffcc;
+      --gold: #c9a84c;
+      --coral: #ff6b35;
+      --text: #dff4f8;
+      --text-dim: rgba(220,245,255,0.58);
+      --font-display: 'Cinzel', serif;
+      --font-body: 'Rajdhani', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --font-tamil: 'Noto Sans Tamil', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--abyss);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Canvas ── */
+    #ocean-canvas {
+      position: fixed;
+      inset: 0; width: 100%; height: 100%;
+      z-index: 0;
+    }
+    #particles-canvas {
+      position: fixed;
+      inset: 0; width: 100%; height: 100%;
+      z-index: 1;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    .vignette {
+      position: fixed;
+      inset: 0; z-index: 2;
+      pointer-events: none;
+      background: radial-gradient(ellipse 80% 75% at 50% 50%,
+        transparent 25%, rgba(1,10,18,0.5) 70%, rgba(1,10,18,0.9) 100%);
+    }
+
+    /* ── Header ── */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 52px;
+      background: rgba(1,8,18,0.92);
+      border-bottom: 1px solid rgba(0,232,255,0.1);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+    }
+
+    .logo-area img {
+      height: 34px;
+      filter: brightness(1.4) drop-shadow(0 0 8px rgba(0,232,255,0.4));
+    }
+
+    .site-nav { display: flex; align-items: center; gap: 28px; }
+    .site-nav a {
+      font-family: var(--font-body);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .site-nav a:hover { color: var(--glow); }
+
+    /* ── Main content ── */
+    main {
+      position: relative;
+      z-index: 10;
+      padding-top: 110px;
+      padding-bottom: 80px;
+    }
+
+    .privacy-container {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ── Page header ── */
+    .privacy-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(0,232,255,0.1);
+      position: relative;
+    }
+
+    .privacy-header::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 30%; right: 30%;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent, var(--glow2) 30%, var(--glow) 50%, var(--glow2) 70%, transparent);
+      box-shadow: 0 0 8px var(--glow);
+    }
+
+    .page-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--coral);
+      margin-bottom: 0.75rem;
+    }
+
+    .privacy-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.4rem;
+      text-shadow: 0 0 40px rgba(0,232,255,0.2);
+    }
+
+    .privacy-title-tamil {
+      font-family: var(--font-tamil);
+      font-size: 1rem;
+      color: var(--text-dim);
+      margin-bottom: 1rem;
+    }
+
+    .privacy-date {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Content blocks ── */
+    .privacy-block {
+      margin-bottom: 2.8rem;
+      animation: fade-in 0.6s ease both;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .privacy-heading {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1rem;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .privacy-heading::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--glow2), var(--glow));
+      box-shadow: 0 0 8px var(--glow);
+      border-radius: 2px;
+    }
+
+    .privacy-block p {
+      color: var(--text-dim);
+      font-size: 0.97rem;
+      line-height: 1.82;
+      margin-bottom: 0.9rem;
+    }
+
+    .privacy-block p:last-child { margin-bottom: 0; }
+
+    .privacy-block strong { color: var(--text); }
+    .privacy-block em { color: rgba(220,245,255,0.7); font-style: italic; }
+
+    .privacy-list {
+      list-style: none;
+      margin: 0.75rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .privacy-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      padding: 0.55rem 0.9rem;
+      background: rgba(0,232,255,0.03);
+      border: 1px solid rgba(0,232,255,0.08);
+      border-radius: 4px;
+      transition: border-color 0.3s, background 0.3s;
+    }
+
+    .privacy-list li:hover {
+      border-color: rgba(0,232,255,0.16);
+      background: rgba(0,232,255,0.05);
+    }
+
+    .privacy-list li::before {
+      content: '▸';
+      color: var(--glow);
+      flex-shrink: 0;
+      font-size: 0.75rem;
+      margin-top: 0.2rem;
+      text-shadow: 0 0 6px rgba(0,232,255,0.5);
+    }
+
+    .privacy-list li strong { color: var(--text); }
+
+    /* Divider */
+    .privacy-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent, rgba(0,232,255,0.15) 30%, rgba(0,232,255,0.15) 70%, transparent);
+      margin: 2.5rem 0;
+    }
+
+    /* Highlight */
+    .privacy-highlight {
+      color: var(--glow);
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      text-shadow: 0 0 8px rgba(0,232,255,0.4);
+    }
+
+    /* Contact email */
+    .privacy-contact-email {
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      margin: 0.75rem 0 !important;
+    }
+
+    .privacy-email-link {
+      color: var(--glow);
+      text-decoration: none;
+      text-shadow: 0 0 10px rgba(0,232,255,0.4);
+      transition: opacity 0.2s;
+    }
+    .privacy-email-link:hover { opacity: 0.75; }
+
+    /* Footer note */
+    .privacy-footer-note {
+      text-align: center;
+      padding-top: 1.5rem;
+    }
+
+    .privacy-footer-note p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 1.5rem;
+    }
+
+    .privacy-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 1px solid var(--glow);
+      color: var(--glow);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.75rem 1.8rem;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s ease;
+      box-shadow: 0 0 20px rgba(0,232,255,0.1);
+    }
+    .privacy-back-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0,232,255,0.2), rgba(0,255,204,0.12));
+      transform: translateX(-101%);
+      transition: transform 0.35s ease;
+    }
+    .privacy-back-btn:hover {
+      color: #fff;
+      border-color: #fff;
+      box-shadow: 0 0 35px rgba(0,232,255,0.3);
+      transform: translateY(-2px);
+    }
+    .privacy-back-btn:hover::before { transform: translateX(0); }
+
+    /* ── Footer ── */
+    .site-footer {
+      position: relative;
+      z-index: 10;
+      background: rgba(1,5,12,0.95);
+      border-top: 1px solid rgba(0,232,255,0.08);
+      padding: 28px 52px;
+    }
+    .footer-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .footer-copy {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: rgba(150,200,225,0.3);
+      letter-spacing: 0.06em;
+    }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a {
+      font-size: 12px;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--glow); }
+
+    @media (max-width: 700px) {
+      .site-header { padding: 14px 24px; }
+      .site-nav a { font-size: 11px; }
+      .privacy-container { padding: 0 1.2rem; }
+      .site-footer { padding: 22px 24px; }
+      .footer-inner { flex-direction: column; align-items: center; }
+    }
+  </style>
 </head>
+<body>
 
-<body class="page-privacy">
+  <canvas id="ocean-canvas"></canvas>
+  <canvas id="particles-canvas"></canvas>
+  <div class="vignette"></div>
 
-  <canvas id="starfield"></canvas>
-  <div class="sun-ray"></div>
-
-  <!-- Header -->
   <header class="site-header">
-    <a href="https://www.iarrd.in" class="logo-area">
-      <img src="logo/logo.jpeg" alt="IARRD Logo" class="logo-img" />
+    <a href="index.html" class="logo-area">
+      <img src="logo/logo3.png" alt="IARRD Logo" onerror="this.style.display='none'" />
     </a>
     <nav class="site-nav">
       <a href="index.html#about">About</a>
@@ -31,77 +375,60 @@
     </nav>
   </header>
 
-  <!-- Privacy Policy Content -->
-  <main class="privacy-main">
+  <main>
     <div class="privacy-container">
 
-      <!-- Page Title -->
       <div class="privacy-header">
-        <p class="event-label">IARRD · LEGAL</p>
+        <p class="page-eyebrow">IARRD · Legal</p>
         <h1 class="privacy-title">Privacy Policy</h1>
         <p class="privacy-title-tamil">தனியுரிமைக் கொள்கை</p>
         <p class="privacy-date">Effective Date: <strong>May 2026</strong></p>
       </div>
 
-      <!-- Intro -->
       <div class="privacy-block">
-        <p>At <strong>Indian Astronomy Rocket Research and Development (IARRD)</strong>, we are committed to protecting
-          your privacy. This Privacy Policy explains how we collect, use, and protect the personal information you
-          provide when registering for our events and workshops, including <em>"Vinveliyil Oru Payanam — விண்வெளியில்
-            ஒரு பயணம்."</em></p>
-        <p>By registering for our workshop, you agree to the practices described in this policy. Please read it
-          carefully.</p>
+        <p>At <strong>Indian Astronomy Rocket Research and Development (IARRD)</strong>, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, and protect the personal information you provide when registering for our events and workshops, including <em>"ஆழ்கடலில் ஒரு பயணம் — The Atlantis Protocol."</em></p>
+        <p>By registering for our masterclass, you agree to the practices described in this policy. Please read it carefully.</p>
       </div>
 
       <hr class="privacy-divider" />
 
-      <!-- Section 1 -->
       <div class="privacy-block">
         <h2 class="privacy-heading">1. Information We Collect</h2>
-        <p>When you register for our workshop, we collect the following personal information:</p>
+        <p>When you register for our masterclass, we collect the following personal information:</p>
         <ul class="privacy-list">
           <li><strong>Full Name</strong> — To generate your certificate of participation</li>
           <li><strong>Email Address</strong> — To send workshop details, links, and confirmations</li>
           <li><strong>WhatsApp Number</strong> — For updates, reminders, and support</li>
-          <li><strong>College / School Name</strong> — For audience insights and program improvement</li>
-          <li><strong>Category</strong> (School / College / Professional / Enthusiast) — To tailor our communication
-          </li>
+          <li><strong>College / School / Company Name</strong> — For audience insights and program improvement</li>
+          <li><strong>Category</strong> (School / College / Professional / Enthusiast) — To tailor our communication</li>
         </ul>
       </div>
 
       <hr class="privacy-divider" />
 
-      <!-- Section 2 -->
       <div class="privacy-block">
         <h2 class="privacy-heading">2. How We Use Your Information</h2>
         <p>Your information is used solely for the following purposes:</p>
         <ul class="privacy-list">
           <li>To <strong>manage your registration</strong> and confirm your seat</li>
-          <li>To <strong>send workshop links, study materials</strong>, and event updates</li>
-          <li>To <strong>issue certificates</strong> upon completion</li>
-          <li>To <strong>notify you of future programs</strong> and astronomy events by IARRD</li>
+          <li>To <strong>send session links, study materials</strong>, and event updates</li>
+          <li>To <strong>issue participation certificates</strong> upon completion</li>
+          <li>To <strong>notify you of future programs</strong> and marine tech events by IARRD</li>
           <li>To <strong>improve our events</strong> based on participant demographics</li>
         </ul>
-        <p>We do <strong>not</strong> sell, rent, or share your personal data with third parties for commercial
-          purposes.</p>
+        <p>We do <strong>not</strong> sell, rent, or share your personal data with third parties for commercial purposes.</p>
       </div>
 
       <hr class="privacy-divider" />
 
-      <!-- Section 3 -->
       <div class="privacy-block">
         <h2 class="privacy-heading">3. Data Protection &amp; Security</h2>
-        <p>We take your data seriously. All information collected is stored securely using Google's infrastructure
-          (Google Sheets / Google Forms) and is accessible only to authorised IARRD team members. We implement
-          reasonable technical and organisational measures to prevent unauthorized access, disclosure, or loss of your
-          personal information.</p>
-        <p>While we strive to protect your personal data, no transmission over the internet is 100% secure. We
-          encourage you to reach out immediately if you suspect any misuse of your data.</p>
+        <p>We take your data seriously. All information collected is stored securely using Google's infrastructure (Google Sheets) and is accessible only to authorised IARRD team members. We implement reasonable technical and organisational measures to prevent unauthorized access, disclosure, or loss of your personal information.</p>
+        <p>Payment processing is handled entirely by Razorpay — IARRD does not store any card or UPI details. Razorpay is PCI-DSS compliant.</p>
       </div>
 
       <hr class="privacy-divider" />
 
-      <!-- Section 4 -->
       <div class="privacy-block">
         <h2 class="privacy-heading">4. Your Rights &amp; Opt-Out</h2>
         <p>You have the right to:</p>
@@ -110,36 +437,28 @@
           <li>Request correction or deletion of your data</li>
           <li>Opt out of future communications at any time</li>
         </ul>
-        <p>To stop receiving messages, simply <span class="privacy-highlight">reply STOP</span> to any WhatsApp
-          message, or <span class="privacy-highlight">unsubscribe via the link</span> in our emails. For data deletion
-          requests, contact us directly.</p>
+        <p>To stop receiving messages, simply <span class="privacy-highlight">reply STOP</span> to any WhatsApp message, or <span class="privacy-highlight">unsubscribe via the link</span> in our emails. For data deletion requests, contact us directly.</p>
       </div>
 
       <hr class="privacy-divider" />
 
-      <!-- Section 5 -->
       <div class="privacy-block">
         <h2 class="privacy-heading">5. Contact Us</h2>
-        <p>If you have any questions about this Privacy Policy or wish to exercise your rights, please reach out to us
-          at:</p>
-        <p class="privacy-contact-email">
-          📧 <a href="mailto:iarrd.official@gmail.com" class="privacy-email-link">iarrd.official@gmail.com</a>
-        </p>
+        <p>If you have any questions about this Privacy Policy or wish to exercise your rights, please reach out to us at:</p>
+        <p class="privacy-contact-email">📧 <a href="mailto:iarrd.official@gmail.com" class="privacy-email-link">iarrd.official@gmail.com</a></p>
         <p>We aim to respond to all enquiries within <strong>2–3 business days</strong>.</p>
       </div>
 
       <hr class="privacy-divider" />
 
       <div class="privacy-footer-note">
-        <p>This policy may be updated periodically. The latest version will always be available on this page. Last
-          reviewed: <strong>May 2026</strong>.</p>
-        <a href="index.html" class="privacy-back-btn">← Back to Home</a>
+        <p>This policy may be updated periodically. The latest version will always be available on this page. Last reviewed: <strong>June 2026</strong>.</p>
+        <a href="index.html" class="privacy-back-btn">← Return to Surface</a>
       </div>
 
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <div class="footer-inner">
       <p class="footer-copy">© 2026 IARRD. All rights reserved.</p>
@@ -151,7 +470,233 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
-</body>
+  <script>
+  /* ══ OCEAN CANVAS ══ */
+  (function() {
+    var c = document.getElementById('ocean-canvas');
+    var ctx = c.getContext('2d');
+    function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
 
+    var fish = [];
+    for (var f = 0; f < 9; f++) {
+      fish.push({
+        x: Math.random(), y: 0.05 + Math.random() * 0.85,
+        scale: 0.4 + Math.random() * 1.1,
+        speed: (0.00025 + Math.random() * 0.00045) * (Math.random() > 0.5 ? 1 : -1),
+        alpha: 0.07 + Math.random() * 0.14,
+        phase: Math.random() * Math.PI * 2,
+        hue: 170 + Math.floor(Math.random() * 60)
+      });
+    }
+
+    var jellies = [];
+    for (var j = 0; j < 4; j++) {
+      jellies.push({
+        x: Math.random(), y: 0.05 + Math.random() * 0.65,
+        r: 16 + Math.random() * 24,
+        phase: Math.random() * Math.PI * 2,
+        speedX: (Math.random() - 0.5) * 0.00007,
+        speedY: -0.00005 - Math.random() * 0.00009,
+        alpha: 0.12 + Math.random() * 0.2,
+        hue: Math.random() > 0.5 ? 185 : 265
+      });
+    }
+
+    var corals = [];
+    for (var co = 0; co < 8; co++) {
+      var side = Math.random() > 0.5;
+      corals.push({
+        x: side ? Math.random() * 0.2 : 0.8 + Math.random() * 0.2,
+        y: 0.65 + Math.random() * 0.35,
+        r: 18 + Math.random() * 35,
+        branches: Math.floor(3 + Math.random() * 5),
+        hue: Math.random() > 0.4 ? 175 : 280,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.003 + Math.random() * 0.004,
+        alpha: 0.3 + Math.random() * 0.45
+      });
+    }
+
+    var t = 0;
+
+    function draw() {
+      t++;
+      var W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+
+      var og = ctx.createLinearGradient(0, 0, 0, H);
+      og.addColorStop(0, '#010d18');
+      og.addColorStop(0.35, '#011828');
+      og.addColorStop(0.7, '#021e2e');
+      og.addColorStop(1, '#010a12');
+      ctx.fillStyle = og;
+      ctx.fillRect(0, 0, W, H);
+
+      // God rays
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      for (var ri = 0; ri < 7; ri++) {
+        var ox = (0.08 + ri * 0.14) * W;
+        var p = 0.4 + 0.6 * Math.sin(t * 0.004 + ri * 1.3);
+        var g = ctx.createLinearGradient(ox, 0, ox + ri * 10, H);
+        g.addColorStop(0, 'rgba(0,190,230,' + (0.025 * p) + ')');
+        g.addColorStop(0.5, 'rgba(0,130,180,' + (0.01 * p) + ')');
+        g.addColorStop(1, 'rgba(0,60,120,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(ox - 20, 0); ctx.lineTo(ox + 20, 0);
+        ctx.lineTo(ox + 100, H); ctx.lineTo(ox - 100, H);
+        ctx.closePath(); ctx.fill();
+      }
+      ctx.restore();
+
+      // Jellies
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      jellies.forEach(function(jl) {
+        jl.x += jl.speedX; jl.y += jl.speedY;
+        if (jl.y < -0.12) { jl.y = 1.05; jl.x = Math.random(); }
+        var jx = jl.x * W, jy = jl.y * H;
+        var pulse = 0.8 + 0.2 * Math.sin(t * 0.022 + jl.phase);
+        var rr = jl.r * pulse;
+        var jg = ctx.createRadialGradient(jx, jy, 0, jx, jy, rr);
+        jg.addColorStop(0, 'hsla(' + jl.hue + ',80%,70%,' + (jl.alpha * 0.9) + ')');
+        jg.addColorStop(1, 'hsla(' + jl.hue + ',60%,40%,0)');
+        ctx.fillStyle = jg;
+        ctx.beginPath();
+        ctx.ellipse(jx, jy, rr, rr * 0.65, 0, Math.PI, 0);
+        ctx.fill();
+        for (var tt = 0; tt < 5; tt++) {
+          var tx = jx + (tt - 2) * (rr / 2.5);
+          var tLen = jl.r * (1.3 + Math.sin(t * 0.014 + tt + jl.phase) * 0.5);
+          ctx.strokeStyle = 'hsla(' + jl.hue + ',70%,65%,' + (jl.alpha * 0.4) + ')';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(tx, jy);
+          ctx.quadraticCurveTo(tx + Math.sin(t * 0.01 + tt) * jl.r * 0.4, jy + tLen * 0.5, tx, jy + tLen);
+          ctx.stroke();
+        }
+      });
+      ctx.restore();
+
+      // Corals
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      corals.forEach(function(co) {
+        var cx = co.x * W, cy = co.y * H;
+        var sway = Math.sin(t * co.speed + co.phase) * 0.1;
+        for (var b = 0; b < co.branches; b++) {
+          var angle = (b / co.branches) * Math.PI * 2 + sway;
+          var len = co.r * (0.6 + 0.4 * Math.sin(angle * 3 + t * co.speed));
+          ctx.save();
+          ctx.translate(cx, cy); ctx.rotate(angle);
+          var cg = ctx.createLinearGradient(0, 0, 0, -len);
+          cg.addColorStop(0, 'hsla(' + co.hue + ',100%,55%,' + co.alpha + ')');
+          cg.addColorStop(1, 'hsla(' + co.hue + ',80%,75%,0)');
+          ctx.strokeStyle = cg; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(0, 0);
+          ctx.quadraticCurveTo(Math.sin(angle * 2) * len * 0.3, -len * 0.5, 0, -len);
+          ctx.stroke(); ctx.restore();
+        }
+      });
+      ctx.restore();
+
+      // Fish
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      fish.forEach(function(fi) {
+        fi.x += fi.speed;
+        if (fi.x > 1.15) fi.x = -0.15;
+        if (fi.x < -0.15) fi.x = 1.15;
+        var fx = fi.x * W, fy = fi.y * H;
+        var sc = fi.scale * 18;
+        var dir = fi.speed > 0 ? 1 : -1;
+        var tail = Math.sin(t * 0.05 + fi.phase) * 0.3;
+        ctx.save();
+        ctx.translate(fx, fy); ctx.scale(dir, 1);
+        ctx.fillStyle = 'hsla(' + fi.hue + ',70%,60%,' + fi.alpha + ')';
+        ctx.beginPath(); ctx.ellipse(0, 0, sc, sc * 0.38, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath();
+        ctx.moveTo(-sc * 0.8, 0);
+        ctx.lineTo(-sc * 1.5, sc * 0.35 + tail * sc);
+        ctx.lineTo(-sc * 1.5, -sc * 0.35 + tail * sc);
+        ctx.closePath(); ctx.fill(); ctx.restore();
+      });
+      ctx.restore();
+
+      // Floor haze
+      var hz = ctx.createLinearGradient(0, H * 0.78, 0, H);
+      hz.addColorStop(0, 'rgba(0,16,32,0)');
+      hz.addColorStop(1, 'rgba(1,8,15,0.95)');
+      ctx.fillStyle = hz;
+      ctx.fillRect(0, H * 0.78, W, H * 0.22);
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+
+  /* ══ PARTICLES CANVAS ══ */
+  (function() {
+    var c = document.getElementById('particles-canvas');
+    var ctx = c.getContext('2d');
+    function resize() { c.width = window.innerWidth; c.height = window.innerHeight; }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var ps = [];
+    for (var i = 0; i < 90; i++) {
+      ps.push({
+        x: Math.random(), y: Math.random(),
+        r: 0.7 + Math.random() * 1.8,
+        vy: -(Math.random() * 0.00016 + 0.00004),
+        vx: (Math.random() - 0.5) * 0.00008,
+        alpha: 0.15 + Math.random() * 0.4,
+        phase: Math.random() * Math.PI * 2,
+        speed: 0.01 + Math.random() * 0.016,
+        hue: Math.random() > 0.5 ? 185 : 260
+      });
+    }
+
+    var bubbles = [];
+    for (var b = 0; b < 12; b++) bubbles.push(mkBubble());
+    function mkBubble() {
+      return { x: Math.random(), y: 1.05, r: 2 + Math.random() * 5,
+        speed: 0.00025 + Math.random() * 0.0004, wobble: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.008 + Math.random() * 0.012, alpha: 0.07 + Math.random() * 0.12 };
+    }
+
+    var t = 0;
+    function draw() {
+      t++;
+      var W = c.width, H = c.height;
+      ctx.clearRect(0, 0, W, H);
+      ps.forEach(function(p) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.y < -0.02) { p.y = 1.02; p.x = Math.random(); }
+        if (p.x < 0) p.x = 1; if (p.x > 1) p.x = 0;
+        var tw = 0.5 + 0.5 * Math.sin(t * p.speed + p.phase);
+        ctx.beginPath();
+        ctx.arc(p.x * W, p.y * H, p.r * (0.8 + 0.4 * tw), 0, Math.PI * 2);
+        ctx.fillStyle = 'hsla(' + p.hue + ',90%,70%,' + (p.alpha * tw) + ')';
+        ctx.fill();
+      });
+      bubbles.forEach(function(bu, i) {
+        bu.y -= bu.speed; bu.wobble += bu.wobbleSpeed;
+        bu.x += Math.sin(bu.wobble) * 0.00018;
+        if (bu.y < -0.05) { bubbles[i] = mkBubble(); return; }
+        var bx = bu.x * W, by = bu.y * H;
+        ctx.strokeStyle = 'rgba(100,230,255,' + bu.alpha + ')'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(bx, by, bu.r, 0, Math.PI * 2); ctx.stroke();
+        ctx.fillStyle = 'rgba(200,245,255,' + (bu.alpha * 0.28) + ')';
+        ctx.beginPath(); ctx.arc(bx - bu.r * 0.3, by - bu.r * 0.3, bu.r * 0.25, 0, Math.PI * 2); ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
+  </script>
+</body>
 </html>

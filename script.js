@@ -207,172 +207,176 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
   if (!submitBtn) return;
 
   submitBtn.addEventListener("click", async () => {
-    const name = document.getElementById("reg-name").value.trim();
-    const email = document.getElementById("reg-email").value.trim();
-    const phone = document.getElementById("reg-phone").value.trim();
+    const name     = document.getElementById("reg-name").value.trim();
+    const email    = document.getElementById("reg-email").value.trim();
+    const phone    = document.getElementById("reg-phone").value.trim();
     const category = document.getElementById("reg-category").value;
-    const org = document.getElementById("reg-org") ? document.getElementById("reg-org").value.trim() : "";
-    const privacyCheck = document.getElementById("reg-privacy-agree");
-
-    // Validations
-    if (!name) { shake("reg-name"); return; }
-    if (!email || !email.includes("@")) { shake("reg-email"); return; }
-    if (!phone) { shake("reg-phone"); return; }
-    if (document.getElementById("reg-org") && document.getElementById("reg-org").style.display !== "none" && !org) {
-      shake("reg-org"); return;
-    }
-
-    if (!privacyCheck || !privacyCheck.checked) {
-      const consentBox = privacyCheck.closest(".privacy-consent");
-      consentBox.style.borderColor = "#ff7f50";
-      consentBox.style.boxShadow = "0 0 10px rgba(255, 127, 80, 0.2)";
-      setTimeout(() => {
-        consentBox.style.borderColor = "";
-        consentBox.style.boxShadow = "";
-      }, 2000);
-      return;
-    }
-
-    // Build the submission payload following Google Sheets Columns
-    const submission = {
-      name: name,
-      email: email,
-      phone: phone,
-      category: category,
-      school: category === "school" ? org : "",
-      standard: "", // blank for single step
-      college: category === "college" ? org : "",
-      dept: "",
-      year: "",
-      company: category === "professional" ? org : "",
-      role: "",
-      description: category === "enthusiast" ? org : "",
-      timestamp: new Date().toISOString()
-    };
+    const orgEl    = document.getElementById("reg-org");
+    const org      = orgEl ? orgEl.value.trim() : "";
+    const agreed   = document.getElementById("reg-privacy-agree").checked;
 
     const spinner = document.getElementById("submit-spinner");
-    const errEl = document.getElementById("submit-error");
-
-    submitBtn.style.display = "none";
-    spinner.style.display = "block";
+    const errEl   = document.getElementById("submit-error");
     errEl.style.display = "none";
 
-    // Demo Mode check
-    if (GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_SCRIPT_URL") {
-      await new Promise(res => setTimeout(res, 1200));
-      window.location.href = "success.html";
+    // ── Validation ──
+    if (!name)                        { shake("reg-name");  return; }
+    if (!email || !email.includes("@")) { shake("reg-email"); return; }
+    if (!phone)                       { shake("reg-phone"); return; }
+    if (orgEl && orgEl.closest(".field-group").style.display !== "none" && !org) {
+      shake("reg-org"); return;
+    }
+    if (!agreed) {
+      const cb = document.getElementById("reg-privacy-agree").closest(".privacy-consent");
+      cb.style.borderColor = "#ff7f50";
+      setTimeout(() => { cb.style.borderColor = ""; }, 2000);
       return;
     }
 
-    try {
-      console.log("📤 Initializing payment system...", submission);
+    // ── Build submission payload ──
+    const submission = {
+      name, email, phone, category,
+      school:      category === "school"        ? org : "",
+      standard:    "",
+      college:     category === "college"       ? org : "",
+      dept:        "",
+      year:        "",
+      company:     category === "professional"  ? org : "",
+      role:        "",
+      description: category === "enthusiast"    ? org : "",
+    };
 
-      // STEP 1: CREATE PAYMENT ORDER
+    submitBtn.style.display = "none";
+    spinner.style.display   = "block";
+
+    try {
+      // ══════════════════════════════════════════════
+      // STEP 1: Create Razorpay order (get orderId)
+      // ══════════════════════════════════════════════
       const orderRes = await fetch(`${BACKEND_URL}/api/payment/create-order`, {
         method: "POST",
         headers: { "Content-Type": "application/json" }
       });
 
-      if (!orderRes.ok) {
-        const errText = await orderRes.text();
-        throw new Error(`Server error ${orderRes.status}: ${errText || "Order creation failed"}`);
-      }
-
+      if (!orderRes.ok) throw new Error(`Order API error: ${orderRes.status}`);
       const orderData = await orderRes.json();
-      if (!orderData.success || !orderData.order) {
-        throw new Error(orderData.message || "Failed to create checkout order.");
+      if (!orderData.success) throw new Error(orderData.message || "Order creation failed");
+
+      const orderId = orderData.order.id;
+
+      // ══════════════════════════════════════════════
+      // STEP 2: Save to Google Sheets with PENDING
+      //         status + orderId (for later lookup)
+      // ══════════════════════════════════════════════
+      console.log("📊 Saving registration with PENDING status...");
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain" },
+          body: JSON.stringify({
+            ...submission,
+            paymentStatus:    "PENDING",
+            razorpayPaymentId: "",
+            razorpayOrderId:   orderId   // ← key for later update
+          })
+        });
+        console.log("✅ Pending registration saved to sheet");
+      } catch (sheetErr) {
+        // Non-fatal: sheet save failed, but continue to payment
+        console.warn("⚠️ Sheet save failed (continuing to payment):", sheetErr.message);
       }
 
-      // STEP 2: LAUNCH CHECKOUT WINDOW
-      let checkoutOpened = false;
-
+      // ══════════════════════════════════════════════
+      // STEP 3: Open Razorpay checkout
+      // ══════════════════════════════════════════════
       const options = {
-        key: orderData.key,
-        amount: orderData.order.amount,
-        currency: orderData.order.currency,
-        name: "IARRD Marine Academy",
+        key:         orderData.key,
+        amount:      orderData.order.amount,
+        currency:    orderData.order.currency,
+        name:        "IARRD Marine Academy",
         description: "Masterclass Registration — ஆழ்கடலில் ஒரு பயணம்",
-        order_id: orderData.order.id,
-        theme: { color: "#00f5ff" },
-        prefill: {
-          email: email,
-          contact: phone,
-          name: name
-        },
+        order_id:    orderId,
+        theme:       { color: "#00f5ff" },
+        prefill:     { email, contact: phone, name },
 
-        // Payment verified callback
         handler: async function (response) {
-          console.log("✅ Checkout completed successfully.");
+          // Payment succeeded in Razorpay
+          console.log("✅ Payment completed:", response.razorpay_payment_id);
+
           try {
-            // STEP 3: VERIFY SIGNATURE
-            console.log("🔐 Verifying checkout digital signature...");
+            // ══════════════════════════════════════════
+            // STEP 4: Verify signature on backend
+            // ══════════════════════════════════════════
             const verifyRes = await fetch(`${BACKEND_URL}/api/payment/verify-payment`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(response)
             });
 
-            if (!verifyRes.ok) {
-              const errText = await verifyRes.text();
-              throw new Error(`Signature verification failed: ${errText}`);
-            }
-
+            if (!verifyRes.ok) throw new Error("Verification request failed");
             const verifyData = await verifyRes.json();
-            if (!verifyData.success) {
-              throw new Error(verifyData.message || "Verification response invalid.");
-            }
+            if (!verifyData.success) throw new Error(verifyData.message || "Signature invalid");
 
-            // STEP 4: RECORD REGISTRATION TO SPREADSHEET
-            console.log("📊 Archiving registration details...");
+            // ══════════════════════════════════════════
+            // STEP 5: Update Google Sheet row
+            //         PENDING → PAID using orderId
+            // ══════════════════════════════════════════
+            console.log("📊 Updating sheet: PENDING → PAID...");
             try {
               await fetch(GOOGLE_SCRIPT_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify({
-                  ...submission,
-                  paymentStatus: "PAID",
-                  razorpayPaymentId: response.razorpay_payment_id,
-                  razorpayOrderId: response.razorpay_order_id
+                  action:             "updatePayment",
+                  razorpayOrderId:    response.razorpay_order_id,
+                  razorpayPaymentId:  response.razorpay_payment_id
                 })
               });
-            } catch (sheetsErr) {
-              console.warn("Sheets response unreadable (cors restriction):", sheetsErr.message);
+              console.log("✅ Sheet updated to PAID");
+            } catch (updateErr) {
+              console.warn("⚠️ Sheet update failed:", updateErr.message);
+              // Non-fatal: payment was real, log it
             }
 
-            await new Promise(res => setTimeout(res, 1200));
+            // ══════════════════════════════════════════
+            // STEP 6: Redirect to success page
+            // ══════════════════════════════════════════
             window.location.href = "success.html";
 
           } catch (err) {
-            console.error("❌ Checkout response processing failure:", err);
+            console.error("❌ Post-payment processing error:", err);
             spinner.style.display = "none";
             submitBtn.style.display = "block";
             errEl.style.display = "block";
-            errEl.textContent = `❌ Error: ${err.message}`;
+            errEl.textContent = `❌ Payment received but verification failed: ${err.message}. Please contact support.`;
           }
         },
 
         modal: {
           ondismiss: function () {
-            console.log("⚠️ Checkout interface dismissed by user.");
-            if (spinner.style.display === "block") {
-              spinner.style.display = "none";
-              submitBtn.style.display = "block";
-              errEl.style.display = "block";
-              errEl.textContent = "Checkout cancelled. Please retry.";
-            }
+            // User closed the payment modal without paying
+            console.log("⚠️ Payment modal dismissed — registration stays as PENDING");
+            spinner.style.display = "none";
+            submitBtn.style.display = "block";
+            errEl.style.display = "block";
+            errEl.textContent = "Payment cancelled. Your details are saved — click below to retry payment.";
           }
         }
       };
 
-      if (!checkoutOpened) {
-        checkoutOpened = true;
-        const rpay = new Razorpay(options);
-        rpay.open();
-      }
+      const rzp = new Razorpay(options);
+      rzp.on("payment.failed", function (response) {
+        spinner.style.display = "none";
+        submitBtn.style.display = "block";
+        errEl.style.display = "block";
+        errEl.textContent = `❌ Payment failed: ${response.error.description}`;
+      });
+      rzp.open();
 
     } catch (e) {
-      console.error("❌ Submission process failure:", e);
+      console.error("❌ Registration flow error:", e);
       spinner.style.display = "none";
       submitBtn.style.display = "block";
       errEl.style.display = "block";
@@ -385,10 +389,10 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
     if (!el) return;
     el.style.borderColor = "#ff7f50";
     el.animate([
-      { transform: "translateX(0)" },
+      { transform: "translateX(0)"  },
       { transform: "translateX(-5px)" },
-      { transform: "translateX(5px)" },
-      { transform: "translateX(0)" }
+      { transform: "translateX(5px)"  },
+      { transform: "translateX(0)"  }
     ], { duration: 250, easing: "ease" });
     el.focus();
     setTimeout(() => { el.style.borderColor = ""; }, 1500);
