@@ -3,7 +3,7 @@
  * script.js — Landing page logic, payment gateways, and data sheets.
  */
 
-const BACKEND_URL = "https://theatlantisprotocol.onrender.com/";
+const BACKEND_URL = "https://theatlantisprotocol.onrender.com";
 const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUy18wkPzVpJj4_gVgj-bkbBZxDXYIutWWnI89-Ke0uVJfR25thW5HsA3LWolOVoYt/exec";
 const ADMIN_PASSWORD = "iarrdadmin2026";
 
