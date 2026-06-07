@@ -203,8 +203,11 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
    EMBEDDED LANDING REGISTRATION FORM HANDLER
    ═══════════════════════════════════════ */
 (function initEmbeddedForm() {
-  const submitBtn = document.getElementById("submit-reg-btn");
-  if (!submitBtn) return;
+    const submitBtn = document.getElementById("submit-reg-btn");
+    if (!submitBtn) return;
+
+    // ── Wake up backend immediately on page load ──
+  fetch("https://theatlantisprotocol.onrender.com/").catch(() => {});
 
   submitBtn.addEventListener("click", async () => {
     const name     = document.getElementById("reg-name").value.trim();
