@@ -743,6 +743,96 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
 .reveal.visible { opacity: 1; transform: none; }
 
 /* ── RESPONSIVE ── */
+/* ══════════════════════════════════════════
+   PRICING GRID + CARD COMPONENTS
+══════════════════════════════════════════ */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.card-badge {
+  position: absolute;
+  top: -13px; left: 50%;
+  transform: translateX(-50%);
+  border-radius: 20px;
+  padding: 5px 18px;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+}
+.card-badge-cyan {
+  background: rgba(0,14,28,0.98);
+  border: 1px solid rgba(0,232,255,0.35);
+  color: var(--glow);
+  position:relative;
+  text-align:center;
+}
+.card-badge-gold {
+  background: rgba(14,10,0,0.98);
+  border: 1px solid rgba(201,168,76,0.5);
+  color: var(--gold);
+  position:relative;
+  text-align:center;
+}
+
+.crew-card-gold {
+  border-color: rgba(201,168,76,0.3) !important;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.6),
+              inset 0 1px 0 rgba(201,168,76,0.1),
+              0 0 40px rgba(201,168,76,0.05) !important;
+}
+.gold-top-line {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 30%, #ffcc44 50%, var(--gold) 70%, transparent);
+  box-shadow: 0 0 10px rgba(201,168,76,0.3);
+}
+
+.savings-box {
+  background: rgba(201,168,76,0.05);
+  border: 1px solid rgba(201,168,76,0.18);
+  border-radius: 4px;
+  padding: 16px 18px;
+  margin-bottom: 22px;
+}
+.savings-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(201,168,76,0.08);
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.btn-whatsapp {
+  display: block;
+  text-align: center;
+  padding: 16px 20px;
+  background: transparent;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  color: var(--gold);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: all 0.3s;
+  box-shadow: 0 0 18px rgba(201,168,76,0.08);
+}
+.btn-whatsapp:hover {
+  background: rgba(201,168,76,0.08);
+  box-shadow: 0 0 30px rgba(201,168,76,0.2);
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
 @media (max-width: 900px) {
   .site-header { padding: 16px 24px; }
   .section-wrap { padding: 0 24px; }
@@ -751,12 +841,18 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
   .crew-grid { grid-template-columns: repeat(2,1fr); }
   .crew-grid.three-col { grid-template-columns: repeat(2,1fr); }
   .contact-grid { grid-template-columns: 1fr; }
-  .payment-inner { grid-template-columns: 1fr; }
-  .payment-card { position: static; }
   .depth-meter, .pressure-gauge { display: none; }
   .mobile-sticky-cta { display: block; }
   section { padding: 72px 0; }
+
+  /* Stack pricing cards on tablet */
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin: 0 auto;
+  }
 }
+
 @media (max-width: 600px) {
   .crew-grid, .crew-grid.three-col { grid-template-columns: 1fr; }
   .hero-tamil { font-size: 36px !important; }
@@ -764,13 +860,13 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
   .cd-num { font-size: 26px; }
   .cta-btn { padding: 15px 28px; font-size: 12px; }
   .site-nav a { display: none; }
-  .payment-card { padding: 28px 20px; }
+  .payment-card { padding: 28px 18px !important; }
   .footer-inner { flex-direction: column; align-items: center; }
-}
-/* Group pass cards responsive */
-@media (max-width: 900px) {
-  .payment-inner > div[style*="display:flex"] {
-    flex-direction: column;
+  .price-main { font-size: 48px !important; }
+
+  /* Full width cards on mobile */
+  .pricing-grid {
+    max-width: 100%;
   }
 }
 </style>
@@ -906,7 +1002,7 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
     <span class="section-eyebrow reveal">What You Take Back</span>
     <h2 class="section-title reveal">The IARRD Value Stack</h2>
     <div class="value-grid reveal">
-      <div class="value-card"><span class="value-icon">📜</span><h3 class="value-title">Academy Credentials</h3><p class="value-desc">Official IARRD Marine Academy Credentials to display on LinkedIn and boost your engineering portfolio.</p></div>
+      <div class="value-card"><span class="value-icon">📜</span><h3 class="value-title">Academy Credentials</h3><p class="value-desc">Official IARRD Academy Credentials to display on LinkedIn and boost your engineering portfolio.</p></div>
       <div class="value-card"><span class="value-icon">🎥</span><h3 class="value-title">Live 3D Simulations</h3><p class="value-desc">2 days of live experiential training featuring detailed 3D model presentations and underwater simulations.</p></div>
       <div class="value-card"><span class="value-icon">🌐</span><h3 class="value-title">Private Networks</h3><p class="value-desc">Exclusive access to the private IARRD Marine Tech Network to connect with peers and mentors.</p></div>
     </div>
@@ -920,9 +1016,9 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
     <h2 class="section-title reveal">What Explorers Say</h2>
     <div class="carousel-container reveal">
       <div class="carousel-track" id="carousel-track">
-        <div class="carousel-slide"><div class="test-card"><div class="test-stars">★★★★★</div><p class="test-quote">"The best technology masterclass I've attended. High-level marine and space concepts explained beautifully in Tamil!"</p><p class="test-author">— Verified Space Explorer</p></div></div>
-        <div class="carousel-slide"><div class="test-card"><div class="test-stars">★★★★★</div><p class="test-quote">"Absolutely cinematic experience. It felt less like a classroom lecture and more like a submarine journey."</p><p class="test-author">— Engineering College Student</p></div></div>
-        <div class="carousel-slide"><div class="test-card"><div class="test-stars">★★★★★</div><p class="test-quote">"IARRD never fails to amaze. The explanation of underwater acoustics and naval tracking systems was mind-blowing."</p><p class="test-author">— Professional Engineer</p></div></div>
+        <div class="carousel-slide"><div class="test-card"><div class="test-stars">★★★★★</div><p class="test-quote">" very interesting and perfect explanation credits to team and ceo"</p><p class="test-author">— Priyanka.k</p></div></div>
+        <div class="carousel-slide"><div class="test-card"><div class="test-stars">★★★★★</div><p class="test-quote">"Amazing session loved it ,very easy to understand and doubts were also getting solved"</p><p class="test-author">— Aanya</p></div></div>
+        <div class="carousel-slide"><div class="test-card"><div class="test-stars">★★★★★</div><p class="test-quote">" Its Good to see the  Initiative step taken by your Start Up to organise a Tamil Workshop..."</p><p class="test-author">— Priscilla</p></div></div>
       </div>
       <div class="carousel-navs">
         <button class="carousel-arrow" onclick="moveCarousel(-1)">⟵</button>
@@ -935,155 +1031,150 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
 <!-- REGISTER -->
 <section class="payment-section" id="register">
   <div class="section-wrap">
-    <div class="payment-inner">
-      <div class="payment-left reveal">
-        <span class="section-eyebrow">Secure Your Pass</span>
-        <h2 class="section-title">Enter the Abyss</h2>
-        <p class="section-sub">Claim your virtual seat for the Atlantis Protocol. Limited explorer passes available.</p>
-        <ul class="payment-meta-list">
-          <li><span class="meta-dot"></span>July 4 &amp; 5, 2026 — 2 Days, Fully Online (Live)</li>
-          <li><span class="meta-dot"></span>Conducted in Tamil — accessible to all levels</li>
-          <li><span class="meta-dot"></span>IARRD Academy Credentials upon completion</li>
-          <li><span class="meta-dot"></span>Private Marine Tech Network onboarding</li>
-          <li><span class="meta-dot"></span>Live 3D simulations &amp; case studies</li>
-        </ul>
-      </div>
-      <!-- Replace the single payment-card div with this two-card grid -->
-<div style="display:flex; gap:18px; align-items:flex-start;">
 
-  <!-- CARD 1: Individual Pass (your existing card) -->
-  <div class="payment-card reveal" style="flex:1; position:relative;">
-    <div style="position:absolute; top:-12px; left:50%; transform:translateX(-50%);
-                background:rgba(0,232,255,0.08); border:1px solid rgba(0,232,255,0.3);
-                border-radius:20px; padding:4px 16px; white-space:nowrap;">
-      <span style="font-family:var(--font-mono); font-size:9px; color:var(--glow); letter-spacing:0.2em;">
-        SOLO DIVER
-      </span>
-    </div>
-    <div class="price-row"><span class="price-strike">₹499</span><span class="price-main">₹99</span></div>
-    <p class="price-note">Per person · All sessions included</p>
-    <div class="early-bird"><span class="early-dot"></span>Early Bird tier slots are limited. Price increases to ₹499 once the tier cap is reached.</div>
-    <div class="field-group"><label for="reg-name">Full Name (For Certificate)</label><input type="text" id="reg-name" placeholder="Enter your full name" required /></div>
-    <div class="field-group"><label for="reg-email">Email Address</label><input type="email" id="reg-email" placeholder="you@example.com" required /></div>
-    <div class="field-group"><label for="reg-phone">WhatsApp Number</label><input type="tel" id="reg-phone" placeholder="Enter WhatsApp number" required /></div>
-    <div class="field-group"><label for="reg-category">Category</label>
-      <select id="reg-category" onchange="toggleRegCategoryFields()">
-        <option value="school">School Student</option>
-        <option value="college" selected>College Student</option>
-        <option value="professional">Working Professional</option>
-        <option value="enthusiast">Tech Enthusiast</option>
-      </select>
-    </div>
-    <div class="field-group" id="reg-org-wrap"><label for="reg-org" id="reg-org-label">College Name</label><input type="text" id="reg-org" placeholder="Enter college or university name" /></div>
-    <div class="privacy-consent"><input type="checkbox" id="reg-privacy-agree" /><label for="reg-privacy-agree">I consent to IARRD sending course details and onboarding links via Email and WhatsApp.</label></div>
-    <button class="btn-submit" id="submit-reg-btn">Secure Your Seat ✦</button>
-    <div class="submit-spinner" id="submit-spinner" style="display:none"><div class="spinner"></div><p>Initializing Submersible Pass...</p></div>
-    <div class="submit-error" id="submit-error" style="display:none"></div>
-    <div class="trust-badges"><span>🔒 Secure UPI</span><span>⚡ Instant Access</span><span>📜 IARRD Credentials</span></div>
-  </div>
-
-  <!-- CARD 2: Group Pass -->
-  <div class="payment-card reveal" style="flex:1; position:relative;
-       border-color:rgba(201,168,76,0.35);
-       box-shadow:0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(201,168,76,0.15), 0 0 40px rgba(201,168,76,0.06);">
-
-    <!-- POPULAR badge -->
-    <div style="position:absolute; top:-12px; left:50%; transform:translateX(-50%);
-                background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.5);
-                border-radius:20px; padding:4px 16px; white-space:nowrap;">
-      <span style="font-family:var(--font-mono); font-size:9px; color:var(--gold); letter-spacing:0.2em;">
-        ★ BEST VALUE
-      </span>
+    <!-- Header -->
+    <div style="text-align:center; margin-bottom:52px;">
+      <span class="section-eyebrow reveal">Secure Your Pass</span>
+      <h2 class="section-title reveal" style="max-width:100%;">Enter the Abyss</h2>
+      <p style="font-size:15px; color:var(--text-dim); max-width:520px; margin:0 auto; line-height:1.75;">
+        Claim your virtual seat for the Atlantis Protocol. Limited explorer passes available.
+      </p>
+      <ul style="list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:14px 32px; margin-top:24px; padding:0;">
+        <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>July 4 &amp; 5, 2026 — 2 Days, Fully Online</li>
+        <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>Conducted in Tamil</li>
+        <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>IARRD Academy Credentials</li>
+        <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>Live 3D Simulations</li>
+      </ul>
     </div>
 
-    <!-- Gold top line -->
-    <div style="position:absolute; top:0; left:10%; right:10%; height:1px;
-                background:linear-gradient(90deg, transparent, var(--gold) 30%, #ffcc44 50%, var(--gold) 70%, transparent);
-                box-shadow:0 0 10px rgba(201,168,76,0.4);">
-    </div>
+    <!-- Two Cards -->
+    <div class="pricing-grid reveal">
 
-    <h3 style="font-family:var(--font-display); font-size:17px; color:var(--gold);
-               margin-bottom:6px; letter-spacing:0.04em;">
-      Crew Manifest Pass
-    </h3>
-    <p style="font-family:var(--font-mono); font-size:10px; color:var(--text-dim);
-              letter-spacing:0.15em; margin-bottom:20px; text-transform:uppercase;">
-      Group of 3 or more
-    </p>
+      <!-- ══ CARD 1: SOLO DIVER ══ -->
+      <div class="payment-card" style="position:relative; padding-top:40px;">
+        <div class="card-badge card-badge-cyan">SOLO DIVER</div>
 
-    <div class="price-row">
-      <span class="price-strike">₹297</span>
-      <span class="price-main" style="color:var(--gold); font-size:48px;">₹249</span>
-    </div>
-    <p class="price-note">Team of 3 · ₹83/head · Save ₹48 on group boarding</p>
-
-    <!-- Savings callout -->
-    <div style="background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2);
-                border-radius:4px; padding:14px 16px; margin-bottom:24px;">
-      <p style="font-family:var(--font-mono); font-size:11px; color:var(--gold);
-                margin:0 0 8px 0; letter-spacing:0.1em;">GROUP SAVINGS BREAKDOWN</p>
-      <table style="width:100%; border-collapse:collapse;">
-        <tr>
-          <td style="font-size:12px; color:var(--text-dim); padding:4px 0;">Individual × 3</td>
-          <td style="font-size:12px; color:var(--text); text-align:right; padding:4px 0;">₹99 × 3 = <span style="color:var(--text-dim);">₹297</span></td>
-        </tr>
-        <tr>
-          <td style="font-size:12px; color:var(--text-dim); padding:4px 0;">Crew Manifest (3)</td>
-          <td style="font-size:12px; color:var(--text); text-align:right; padding:4px 0;"><span style="color:var(--gold);">₹249 flat</span></td>
-        </tr>
-        <tr>
-          <td style="font-size:12px; color:var(--text-dim); padding:4px 0; border-top:1px solid rgba(201,168,76,0.1);">You save</td>
-          <td style="font-size:12px; color:#00ffcc; text-align:right; padding:4px 0; border-top:1px solid rgba(201,168,76,0.1);">₹48 on group boarding</td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- What's included -->
-    <div style="margin-bottom:24px;">
-      <p style="font-family:var(--font-mono); font-size:9px; color:var(--text-dim);
-                letter-spacing:0.2em; text-transform:uppercase; margin-bottom:12px;">Includes everything in Solo +</p>
-      <div style="display:flex; flex-direction:column; gap:8px;">
-        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-dim);">
-          <span style="color:var(--gold);">✦</span> Priority certificate processing
+        <div class="price-row">
+          <span class="price-strike">₹499</span>
+          <span class="price-main">₹99</span>
         </div>
-        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-dim);">
-          <span style="color:var(--gold);">✦</span> Dedicated crew WhatsApp group
+        <p class="price-note">Per person · All sessions included · Instant access</p>
+
+        <div class="early-bird">
+          <span class="early-dot"></span>
+          Early Bird tier slots are limited. Price increases to ₹499 once the tier cap is reached.
         </div>
-        <div style="display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text-dim);">
-          <span style="color:var(--gold);">✦</span> Single point of contact for your group
+
+        <div class="field-group">
+          <label for="reg-name">Full Name (For Certificate)</label>
+          <input type="text" id="reg-name" placeholder="Enter your full name" required />
+        </div>
+        <div class="field-group">
+          <label for="reg-email">Email Address</label>
+          <input type="email" id="reg-email" placeholder="you@example.com" required />
+        </div>
+        <div class="field-group">
+          <label for="reg-phone">WhatsApp Number</label>
+          <input type="tel" id="reg-phone" placeholder="Enter WhatsApp number" required />
+        </div>
+        <div class="field-group">
+          <label for="reg-category">Category</label>
+          <select id="reg-category" onchange="toggleRegCategoryFields()">
+            <option value="school">School Student</option>
+            <option value="college" selected>College Student</option>
+            <option value="professional">Working Professional</option>
+            <option value="enthusiast">Tech Enthusiast</option>
+          </select>
+        </div>
+        <div class="field-group" id="reg-org-wrap">
+          <label for="reg-org" id="reg-org-label">College Name</label>
+          <input type="text" id="reg-org" placeholder="Enter college or university name" />
+        </div>
+        <div class="privacy-consent">
+          <input type="checkbox" id="reg-privacy-agree" />
+          <label for="reg-privacy-agree">I consent to IARRD sending course details and onboarding links via Email and WhatsApp.</label>
+        </div>
+        <button class="btn-submit" id="submit-reg-btn">Secure Your Seat ✦</button>
+        <div class="submit-spinner" id="submit-spinner" style="display:none">
+          <div class="spinner"></div><p>Initializing Submersible Pass...</p>
+        </div>
+        <div class="submit-error" id="submit-error" style="display:none"></div>
+        <div class="trust-badges">
+          <span>🔒 Secure UPI</span><span>⚡ Instant Access</span><span>📜 Credentials</span>
         </div>
       </div>
-    </div>
 
-    <!-- CTA — WhatsApp -->
-    <a href="https://wa.me/918903272879?text=Hi%20IARRD!%20I%20want%20to%20register%20for%20the%20Crew%20Manifest%20Group%20Pass%20(3%2B%20people)%20for%20the%20Atlantis%20Protocol%20Masterclass."
-       target="_blank" rel="noopener"
-       style="display:block; text-align:center; padding:17px;
-              background:transparent; border:1px solid var(--gold);
-              color:var(--gold); border-radius:4px; text-decoration:none;
-              font-family:var(--font-body); font-size:13px; font-weight:700;
-              letter-spacing:0.16em; text-transform:uppercase;
-              transition:all 0.3s; margin-bottom:14px;
-              box-shadow:0 0 20px rgba(201,168,76,0.1);">
-      Contact Us on WhatsApp ✦
-    </a>
+      <!-- ══ CARD 2: CREW MANIFEST ══ -->
+      <div class="payment-card crew-card-gold" style="position:relative; padding-top:40px;">
+        <div class="card-badge card-badge-gold">★ BEST VALUE</div>
+        <div class="gold-top-line"></div>
 
-    <p style="font-size:11px; color:var(--text-dim); text-align:center;
-              font-family:var(--font-mono); margin:0;">
-      We'll handle group registration manually
-    </p>
+        <h3 style="font-family:var(--font-display); font-size:20px; font-weight:600;
+                   color:var(--gold); margin:0 0 4px 0;">Crew Manifest Pass</h3>
+        <p style="font-family:var(--font-mono); font-size:10px; color:var(--text-dim);
+                  letter-spacing:0.15em; text-transform:uppercase; margin:0 0 20px 0;">Team of 3</p>
 
-    <div class="trust-badges" style="margin-top:18px;">
-      <span style="border-color:rgba(201,168,76,0.2); color:rgba(201,168,76,0.6);">👥 Min. 3 People</span>
-      <span style="border-color:rgba(201,168,76,0.2); color:rgba(201,168,76,0.6);">💰 15% Off</span>
-    </div>
-  </div>
+        <div class="price-row">
+          <span class="price-strike">₹297</span>
+          <span class="price-main" style="color:var(--gold);">₹249</span>
+        </div>
+        <p class="price-note" style="margin-bottom:22px;">Team of 3 flat · ₹83/head · Save ₹48</p>
 
-</div>
+        <!-- Savings breakdown -->
+        <div class="savings-box">
+          <p style="font-family:var(--font-mono); font-size:9px; color:var(--gold);
+                    letter-spacing:0.18em; text-transform:uppercase; margin:0 0 10px 0;">
+            Group Savings Breakdown
+          </p>
+          <div class="savings-row">
+            <span>Individual × 3</span><span>₹99 × 3 = ₹297</span>
+          </div>
+          <div class="savings-row">
+            <span>Crew Manifest (3)</span>
+            <span style="color:var(--gold); font-weight:600;">₹249 flat</span>
+          </div>
+          <div class="savings-row" style="border-bottom:none; padding-top:8px; margin-top:4px; border-top:1px solid rgba(201,168,76,0.12);">
+            <span>You save</span>
+            <span style="color:#00ffcc; font-weight:600;">₹48 total</span>
+          </div>
+        </div>
+
+        <!-- Includes -->
+        <div style="margin-bottom:24px;">
+          <p style="font-family:var(--font-mono); font-size:9px; color:var(--text-dim);
+                    letter-spacing:0.18em; text-transform:uppercase; margin:0 0 12px 0;">
+            Includes everything in Solo +
+          </p>
+          <p style="margin:0 0 9px; font-size:14px; color:var(--text-dim); line-height:1.5;">
+            <span style="color:var(--gold);">✦</span>&nbsp; Priority certificate processing
+          </p>
+          <p style="margin:0 0 9px; font-size:14px; color:var(--text-dim); line-height:1.5;">
+            <span style="color:var(--gold);">✦</span>&nbsp; Dedicated crew WhatsApp group
+          </p>
+          <p style="margin:0; font-size:14px; color:var(--text-dim); line-height:1.5;">
+            <span style="color:var(--gold);">✦</span>&nbsp; Single point of contact for your group
+          </p>
+        </div>
+
+        <a href="https://wa.me/918903272879?text=Hi%20IARRD%20Control,%20we%20want%20to%20register%20our%20team%20for%20the%20Crew%20Manifest%20Pass%20(Team%20of%203).%20Please%20share%20the%20payment%20details."
+           target="_blank" rel="noopener" class="btn-whatsapp">
+          Register Team via WhatsApp ✦
+        </a>
+
+        <p style="font-size:11px; color:var(--text-dim); text-align:center;
+                  font-family:var(--font-mono); margin:10px 0 18px; letter-spacing:0.06em;">
+          We'll handle group registration manually
+        </p>
+
+        <div class="trust-badges">
+          <span style="border-color:rgba(201,168,76,0.2); color:rgba(201,168,76,0.6);">👥 Min. 3 People</span>
+          <span style="border-color:rgba(201,168,76,0.2); color:rgba(201,168,76,0.6);">💰 Save ₹48</span>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
-
 <!-- TEAM -->
 <section class="mission-section" id="team">
   <div class="section-wrap">
@@ -1091,8 +1182,8 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
     <h2 class="section-title reveal">The Crew Guiding Your Journey</h2>
     <div class="team-category reveal">Leadership</div>
     <div class="crew-grid reveal">
-      <div class="crew-card"><div class="crew-avatar-wrap"><img src="team/harish.jpeg" alt="Harish" onerror="this.src=''" /><a class="crew-linkedin" href="https://www.linkedin.com/in/harish-ragavendra-srinivasan/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a></div><h4 class="crew-name">Harish Ragavendra Srinivasan</h4><p class="crew-role">Founder &amp; CEO / Acting Defence Lead</p><p class="crew-spec">Leading multidisciplinary research across space systems, defense technologies, and marine monitoring platforms.</p></div>
-      <div class="crew-card"><div class="crew-avatar-wrap"><img src="team/tamil.jpeg" alt="Tamizh Amuthan" onerror="this.src=''" /><a class="crew-linkedin" href="https://www.linkedin.com/in/tamizh-amuthan-r-926450297/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a></div><h4 class="crew-name">Tamizh Amuthan</h4><p class="crew-role">Chief Strategic Officer</p><p class="crew-spec">Leads research activities, mission conceptualization, and strategic planning for advanced technology programs.</p></div>
+      <div class="crew-card"><div class="crew-avatar-wrap"><img src="team/harish.jpeg" alt="Harish" onerror="this.src=''" /><a class="crew-linkedin" href="https://www.linkedin.com/in/harish-ragavendra-srinivasan/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a></div><h4 class="crew-name">Harish Ragavendra Srinivasan</h4><p class="crew-role">Founder &amp; CEO </p><p class="crew-spec">Leading multidisciplinary research across space systems, defense technologies, and marine monitoring platforms.</p></div>
+      <div class="crew-card"><div class="crew-avatar-wrap"><img src="team/tamil.jpeg" alt="Tamizh Amuthan" onerror="this.src=''" /><a class="crew-linkedin" href="https://www.linkedin.com/in/tamizh-amuthan-r-926450297/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a></div><h4 class="crew-name">Tamizh Amuthan</h4><p class="crew-role">Astronomy team lead</p><p class="crew-spec">Leads research activities, mission conceptualization, and strategic planning for advanced technology programs.</p></div>
       <div class="crew-card"><div class="crew-avatar-wrap"><img src="team/keerti.jpeg" alt="Keerthi Sai" onerror="this.src=''" /><a class="crew-linkedin" href="https://www.linkedin.com/in/keerthisaias/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a></div><h4 class="crew-name">Keerthi Sai A S</h4><p class="crew-role">Chief Technology Officer / R&amp;D Lead</p><p class="crew-spec">Coordinates technology operations across core engineering teams, hardware designs, and AI architectures.</p></div>
       <div class="crew-card"><div class="crew-avatar-wrap"><img src="team/gowtham.jpeg" alt="Goutham" onerror="this.src=''" /><a class="crew-linkedin" href="https://www.linkedin.com/in/goutham-gv-603482397/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a></div><h4 class="crew-name">Goutham GV</h4><p class="crew-role">Chief Financial Officer</p><p class="crew-spec">Oversees fundraising, accounts, partnerships, and financial strategy supporting research sustainability.</p></div>
     </div>
@@ -1740,7 +1831,7 @@ window.addEventListener('scroll', function() {
 (function() {
   var btn = document.getElementById('ambient-sound-toggle');
   if (!btn) return;
-  var audio = new Audio('audio/vinvelil-audio.mpeg');
+  var audio = new Audio('audio/aazhkadalil-audio.mpeg');
   audio.loop = true; audio.volume = 0.35;
   var playing = false;
   btn.addEventListener('click', function() {
