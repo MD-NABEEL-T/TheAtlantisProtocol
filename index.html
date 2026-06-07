@@ -883,6 +883,55 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
     gap: 36px !important;
   }
 }
+
+/* ── ABOUT IARRD GRID ── */
+.iarrd-about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 52px;
+  align-items: start;
+}
+
+.domains-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.domain-tile {
+  background: rgba(0,16,32,0.6);
+  border: 1px solid rgba(0,232,255,0.1);
+  border-radius: 5px;
+  padding: 16px 18px;
+  transition: all 0.3s;
+}
+
+.domain-tile:hover {
+  border-color: rgba(0,232,255,0.25);
+  background: rgba(0,22,44,0.7);
+  transform: translateY(-2px);
+}
+
+.domain-tile p {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .iarrd-about-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 600px) {
+  .domains-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 </style>
 </head>
 <body>
@@ -1192,75 +1241,67 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
     </div>
   </div>
 </section>
+
 <!-- ABOUT IARRD -->
-<div class="reveal" style="margin-top:64px; padding-top:52px; border-top:1px solid rgba(0,232,255,0.08);">
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; min-width:0;">
-    <!-- Left: Text -->
-    <div style="min-width:0;">
-      <span class="section-eyebrow" style="margin-bottom:10px;">About IARRD</span>
-      <h3 style="font-family:var(--font-display); font-size:26px; font-weight:600;
-                 color:var(--text); margin:0 0 16px 0; line-height:1.2;">
-        Indian Astronomy Rocket Research &amp; Development
-      </h3>
-      <p style="font-size:14px; color:var(--text-dim); line-height:1.85; margin:0 0 22px 0;">
-        IARRD is a multidisciplinary engineering and educational initiative working across advanced technology domains. Through workshops, research programs, and technology initiatives, IARRD aims to make advanced engineering education more accessible to students and innovators.
-      </p>
-    </div>
+<section style="background:var(--abyss); padding:72px 0 0 0;">
+  <div class="section-wrap">
+    <div class="reveal" style="padding-top:52px; border-top:1px solid rgba(0,232,255,0.08);">
+      <div class="iarrd-about-grid">
 
-    <!-- Right: Domains -->
-    <div>
-      <p style="font-family:var(--font-mono); font-size:9px; color:var(--glow);
-                letter-spacing:0.35em; text-transform:uppercase; margin:0 0 20px 0;">
-        Our Domains
-      </p>
-<div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;">
-        <div style="background:rgba(0,16,32,0.6); border:1px solid rgba(0,232,255,0.1);
-                    border-radius:5px; padding:16px 18px; transition:all 0.3s;">
-          <span style="font-size:18px; display:block; margin-bottom:8px;">🚀</span>
-          <p style="font-family:var(--font-body); font-size:13px; font-weight:600;
-                    color:var(--text); margin:0;">Space Systems</p>
+        <!-- Left: Text -->
+        <div>
+          <span class="section-eyebrow">About IARRD</span>
+          <h3 style="font-family:var(--font-display); font-size:26px; font-weight:600;
+                     color:var(--text); margin:0 0 16px 0; line-height:1.2;">
+            Indian Astronomy Rocket Research &amp; Development
+          </h3>
+          <p style="font-size:14px; color:var(--text-dim); line-height:1.85; margin:0;">
+            IARRD is a multidisciplinary engineering and educational initiative working across advanced technology domains. Through workshops, research programs, and technology initiatives, IARRD aims to make advanced engineering education more accessible to students and innovators.
+          </p>
         </div>
 
-        <div style="background:rgba(0,16,32,0.6); border:1px solid rgba(0,232,255,0.1);
-                    border-radius:5px; padding:16px 18px; transition:all 0.3s;">
-          <span style="font-size:18px; display:block; margin-bottom:8px;">🌊</span>
-          <p style="font-family:var(--font-body); font-size:13px; font-weight:600;
-                    color:var(--text); margin:0;">Marine Technologies</p>
-        </div>
+        <!-- Right: Domains -->
+        <div>
+          <p style="font-family:var(--font-mono); font-size:9px; color:var(--glow);
+                    letter-spacing:0.35em; text-transform:uppercase; margin:0 0 20px 0;">
+            Our Domains
+          </p>
+          <div class="domains-grid">
 
-        <div style="background:rgba(0,16,32,0.6); border:1px solid rgba(0,232,255,0.1);
-                    border-radius:5px; padding:16px 18px; transition:all 0.3s;">
-          <span style="font-size:18px; display:block; margin-bottom:8px;">🛡️</span>
-          <p style="font-family:var(--font-body); font-size:13px; font-weight:600;
-                    color:var(--text); margin:0;">Defence Technologies</p>
-        </div>
+            <div class="domain-tile">
+              <span style="font-size:20px; display:block; margin-bottom:8px;">🚀</span>
+              <p>Space Systems</p>
+            </div>
+            <div class="domain-tile">
+              <span style="font-size:20px; display:block; margin-bottom:8px;">🌊</span>
+              <p>Marine Technologies</p>
+            </div>
+            <div class="domain-tile">
+              <span style="font-size:20px; display:block; margin-bottom:8px;">🛡️</span>
+              <p>Defence Technologies</p>
+            </div>
+            <div class="domain-tile">
+              <span style="font-size:20px; display:block; margin-bottom:8px;">🤖</span>
+              <p>Artificial Intelligence</p>
+            </div>
+            <div class="domain-tile">
+              <span style="font-size:20px; display:block; margin-bottom:8px;">🔭</span>
+              <p>Astronomy</p>
+            </div>
+            <div class="domain-tile">
+              <span style="font-size:20px; display:block; margin-bottom:8px;">⚙️</span>
+              <p>Applied Engineering Research</p>
+            </div>
 
-        <div style="background:rgba(0,16,32,0.6); border:1px solid rgba(0,232,255,0.1);
-                    border-radius:5px; padding:16px 18px; transition:all 0.3s;">
-          <span style="font-size:18px; display:block; margin-bottom:8px;">🤖</span>
-          <p style="font-family:var(--font-body); font-size:13px; font-weight:600;
-                    color:var(--text); margin:0;">Artificial Intelligence</p>
-        </div>
-
-        <div style="background:rgba(0,16,32,0.6); border:1px solid rgba(0,232,255,0.1);
-                    border-radius:5px; padding:16px 18px; transition:all 0.3s;">
-          <span style="font-size:18px; display:block; margin-bottom:8px;">🔭</span>
-          <p style="font-family:var(--font-body); font-size:13px; font-weight:600;
-                    color:var(--text); margin:0;">Astronomy</p>
-        </div>
-
-        <div style="background:rgba(0,16,32,0.6); border:1px solid rgba(0,232,255,0.1);
-                    border-radius:5px; padding:16px 18px; transition:all 0.3s;">
-          <span style="font-size:18px; display:block; margin-bottom:8px;">⚙️</span>
-          <p style="font-family:var(--font-body); font-size:13px; font-weight:600;
-                    color:var(--text); margin:0;">Applied Engineering Research</p>
+          </div>
         </div>
 
       </div>
     </div>
-
   </div>
-</div>
+</section>
+
+<!-- TEAM -->
 <!-- TEAM -->
 <section class="mission-section" id="team">
   <div class="section-wrap">
