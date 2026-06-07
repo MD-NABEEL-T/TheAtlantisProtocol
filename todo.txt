@@ -1,3 +1,4 @@
+if the workflow is good then we'll try
 to change mail theme - 1pm tmd.
 more entire working + cart logic for gautham 
 LET ME FIX THIS ENTIRE LOGIC FIRST 
@@ -5,17 +6,13 @@ BECAUSE LATER WE CAN DO THE REQ2 ALRIGHT
 
 like once user fills and submit the data to google sheets and then mail the participant and then the data displayed in success page wiht pending in payment once the user pays it is updated to paid.
 
+workflow :done alhamdulilah
 FINAL STEP : Harish has to give razorpay keys , audio ,etc.
+razorpay keys using new website link from harish and .env to change 
+use test keys to check if it works
+add that keys onrender.com and in script.js and .env that's all 
 
 deploy
 https://the-atlantis-protocol.vercel.app/
 https://theatlantisprotocol.onrender.com/
-
-web app url=https://script.google.com/macros/s/AKfycbxujEPR387qZMVDqTh7KaNVLKBnH7-YJOp6yXduT1Nx9WarFX092LfbrcmADFaEXKcL/exec
-
-
-razorpay keys using new website link from harish and .env to change 
-
-use test keys to check if it works
-
-backend use 1 rupee for your account and success page check 
+web app url=https://script.google.com/macros/s/AKfycbxUy18wkPzVpJj4_gVgj-bkbBZxDXYIutWWnI89-Ke0uVJfR25thW5HsA3LWolOVoYt/exec
