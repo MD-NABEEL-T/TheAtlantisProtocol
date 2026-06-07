@@ -5,7 +5,7 @@ BECAUSE LATER WE CAN DO THE REQ2 ALRIGHT
 
 like once user fills and submit the data to google sheets and then mail the participant and then the data displayed in success page wiht pending in payment once the user pays it is updated to paid.
 
-Harish has to give razorpay keys , audio ,etc.
+FINAL STEP : Harish has to give razorpay keys , audio ,etc.
 
 deploy
 https://the-atlantis-protocol.vercel.app/

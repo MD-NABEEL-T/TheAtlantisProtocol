@@ -4,7 +4,7 @@
  */
 
 const BACKEND_URL = "https://theatlantisprotocol.onrender.com/";
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxujEPR387qZMVDqTh7KaNVLKBnH7-YJOp6yXduT1Nx9WarFX092LfbrcmADFaEXKcL/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUy18wkPzVpJj4_gVgj-bkbBZxDXYIutWWnI89-Ke0uVJfR25thW5HsA3LWolOVoYt/exec";
 const ADMIN_PASSWORD = "iarrdadmin2026";
 
 /* ═══════════════════════════════════════
@@ -278,7 +278,8 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
             ...submission,
             paymentStatus:    "PENDING",
             razorpayPaymentId: "",
-            razorpayOrderId:   orderId   // ← key for later update
+            razorpayOrderId:   orderId,   // ← key for later update
+            timestamp: new Date().toISOString()   // ← add this line
           })
         });
         console.log("✅ Pending registration saved to sheet");
