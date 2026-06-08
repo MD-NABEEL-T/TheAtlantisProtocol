@@ -1,8 +1,7 @@
-to display payment status highlighted  from google sheets to admin page and
- .env to change 
-add that keys onrender.com and in script.js and .env that's all 
 
 deploy
 https://the-atlantis-protocol.vercel.app/
 https://theatlantisprotocol.onrender.com/
 web app url=https://script.google.com/macros/s/AKfycbxUy18wkPzVpJj4_gVgj-bkbBZxDXYIutWWnI89-Ke0uVJfR25thW5HsA3LWolOVoYt/exec
+
+--SIGNING OFF
