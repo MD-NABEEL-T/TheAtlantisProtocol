@@ -1,17 +1,5 @@
-if the workflow is good then we'll try
-to change mail theme
-more entire working + cart logic for gautham -done.
-
-like once user fills and submit the data to google sheets and then mail the participant and then the data displayed in success page wiht pending in payment once the user pays it is updated to paid.
-
-workflow :done alhamdulilah
-
-FINAL STEP : 
-i have implemented pending and paid 
-to give some person's contact number to include in the 3 person registration as separate .
-Harish has to give whatsapp commmunity link to add in mail , razorpay keys , whatsapp number to add.
-razorpay keys using new website link from harish and .env to change 
-use test keys to check if it works
+to display payment status highlighted  from google sheets to admin page and
+ .env to change 
 add that keys onrender.com and in script.js and .env that's all 
 
 deploy

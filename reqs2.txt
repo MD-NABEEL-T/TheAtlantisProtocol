@@ -23,3 +23,11 @@ Amazing session loved it ,very easy to understand and doubts were also getting s
  Right below the main heading, you need to insert a glowing, high-trust pill badge.
 
 "Exploring the Blue Frontier — A 2-Day Masterclass on Marine Robotics, Underwater Acoustics & Naval AI. Delivered completely in simplified, high-impact Tamil."
+
+5,Add a small note near the form: "⚠️ Requirements: No prior coding or marine experience needed. A smartphone or laptop with an internet connection is all you need to board."
+
+change that official iarrd marine academy credentials to Official IARRD Marine Technology Workshop Certificate
+
+-- ALL DONE.
+SIGNING OFF
+

@@ -937,6 +937,9 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
     grid-template-columns: repeat(4, 1fr);
   }
 }
+@keyframes trust-badge-in {
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
@@ -983,8 +986,33 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
       IARRD Presents · July 4 &amp; 5, 2026 · Online · Tamil
     </div>
     <h1 class="hero-tamil" id="hero-tamil">ஆழ்கடலில் ஒரு பயணம்</h1>
-    <p class="hero-en" id="hero-en">The Atlantis Protocol</p>
-    <div class="hero-divider" id="hero-divider"></div>
+<p class="hero-en" id="hero-en">The Atlantis Protocol</p>
+
+<div id="hero-trust-badge" style="
+  display:inline-flex; align-items:center; gap:10px;
+  background:rgba(201,168,76,0.08);
+  border:1px solid rgba(201,168,76,0.35);
+  border-radius:40px; padding:8px 22px;
+  margin-bottom:22px;
+  box-shadow:0 0 20px rgba(201,168,76,0.12), inset 0 1px 0 rgba(201,168,76,0.15);
+  opacity:0; transform:translateY(16px);
+  animation: trust-badge-in 0.8s 1.4s ease forwards;">
+  <span style="
+    width:7px; height:7px; border-radius:50%;
+    background:var(--gold);
+    box-shadow:0 0 8px var(--gold), 0 0 16px rgba(201,168,76,0.5);
+    flex-shrink:0;
+    animation:pulse-dot 2s ease-in-out infinite;"></span>
+  <span style="
+    font-family:var(--font-mono); font-size:10px;
+    letter-spacing:0.2em; text-transform:uppercase;
+    color:var(--gold);
+    text-shadow:0 0 10px rgba(201,168,76,0.4);">
+    Following the Successful Launch of Mission 2.0 with 30+ Space Pioneers!
+  </span>
+</div>
+
+<div class="hero-divider" id="hero-divider"></div>
     <p class="hero-tagline" id="hero-tagline">
       Exploring the Blue Frontier — A 2-Day Masterclass on Marine Robotics, Underwater Acoustics &amp; Marine Robotics, Underwater Communication Systems, Ocean Intelligence & Autonomous Maritime Technologies. Uncover engineering mysteries in the deep abyss.
     </p>
@@ -1073,9 +1101,10 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
     <span class="section-eyebrow reveal">What You Take Back</span>
     <h2 class="section-title reveal">The IARRD Value Stack</h2>
     <div class="value-grid reveal">
-      <div class="value-card"><span class="value-icon">📜</span><h3 class="value-title">Academy Credentials</h3><p class="value-desc">Official IARRD Academy Credentials to display on LinkedIn and boost your engineering portfolio.</p></div>
+      <div class="value-card"><span class="value-icon">📜</span><h3 class="value-title">Academy Credentials</h3><p class="value-desc">Official IARRD Academy Credentials to display on LinkedIn and Showcase your participation in marine technology and ocean engineering learning initiatives..</p></div>
       <div class="value-card"><span class="value-icon">🎥</span><h3 class="value-title">Live 3D Simulations</h3><p class="value-desc">2 days of live experiential training featuring detailed 3D model presentations and underwater simulations.</p></div>
-      <div class="value-card"><span class="value-icon">🌐</span><h3 class="value-title">Private Networks</h3><p class="value-desc">Exclusive access to the private IARRD Marine Tech Network to connect with peers and mentors.</p></div>
+      <div class="value-card"><span class="value-icon">🌐</span>
+<h3 class="value-title">Workshop Certificate</h3><p class="value-desc">Official IARRD Marine Technology Workshop Certificate to display on LinkedIn and boost your engineering portfolio.</p></div>
     </div>
   </div>
 </section>
@@ -1113,7 +1142,7 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
       <ul style="list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:14px 32px; margin-top:24px; padding:0;">
         <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>July 4 &amp; 5, 2026 — 2 Days, Fully Online</li>
         <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>Conducted in Tamil</li>
-        <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>IARRD Academy Credentials</li>
+        <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>Official IARRD Marine Technology Workshop Certificate</li>
         <li style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-dim);"><span class="meta-dot"></span>Live 3D Simulations</li>
       </ul>
     </div>
@@ -1161,17 +1190,24 @@ section { padding: 110px 0; position: relative; overflow: hidden; background: va
           <label for="reg-org" id="reg-org-label">College Name</label>
           <input type="text" id="reg-org" placeholder="Enter college or university name" />
         </div>
-        <div class="privacy-consent">
-          <input type="checkbox" id="reg-privacy-agree" />
-          <label for="reg-privacy-agree">I consent to IARRD sending course details and onboarding links via Email and WhatsApp.</label>
-        </div>
-        <button class="btn-submit" id="submit-reg-btn">Secure Your Seat ✦</button>
+<div style="background:rgba(255,107,53,0.06); border:1px solid rgba(255,107,53,0.2);
+            border-radius:6px; padding:13px 16px; margin-bottom:18px;
+            font-family:var(--font-body); font-size:13px; color:rgba(220,245,255,0.65);
+            line-height:1.65;">
+  ⚠️ <strong style="color:rgba(255,200,150,0.85);">Requirements:</strong>
+  No prior coding or marine experience needed. A smartphone or laptop with an internet connection is all you need to board.
+</div>
+<div class="privacy-consent">
+  <input type="checkbox" id="reg-privacy-agree" />
+  <label for="reg-privacy-agree">I consent to IARRD sending course details and onboarding links via Email and WhatsApp.</label>
+</div>
+<button class="btn-submit" id="submit-reg-btn">Secure Your Seat ✦</button>
         <div class="submit-spinner" id="submit-spinner" style="display:none">
           <div class="spinner"></div><p>Initializing Submersible Pass...</p>
         </div>
         <div class="submit-error" id="submit-error" style="display:none"></div>
         <div class="trust-badges">
-          <span>🔒 Secure UPI</span><span>⚡ Instant Access</span><span>📜 Credentials</span>
+          <span>🔒 Secure UPI</span><span>⚡ Instant Access</span><span>📜 <span>📜 Workshop Certificate</span></span>
         </div>
       </div>
 

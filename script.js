@@ -757,13 +757,14 @@ if (document.querySelector(".page-admin")) {
     const company = m["company"] || "";
     const role = m["role"] || "";
     const describe = m["description"] || "";
-    const timestamp = m["timestamp"] || "";
+const timestamp = m["timestamp"] || "";
+const paymentStatus = m["paymentstatus"] || m["payment_status"] || m["paymentstatus"] || "";
 
-    return {
-      _raw: r, name, email, phone, category: cat,
-      schoolName, standard, collegeName, department, year,
-      company, role, describe, timestamp
-    };
+return {
+  _raw: r, name, email, phone, category: cat,
+  schoolName, standard, collegeName, department, year,
+  company, role, describe, timestamp, paymentStatus
+};
   }
 
   async function loadData() {
@@ -830,6 +831,7 @@ if (document.querySelector(".page-admin")) {
       tbody.innerHTML = data.map((row, i) => {
         const cat = row.category;
         const det = buildDetailStr(row);
+        const payStatus = (data[i]?.paymentStatus || row.paymentStatus || row["paymentStatus"] || "").toString().toUpperCase().trim();
         const time = row.timestamp
           ? new Date(row.timestamp).toLocaleString("en-IN", { dateStyle: "short", timeStyle: "short" })
           : "—";
@@ -846,8 +848,9 @@ if (document.querySelector(".page-admin")) {
           <td style="color:var(--text-muted)">${esc(row.phone || "—")}</td>
           <td>${catDisplay}</td>
           <td style="color:var(--text-muted);font-size:.8rem">${det}</td>
-          <td style="color:var(--text-dim);font-size:.78rem;white-space:nowrap">${time}</td>
-        </tr>`;
+<td>${renderPayStatus(row)}</td>
+<td style="color:var(--text-dim);font-size:.78rem;white-space:nowrap">${time}</td>
+</tr>`;
       }).join("");
     }
 
@@ -881,6 +884,7 @@ if (document.querySelector(".page-admin")) {
     setStat("stat-college", data.filter(r => r.category === "college").length);
     setStat("stat-pro", data.filter(r => r.category === "professional").length);
     setStat("stat-enth", data.filter(r => r.category === "enthusiast").length);
+    setStat("stat-paid", data.filter(r => (r.paymentStatus || "").toUpperCase() === "PAID").length);
   }
 
   function esc(str) {
@@ -903,4 +907,33 @@ if (document.querySelector(".page-admin")) {
       loadData();
     });
   }
+  function renderPayStatus(row) {
+  const raw = (row.paymentStatus || row["paymentStatus"] || row["paymentstatus"] || "").toString().toUpperCase().trim();
+  if (raw === "PAID") {
+    return `<span style="
+      display:inline-block; padding:4px 14px; border-radius:20px;
+      font-family:'Space Mono',monospace; font-size:10px; font-weight:700;
+      letter-spacing:0.12em;
+      background:rgba(0,255,180,0.08);
+      border:1px solid rgba(0,255,180,0.35);
+      color:#00ffb4;
+      text-shadow:0 0 8px rgba(0,255,180,0.5);
+      box-shadow:0 0 12px rgba(0,255,180,0.1);">
+      ✓ PAID
+    </span>`;
+  } else if (raw === "PENDING") {
+    return `<span style="
+      display:inline-block; padding:4px 14px; border-radius:20px;
+      font-family:'Space Mono',monospace; font-size:10px; font-weight:700;
+      letter-spacing:0.12em;
+      background:rgba(255,165,0,0.08);
+      border:1px solid rgba(255,165,0,0.3);
+      color:#ffaa00;
+      text-shadow:0 0 8px rgba(255,165,0,0.4);">
+      ⏳ PENDING
+    </span>`;
+  } else {
+    return `<span style="color:var(--text-dim);font-size:11px;">${esc(raw || "—")}</span>`;
+  }
+}
 }
