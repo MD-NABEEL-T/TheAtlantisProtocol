@@ -248,11 +248,18 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
       role:        "",
       description: category === "enthusiast"    ? org : "",
     };
-
-    submitBtn.style.display = "none";
+submitBtn.style.display = "none";
     spinner.style.display   = "block";
 
     try {
+      // ══════════════════════════════════════════════
+      // STEP 0: Wake up Render backend before payment
+      // ══════════════════════════════════════════════
+      try {
+        await fetch(`${BACKEND_URL}/`);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+      } catch(e) {}
+
       // ══════════════════════════════════════════════
       // STEP 1: Create Razorpay order (get orderId)
       // ══════════════════════════════════════════════
@@ -269,7 +276,6 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
 
       // ══════════════════════════════════════════════
       // STEP 2: Save to Google Sheets with PENDING
-      //         status + orderId (for later lookup)
       // ══════════════════════════════════════════════
       console.log("📊 Saving registration with PENDING status...");
       try {
@@ -279,15 +285,14 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
           headers: { "Content-Type": "text/plain" },
           body: JSON.stringify({
             ...submission,
-            paymentStatus:    "PENDING",
+            paymentStatus:     "PENDING",
             razorpayPaymentId: "",
-            razorpayOrderId:   orderId,   // ← key for later update
-            timestamp: new Date().toISOString()   // ← add this line
+            razorpayOrderId:   orderId,
+            timestamp:         new Date().toISOString()
           })
         });
         console.log("✅ Pending registration saved to sheet");
       } catch (sheetErr) {
-        // Non-fatal: sheet save failed, but continue to payment
         console.warn("⚠️ Sheet save failed (continuing to payment):", sheetErr.message);
       }
 
@@ -305,13 +310,10 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
         prefill:     { email, contact: phone, name },
 
         handler: async function (response) {
-          // Payment succeeded in Razorpay
           console.log("✅ Payment completed:", response.razorpay_payment_id);
 
           try {
-            // ══════════════════════════════════════════
             // STEP 4: Verify signature on backend
-            // ══════════════════════════════════════════
             const verifyRes = await fetch(`${BACKEND_URL}/api/payment/verify-payment`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
@@ -322,10 +324,7 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
             const verifyData = await verifyRes.json();
             if (!verifyData.success) throw new Error(verifyData.message || "Signature invalid");
 
-            // ══════════════════════════════════════════
-            // STEP 5: Update Google Sheet row
-            //         PENDING → PAID using orderId
-            // ══════════════════════════════════════════
+            // STEP 5: Update Google Sheet PENDING → PAID
             console.log("📊 Updating sheet: PENDING → PAID...");
             try {
               await fetch(GOOGLE_SCRIPT_URL, {
@@ -333,20 +332,17 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
                 mode: "no-cors",
                 headers: { "Content-Type": "text/plain" },
                 body: JSON.stringify({
-                  action:             "updatePayment",
-                  razorpayOrderId:    response.razorpay_order_id,
-                  razorpayPaymentId:  response.razorpay_payment_id
+                  action:            "updatePayment",
+                  razorpayOrderId:   response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id
                 })
               });
               console.log("✅ Sheet updated to PAID");
             } catch (updateErr) {
               console.warn("⚠️ Sheet update failed:", updateErr.message);
-              // Non-fatal: payment was real, log it
             }
 
-            // ══════════════════════════════════════════
             // STEP 6: Redirect to success page
-            // ══════════════════════════════════════════
             window.location.href = "success.html";
 
           } catch (err) {
@@ -360,8 +356,7 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
 
         modal: {
           ondismiss: function () {
-            // User closed the payment modal without paying
-            console.log("⚠️ Payment modal dismissed — registration stays as PENDING");
+            console.log("⚠️ Payment modal dismissed");
             spinner.style.display = "none";
             submitBtn.style.display = "block";
             errEl.style.display = "block";
@@ -393,10 +388,10 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
     if (!el) return;
     el.style.borderColor = "#ff7f50";
     el.animate([
-      { transform: "translateX(0)"  },
+      { transform: "translateX(0)"   },
       { transform: "translateX(-5px)" },
       { transform: "translateX(5px)"  },
-      { transform: "translateX(0)"  }
+      { transform: "translateX(0)"   }
     ], { duration: 250, easing: "ease" });
     el.focus();
     setTimeout(() => { el.style.borderColor = ""; }, 1500);
