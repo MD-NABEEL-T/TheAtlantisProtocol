@@ -20,12 +20,12 @@ export const createOrder = async (req, res) => {
   try {
     // ✅ FIX: Changed from 1 * 100 to 99 * 100
     const options = {
-      amount: 99 * 100,  // ₹99.00 = 9900 paise
+      amount: 101 * 100,  // ₹101.00 = 10100 paise
       currency: "INR",
       receipt: `atlantis_${Date.now()}`
     };
 
-    console.log("📦 Creating Razorpay order for ₹99 — Atlantis Protocol...");
+    console.log("📦 Creating Razorpay order for ₹101  — Atlantis Protocol...");
     const order = await razorpay.orders.create(options);
     console.log(`✅ Order created: ${order.id}`);
 
