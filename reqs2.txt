@@ -31,3 +31,36 @@ change that official iarrd marine academy credentials to Official IARRD Marine T
 -- ALL DONE.
 SIGNING OFF
 
+Step 1 — Log in to dashboard.razorpay.com
+
+Step 2 — On the left sidebar, click Settings
+
+Step 3 — Click Webhooks tab at the top
+
+Step 4 — Click + Add New Webhook button on the right
+
+Step 5 — Fill in the form:
+
+Webhook URL: paste this exactly:
+
+https://theatlantisprotocol.onrender.com/api/payment/webhook
+
+Secret: type the same value you added in Render environment variable as RAZORPAY_WEBHOOK_SECRET
+Alert Email: your email (so Razorpay alerts you if webhook starts failing)
+
+
+Step 6 — Under Active Events, scroll to Payment section and tick only:
+payment.captured
+
+Step 7 — Click Create Webhook
+
+Step 8 — You will see your webhook listed with status Active — that's it, done.
+
+
+Set up webhook on Razorpay Dashboard:
+
+Login → Settings → Webhooks → Add New Webhook
+URL: https://theatlantisprotocol.onrender.com/api/payment/webhook
+Secret: iarrd_atlantis_webhook_2026
+Event: tick payment.captured only
+Save

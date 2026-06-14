@@ -102,3 +102,53 @@ export const verifyPayment = async (req, res) => {
     });
   }
 };
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUy18wkPzVpJj4_gVgj-bkbBZxDXYIutWWnI89-Ke0uVJfR25thW5HsA3LWolOVoYt/exec";
+
+export const handleWebhook = async (req, res) => {
+  try {
+    const signature = req.headers["x-razorpay-signature"];
+    
+    // req.body is now a raw Buffer thanks to server.js fix
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
+      .update(req.body)
+      .digest("hex");
+
+    if (expectedSignature !== signature) {
+      console.warn("⚠️ Webhook signature mismatch");
+      return res.status(400).json({ success: false });
+    }
+
+    const payload = JSON.parse(req.body.toString());
+    console.log("📨 Webhook event received:", payload.event);
+
+    if (payload.event === "payment.captured") {
+      const payment = payload.payload.payment.entity;
+      console.log("✅ Webhook: payment captured");
+      console.log("   Order ID:", payment.order_id);
+      console.log("   Payment ID:", payment.id);
+
+      // Tell Apps Script to flip PENDING -> PAID + send confirmation email
+      const sheetRes = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({
+          action: "updatePayment",
+          razorpayOrderId: payment.order_id,
+          razorpayPaymentId: payment.id
+        })
+      });
+
+      console.log("📊 Sheet update triggered, status:", sheetRes.status);
+    }
+
+    // Always return 200 to Razorpay so it doesn't keep retrying
+    res.status(200).json({ success: true });
+
+  } catch (err) {
+    console.error("❌ Webhook error:", err.message);
+    // Still return 200 so Razorpay doesn't retry on code bugs
+    res.status(200).json({ success: true });
+  }
+};
