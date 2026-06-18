@@ -299,15 +299,26 @@ submitBtn.style.display = "none";
       // ══════════════════════════════════════════════
       // STEP 3: Open Razorpay checkout
       // ══════════════════════════════════════════════
-      const options = {
-        key:         orderData.key,
-        amount:      orderData.order.amount,
-        currency:    orderData.order.currency,
-        name:        "IARRD Marine Academy",
-        description: "Masterclass Registration — ஆழ்கடலில் ஒரு பயணம்",
-        order_id:    orderId,
-        theme:       { color: "#00f5ff" },
-        prefill:     { email, contact: phone, name },
+// REPLACE WITH:
+const options = {
+  key:         orderData.key,
+  amount:      orderData.order.amount,
+  currency:    orderData.order.currency,
+  name:        "IARRD Marine Academy",
+  description: "Masterclass Registration — ஆழ்கடலில் ஒரு பயணம்",
+  order_id:    orderId,
+  theme:       { color: "#00f5ff" },
+  prefill:     { email, contact: phone, name },
+  method:      "upi",
+  config: {
+    display: {
+      blocks: {
+        utib: { name: "Pay via UPI", instruments: [{ method: "upi" }] }
+      },
+      sequence: ["block.utib"],
+      preferences: { show_default_blocks: false }
+    }
+  },
 
         handler: async function (response) {
           console.log("✅ Payment completed:", response.razorpay_payment_id);
@@ -606,16 +617,26 @@ if (document.querySelector(".page-form")) {
         if (!orderData.success) throw new Error(orderData.message);
 
         let opened = false;
-        const options = {
-          key: orderData.key,
-          amount: orderData.order.amount,
-          currency: orderData.order.currency,
-          name: "IARRD Marine Academy",
-          description: "Masterclass Registration — ஆழ்கடலில் ஒரு பயணம்",
-          order_id: orderData.order.id,
-          theme: { color: "#00f5ff" },
-          prefill: { email: formData.email, contact: formData.phone, name: formData.name },
-          handler: async function (response) {
+const options = {
+  key: orderData.key,
+  amount: orderData.order.amount,
+  currency: orderData.order.currency,
+  name: "IARRD Marine Academy",
+  description: "Masterclass Registration — ஆழ்கடலில் ஒரு பயணம்",
+  order_id: orderData.order.id,
+  theme: { color: "#00f5ff" },
+  prefill: { email: formData.email, contact: formData.phone, name: formData.name },
+  method: "upi",
+  config: {
+    display: {
+      blocks: {
+        utib: { name: "Pay via UPI", instruments: [{ method: "upi" }] }
+      },
+      sequence: ["block.utib"],
+      preferences: { show_default_blocks: false }
+    }
+  },
+  handler: async function (response) {
             try {
               const verifyRes = await fetch(`${BACKEND_URL}/api/payment/verify-payment`, {
                 method: "POST",

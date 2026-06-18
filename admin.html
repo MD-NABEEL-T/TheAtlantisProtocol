@@ -678,6 +678,40 @@
       display: none;
       margin-bottom: 1rem;
     }
+
+    @media (max-width: 768px) {
+  .admin-topbar {
+    padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar-brand { order: 2; width: 100%; }
+  .topbar-event-tamil { font-size: 0.85rem; }
+  .admin-content { padding: 1rem 1rem 4rem; }
+  .admin-stats { gap: 0.5rem; }
+  .stat-box { min-width: 70px; padding: 0.7rem 0.9rem; }
+  .stat-num { font-size: 1.25rem; }
+  .stat-label { font-size: 0.55rem; }
+  .admin-toolbar { flex-direction: column; align-items: flex-start; }
+  .admin-filter-wrap { width: 100%; flex-wrap: wrap; }
+  .admin-filter-wrap select { flex: 1; min-width: 140px; }
+  .admin-table-wrap { border-radius: 5px; }
+  .admin-table { font-size: 0.78rem; }
+  .admin-table th, .admin-table td { padding: 0.65rem 0.75rem; }
+  .admin-table th:nth-child(6),
+  .admin-table td:nth-child(6) { display: none; }
+  .cat-badge { font-size: 0.6rem; padding: 0.18rem 0.55rem; }
+  .admin-card { padding: 2.2rem 1.5rem; }
+}
+
+@media (max-width: 480px) {
+  .admin-stats { display: grid; grid-template-columns: repeat(3,1fr); }
+  .stat-box { min-width: unset; text-align: center; }
+  .admin-table th:nth-child(3),
+  .admin-table td:nth-child(3),
+  .admin-table th:nth-child(8),
+  .admin-table td:nth-child(8) { display: none; }
+}
   </style>
 </head>
 
