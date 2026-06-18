@@ -8,6 +8,55 @@ const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxUy18wkPzVpJ
 const ADMIN_PASSWORD = "iarrdadmin2026";
 
 /* ═══════════════════════════════════════
+   DESKTOP SITE MODE DETECTION
+   ═══════════════════════════════════════ */
+function isDesktopSiteMode() {
+  const ua = navigator.userAgent;
+  const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(ua);
+  // On a real mobile device, "Request Desktop Site" removes the mobile UA tokens
+  // and forces a desktop UA. We detect this by checking if we're on a touch device
+  // but the UA looks like a desktop browser.
+  const isTouchDevice = navigator.maxTouchPoints > 1;
+  const looksLikeDesktopUA = !/Android|iPhone|iPad|iPod|Mobile/i.test(ua);
+  return isTouchDevice && looksLikeDesktopUA;
+}
+
+function injectDesktopWarning() {
+  if (document.getElementById('desktop-site-warning')) return;
+
+  const firstField = document.querySelector('#submit-reg-btn')
+    ?.closest('.payment-card')
+    ?.querySelector('.field-group');
+  if (!firstField) return;
+
+  const warning = document.createElement('div');
+  warning.id = 'desktop-site-warning';
+  warning.style.cssText = `
+    display:flex; align-items:flex-start; gap:10px;
+    background:rgba(255,165,0,0.08);
+    border:1px solid rgba(255,165,0,0.4);
+    border-radius:6px; padding:12px 14px;
+    margin-bottom:18px; font-size:13px; line-height:1.55;
+  `;
+  warning.innerHTML = `
+    <span style="font-size:20px;flex-shrink:0;margin-top:1px;">⚠️</span>
+    <div>
+      <strong style="display:block;color:#ffaa00;margin-bottom:4px;">Desktop Site Mode Detected</strong>
+      <span style="color:rgba(220,245,255,0.7);">
+        UPI payment won't work with <strong>Desktop Site</strong> turned on.
+        Please disable it in your browser menu, then refresh this page.
+      </span><br/><br/>
+      <a href="https://wa.me/918903272879?text=Hi%20IARRD%2C%20I%20want%20to%20register%20for%20the%20Marine%20Masterclass%20but%20UPI%20isn%27t%20working%20on%20my%20phone."
+         target="_blank" rel="noopener"
+         style="color:#00e8ff;font-size:12px;text-decoration:underline;">
+        Or register via WhatsApp instead →
+      </a>
+    </div>
+  `;
+  firstField.parentNode.insertBefore(warning, firstField);
+}
+
+/* ═══════════════════════════════════════
    BIOLUMINESCENT CANVAS SYSTEM
    ═══════════════════════════════════════ */
 (function initMarineCanvas() {
@@ -206,10 +255,22 @@ const ADMIN_PASSWORD = "iarrdadmin2026";
     const submitBtn = document.getElementById("submit-reg-btn");
     if (!submitBtn) return;
 
+    // Warn mobile users who have Desktop Site mode on
+if (isDesktopSiteMode()) {
+  injectDesktopWarning(); // inserts before the button
+}
     // ── Wake up backend immediately on page load ──
   fetch("https://theatlantisprotocol.onrender.com/").catch(() => {});
 
   submitBtn.addEventListener("click", async () => {
+    if (isDesktopSiteMode()) {
+  const warn = document.getElementById('desktop-site-warning');
+  if (warn) {
+    warn.style.border = '1px solid rgba(255,165,0,0.9)';
+    warn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  return;
+}
     const name     = document.getElementById("reg-name").value.trim();
     const email    = document.getElementById("reg-email").value.trim();
     const phone    = document.getElementById("reg-phone").value.trim();
