@@ -227,7 +227,7 @@ function injectDesktopWarning() {
   if (!cdDays) return;
 
   // Masterclass date: July 4, 2026
-  const targetTime = new Date("2026-07-04T10:00:00+05:30").getTime();
+  const targetTime = new Date("2026-07-11T10:00:00+05:30").getTime();
 
   function update() {
     const now = Date.now();
